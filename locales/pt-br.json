@@ -1,0 +1,71 @@
+{
+  "group.members": "membros",
+  "group.find": "Grupos",
+  "post.find": "Postagens",
+  "post.create": "Criar postagem",
+  "post.delete": "Deletar postagem",
+  "post.find.empty": "Nenhuma postagem encontrada",
+  "post.delete.confirm.msg": "Você tem certeza que deseja deletar essa postagem?",
+
+  "form-post-body": "Texto",
+  "form-placeholder-post-body": " ",
+  "form-helper-post-body": "Digite o texto que deseja compartilhar ou algo sobre o conteúdo em anexo",
+
+  "form-post-category": "Assunto ou categoria",
+  "form-placeholder-post-category": " ",
+  "form-helper-post-category": "Selecione o assunto ou categoria relacionada a sua postagem",
+
+  "form-post-attachment": "Arquivo anexo",
+  "form-placeholder-post-attachment": " ",
+  "form-helper-post-attachment": "Selecione ou envie um arquivo",
+
+  "form-post-images": "Imagens",
+  "form-placeholder-post-images": " ",
+  "form-helper-post-images": "Selecione ou envie uma ou mais imagens",
+
+  "form-post-setAlias": "URL para o post",
+  "form-placeholder-post-setAlias": " ",
+  "form-helper-post-setAlias": "Digite uma url interna para acessar o seu conteúdo ou deixe o campo vazio para usar a url padrão. Exemplo: /incrivel-conteudo",
+
+  "group.create": "Criar grupo",
+  "group.edit": "Editar grupo",
+
+  "form-group-name": "Nome",
+  "form-placeholder-group-name": " ",
+  "form-helper-group-name": "Digite o nome do seu grupo",
+
+  "form-group-description": "Descrição",
+  "form-placeholder-group-description": " ",
+  "form-helper-group-description": "Digite uma descrição ou texto de introdução para o seu grupo",
+
+  "form-group-privacity": "Privacidade",
+  "form-placeholder-group-privacity": " ",
+  "form-helper-group-privacity": "Selecione o o nível de privacidade do grupo onde público para qualquer pessoa pode acessar e privado para acesso só para convidados",
+
+  "form-group-categories": "Categorias do grupo",
+  "form-placeholder-group-categories": " ",
+  "form-helper-group-categories": "Selecione as categorias ou assuntos do grupo onde as postagens serão associadas",
+
+
+  "form-group-logo": "Logo",
+  "form-placeholder-group-logo": " ",
+  "form-helper-group-logo": " ",
+
+  "form-group-setAlias": "URL do grupo",
+  "form-placeholder-group-setAlias": " ",
+  "form-helper-group-setAlias": "Digite uma url interna para acessar o seu grupo ou deixe o campo vazio para usar a url padrão. Exemplo: /incrivel-conteudo",
+
+  "group.filter.all": "Todos grupos",
+  "group.filter.my": "Meus grupos",
+  "group.filter.new": "Novos grupos",
+
+  "widget.group-description.label": "Nome e logo do grupo",
+  "widget.groups-search-form.label": "Formulário de busca de grupos",
+
+  "group.search.title": "Buscar por:",
+  "group.find.empty": "Nenhum grupo encontrado",
+
+  "group.join": "Entrar",
+  "group.leave": "Sair do grupo",
+  "group.category.null": "Sem categoria"
+}

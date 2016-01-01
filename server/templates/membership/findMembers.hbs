@@ -1,0 +1,8 @@
+{{#we-grid items=data cols=4}}
+<div class="group-member-teaser">
+  {{#link-to 'user.findOne' user.id}}
+  <div class="member-avatar">{{we-avatar id=userId style='medium'}}</div>
+  <div class="member-name">{{user.displayName}}</div>
+  {{/link-to}}
+</div>
+{{/we-grid}}

@@ -1,0 +1,13 @@
+{{#if locals.group}}
+<ul class="nav nav-pills nav-stacked">
+  {{#each locals.group.categories}}
+    <li role="presentation" {{#ifCond ../locals.req.query.category  this}}class="active"{{/ifCond}}>
+       <a href="/group/{{../locals.group.id}}/post?category={{this}}">{{this}}</a>
+    </li>
+  {{/each}}
+  <li role="presentation" {{#ifCond locals.req.query.category null}}class="active"{{/ifCond}}>
+     <a href="/group/{{locals.group.id}}/post?category=null">{{t 'group.category.null'}}</a>
+  </li>
+</ul>
+
+{{/if}}

@@ -1,0 +1,20 @@
+<div class="groups-search">
+  <form class="form-inline" method="get">
+    <h4>{{t 'group.search.title'}}</h4>
+    <div class="form-group">
+      <label for="groups-search">{{t 'name'}}</label>
+      <input name="name" type="text" class="form-control" id="groups-search" value="{{locals.req.query.name}}">
+    </div>
+
+    <div class="form-group">
+      <button class="btn btn-primary">{{t 'Search'}}</button>
+    </div>
+    <input name="my" type="hidden" value="{{locals.req.query.my}}">
+  </form>
+
+  <form class="form-inline" method="get">
+    <input name="name" type="hidden" value="">
+    <input name="my" type="hidden" value="">
+    <button class="btn btn-default">{{t 'Reset'}}</button>
+  </form>
+</div>

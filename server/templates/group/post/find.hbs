@@ -1,0 +1,12 @@
+<div class="actions">
+  {{we-action-create-btn 'group.post' req group.id}}
+  {{rss-btn locals=this}}
+</div>
+{{#each data}}
+  {{render-record-teaser modelName='post' record=this locals=..}}
+  <hr>
+{{else}}
+  <p>{{t 'post.find.empty'}}</p>
+{{/each}}
+
+{{paginate count=metadata.count limit=query.limit currentPage=query.page req=req}}

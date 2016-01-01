@@ -1,0 +1,71 @@
+{
+  "group.members": "members",
+  "group.find": "Groups",
+  "post.find": "Posts",
+  "post.create": "Create post",
+  "post.delete": "Delete post",
+  "post.find.empty": "No posts found",
+  "post.delete.confirm.msg": "Are you sure you want to delete this post?",
+
+  "form-post-body": "Text",
+  "form-placeholder-post-body": " ",
+  "form-helper-post-body": "Write your text or something about your file or image",
+
+  "form-post-category": "Topic or category",
+  "form-placeholder-post-category": " ",
+  "form-helper-post-category": "Select one topic or category related to your content",
+
+  "form-post-attachment": "Attachment",
+  "form-placeholder-post-attachment": " ",
+  "form-helper-post-attachment": "Select or upload one attachment",
+
+  "form-post-images": "Images",
+  "form-placeholder-post-images": " ",
+  "form-helper-post-images": "Select or send one or more images",
+
+  "form-post-setAlias": "URL to post",
+  "form-placeholder-post-setAlias": " ",
+  "form-helper-post-setAlias": "Write one url for your content or skip for use the default url",
+
+
+  "group.create": "Create group",
+  "group.edit": "Edit group",
+
+  "form-group-name": "Name",
+  "form-placeholder-group-name": " ",
+  "form-helper-group-name": "Group name",
+
+  "form-group-description": "Description",
+  "form-placeholder-group-description": " ",
+  "form-helper-group-description": " ",
+
+  "form-group-privacity": "Privacity",
+  "form-placeholder-group-privacity": " ",
+  "form-helper-group-privacity": " ",
+
+  "form-group-categories": "Category",
+  "form-placeholder-group-categories": " ",
+  "form-helper-group-categories": "Write some categories for your group content",
+
+  "form-group-logo": "Logo",
+  "form-placeholder-group-logo": " ",
+  "form-helper-group-logo": " ",
+
+  "form-group-setAlias": "Group URL",
+  "form-placeholder-group-setAlias": " ",
+  "form-helper-group-setAlias": "Write one url for your group or skip for use the default url",
+
+  "group.filter.all": "All groups",
+  "group.filter.my": "My groups",
+  "group.filter.new": "New groups",
+
+
+  "widget.group-description.label": "Group name and logo",
+  "widget.groups-search-form.label": "Groups search form",
+  "group.search.title": "Search for:",
+  "group.find.empty": "No groups found",
+
+  "group.join": "Join",
+  "group.leave": "Leave",
+  "group.category.null": "No category"
+}

@@ -1,0 +1,26 @@
+{
+  "name": "we-plugin-group",
+  "description": "We.js group plugin",
+  "version": "0.3.0",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "NODE_ENV=test LOG_LV=info ./node_modules/.bin/mocha test/bootstrap.js test/**/*.test.js -b ",
+    "prepublish": "npm prune"
+  },
+  "devDependencies": {
+    "fs-extra": "^0.26.3",
+    "istanbul": "^0.4.1",
+    "mocha": "^2.3.4",
+    "rimraf": "^2.4.5",
+    "supertest": "^1.1.0",
+    "we-core": "^0.3.111",
+    "we-plugin-vocabulary": "^0.3.20",
+    "we-test-tools": "^0.3.10",
+    "we-theme-admin-default": "^0.3.12",
+    "we-theme-site-wejs": "^0.3.31"
+  },
+  "publishConfig": {
+    "registry": "http://registry.npmjs.org"
+  },
+  "license": "MIT"
+}

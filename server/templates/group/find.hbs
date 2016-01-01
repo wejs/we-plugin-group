@@ -1,0 +1,22 @@
+{{#if req.user.id}}
+<div class="groups-menu">
+  <ul class="nav nav-tabs nav-justified">
+    <li role="presentation" {{#if showAllGroups}}class="active"{{/if}}>
+    {{#link-to 'group.find'}}
+      {{t 'group.filter.all'}}</a></li>
+    {{/link-to}}
+    <li role="presentation" {{#if showUserGroups}}class="active"{{/if}}><a href="?my=true">{{t 'group.filter.my'}}</a></li>
+    <li role="presentation" {{#if showNewGroups}}class="active"{{/if}}><a href="?my=false">{{t 'group.filter.new'}}</a></li>
+  </ul>
+</div>
+{{/if}}
+<div class="groups">
+{{#each data}}
+  {{render-record-teaser modelName='group' record=this locals=..}}
+{{else}}
+  <p>{{t 'group.find.empty'}}</p>
+{{/each}}
+
+</div>
+
+{{paginate count=metadata.count limit=query.limit currentPage=query.page req=req}}

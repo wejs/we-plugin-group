@@ -1,0 +1,34 @@
+<div id="post-teaser-{{data.id}}" class="post-teaser">
+  <div class="post-header">
+    <div class="post-creator">
+    {{we-avatar id=data.creatorId style=style}}
+    {{data.creator.displayName}}</div>
+    <div class="post-date">{{we-time-ago data.createdAt locals=this}}</div>
+  </div>
+
+  <div class="post-body">{{{data.body}}}</div>
+
+  {{#if data.images}}
+  <div class="post-images">
+    {{#ifCond data.images.length 1}}
+      {{#each data.images}}
+        {{we-image-fancybox this 'large'}}
+      {{/each}}
+    {{else}}
+      {{we-fancybox-galery images=images id=data.id style="medium"}}
+    {{/ifCond}}
+  </div>
+  <script>$(function(){ $("#post-teaser-{{data.id}} > .post-images > a").fancybox(); });</script>
+  {{/if}}
+
+  <div class="post-footer">
+    <div class="post-actions">
+      {{{flag-like modelName="post" modelId=data.id locals=this}}} |
+      comment|
+      share|
+      {{#link-to 'group.post.findOne' data.groupId data.id}}
+        link
+      {{/link-to}}
+    </div>
+  </div>
+</div>
