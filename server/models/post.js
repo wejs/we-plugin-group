@@ -29,6 +29,12 @@ module.exports = function Model(we) {
       objectType: {
         type: we.db.Sequelize.STRING,
         formFieldType: null
+      },
+      // flag to highlight posts inside group
+      highlighted: {
+        type: we.db.Sequelize.BOOLEAN,
+        formFieldType: null,
+        defaultValue: false
       }
     },
 

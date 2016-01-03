@@ -18,26 +18,11 @@ module.exports = function loadPlugin(projectPath, Plugin) {
     },
     groupRoles: ['manager', 'moderator', 'member'],
     permissions: {
-      'find_group': {
+      'post_highlight': {
         'group': 'group',
-        'title': 'Find groups',
-        'description': 'Find and find all groups'
-      },
-      'create_group': {
-        'group': 'group',
-        'title': 'Create one group',
-        'description': 'Create one new group'
-      },
-      'update_group': {
-        'group': 'group',
-        'title': 'Update one group',
-        'description': 'Update one new group'
-      },
-      'delete_group': {
-        'group': 'group',
-        'title': 'Delete one group',
-        'description': 'Delete one group record'
-      },
+        'title': 'Highlight group post',
+        'description': ' '
+      }
     }
   });
 

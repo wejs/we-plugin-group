@@ -10,6 +10,11 @@ module.exports = {
     // filter by groupId
     if (res.locals.group) {
       res.locals.query.where.groupId = res.locals.group.id;
+
+      res.locals.query.order = [
+        ['highlighted', 'DESC'],
+        ['createdAt', 'DESC']
+      ];
     }
 
     if (req.query.category) {

@@ -1,4 +1,4 @@
-<div id="post-teaser-{{record.id}}" class="post-teaser">
+<div id="post-teaser-{{record.id}}" class="post-teaser {{#if record.highlighted}}highlighted{{/if}}">
   <div class="post-header">
     <div class="post-creator">
     {{we-avatar id=record.creatorId style=style}}
@@ -23,12 +23,10 @@
 
   <div class="post-footer">
     <div class="post-actions">
-      {{{flag-like modelName="post" modelId=record.id locals=locals}}} |
-      follow|
-      comment|
-      share|
+      {{{flag-like modelName='post' modelId=record.id isFlagged=record.metadata.isFlagged count=record.metadata.flagCount locals=locals}}}
+      {{{flag-follow modelName='post' modelId=record.id isFollowing=record.metadata.isFollowing locals=locals }}}
 
-
+      {{{post-highlight-btn postId=record.id highlighted=record.highlighted groupId=locals.group.id locals=locals}}}
 
       {{#link-to 'group.post.findOne' record.groupId record.id}}
         link
