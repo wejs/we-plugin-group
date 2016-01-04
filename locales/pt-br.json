@@ -6,10 +6,13 @@
   "post.delete": "Deletar postagem",
   "post.find.empty": "Nenhuma postagem encontrada",
   "post.delete.confirm.msg": "Você tem certeza que deseja deletar essa postagem?",
+  "post.highlight": "destacar",
+  "post.unhighlight": "remover destaque",
+  "post.findOne": "postagem",
 
-  "form-post-body": "Texto",
+  "form-post-body": "Digite o texto que deseja compartilhar ou algo sobre o conteúdo em anexo",
   "form-placeholder-post-body": " ",
-  "form-helper-post-body": "Digite o texto que deseja compartilhar ou algo sobre o conteúdo em anexo",
+  "form-helper-post-body": " ",
 
   "form-post-category": "Assunto ou categoria",
   "form-placeholder-post-category": " ",
@@ -67,5 +70,6 @@
 
   "group.join": "Entrar",
   "group.leave": "Sair do grupo",
-  "group.category.null": "Sem categoria"
+  "group.category.null": "Sem categoria",
+  "group.category.all": "Todos posts"
 }

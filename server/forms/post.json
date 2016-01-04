@@ -1,0 +1,37 @@
+{
+  "title": "post.form.title",
+
+  "method": "post",
+  "action": "/post/create",
+
+  "fields": {
+    "body": {
+      "type": "textarea",
+      "allowNull": false
+    },
+    "category": {
+      "type": "vocabulary/category",
+      "vocabularyName": "Group-category",
+      "canCreate": false,
+      "formFieldMultiple": false,
+      "onlyLowercase": false
+    },
+
+    "images": {
+      "type": "file/image",
+      "formFieldMultiple": true
+    },
+    "attachment": {
+      "type": "file/file",
+      "formFieldMultiple": true
+    }
+  },
+  "actions": {
+    "submit": {
+      "type": "submit"
+    },
+    "cancel": {
+      "type": "button"
+    }
+  }
+}

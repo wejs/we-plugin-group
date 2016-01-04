@@ -21,9 +21,7 @@ module.exports = function Model(we) {
       // post content
       body: {
         type: we.db.Sequelize.TEXT,
-        allowNull: false,
-        formFieldType: 'html',
-        formFieldHeight: '200'
+        allowNull: false
       },
       // image, text, link, video ...
       objectType: {
@@ -86,32 +84,108 @@ module.exports = function Model(we) {
       },
       fileFields: {
         attachment: { formFieldMultiple: true }
-      }
-    },
-
-    hooks: {
-      beforeCreate: function beforeCreate(post, options, next) {
-        if (!post.body) return next();
-        var postBodyClean = we.utils.string(post.body)
-          .stripTags().s;
-
-        if (!postBodyClean) return next();
-
-        post.teaser = postBodyClean.substr(0, 150);
-
-        next(null, post);
       },
 
-      beforeUpdate: function beforeUpdate(post, options, next) {
-        if (!post.body) return next();
-        var postBodyClean = we.utils.string(post.body)
-          .stripTags().s;
+      classMethods: {
+        /**
+         * Context loader, preload current request record and related data
+         *
+         * @param  {Object}   req  express.js request
+         * @param  {Object}   res  express.js response
+         * @param  {Function} done callback
+         */
+        contextLoader: function contextLoader(req, res, done) {
+          if (!res.locals.id || !res.locals.loadCurrentRecord) return done();
 
-        if (!postBodyClean) return next();
+          return this.findOne({
+            where: { id: res.locals.id},
+            include: [{ all: true }]
+          }).then(function (record) {
+            res.locals.data = record;
 
-        post.teaser = postBodyClean.substr(0, 150);
+            if (record) {
+              if ( record.dataValues.creatorId && req.isAuthenticated()) {
+                // set role owner
+                if (record.isOwner(req.user.id)) {
+                  if(req.userRoleNames.indexOf('owner') == -1 ) req.userRoleNames.push('owner');
+                }
+              }
 
-        next(null, post);
+              // redirect to post inside group
+              if (record.groupId && !res.locals.group) {
+                res.redirect(we.router.urlTo(
+                  'group.post.findOne', [record.groupId, record.id]
+                ));
+              }
+            }
+
+            return done();
+          })
+        },
+
+        // returns an url for post record alias
+        urlAlias: function urlAlias(record) {
+          if (record.groupId) {
+            return {
+              alias:
+                '/'+ we.i18n.__('group') + record.groupId +
+                '/'+ we.i18n.__('post') +'/' + record.id ,
+              target: '/group/'+record.groupId+'/post/' + record.id,
+            }
+          } else {
+            return {
+              alias:
+                '/'+ we.i18n.__('post') +'/' + record.id,
+                target: '/post/' + record.id,
+            }
+          }
+
+        }
+      },
+
+      instanceMethods: {
+        /**
+         *et url path instance method
+         *
+         * @return {String} url path
+         */
+        getUrlPath: function getUrlPath() {
+          if (this.groupId) {
+            return we.router.urlTo(
+              'group.post.findOne', [this.groupId, this.id]
+            );
+          } else {
+            return we.router.urlTo(
+              'post.findOne', [this.id]
+            );
+          }
+        }
+      },
+
+      hooks: {
+        beforeCreate: function beforeCreate(post, options, next) {
+          if (!post.body) return next();
+          var postBodyClean = we.utils.string(post.body)
+            .stripTags().s;
+
+          if (!postBodyClean) return next();
+
+          post.teaser = postBodyClean.substr(0, 150);
+
+          next(null, post);
+        },
+
+        beforeUpdate: function beforeUpdate(post, options, next) {
+          if (!post.body) return next();
+          var postBodyClean = we.utils.string(post.body)
+            .stripTags().s;
+
+          if (!postBodyClean) return next();
+
+          post.teaser = postBodyClean.substr(0, 150);
+
+          next(null, post);
+        }
       }
     }
   }

@@ -1,12 +1,19 @@
-<div class="actions">
-  {{we-action-create-btn 'group.post' req group.id}}
-  {{rss-btn locals=this}}
+<div class="sharebox-area">
+  <div id="sharebox-label">Clique aqui para adicionar um conteúdo</div>
+  {{!-- <div id="sharebox">{{{form-model 'post'}}}</div> --}}
+  <div id="sharebox">{{{form 'post' action=createPostUrl}}}</div>
+
+  <script>$(function(){
+    we.sharebox.init('#sharebox-label', '#sharebox');
+  })</script>
 </div>
+<div class="posts">
 {{#each data}}
   {{render-record-teaser modelName='post' record=this locals=..}}
   <hr>
 {{else}}
   <p>{{t 'post.find.empty'}}</p>
 {{/each}}
+</div>
 
 {{paginate count=metadata.count limit=query.limit currentPage=query.page req=req}}

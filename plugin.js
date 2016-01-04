@@ -23,6 +23,9 @@ module.exports = function loadPlugin(projectPath, Plugin) {
         'title': 'Highlight group post',
         'description': ' '
       }
+    },
+    forms: {
+      'post': __dirname + '/server/forms/post.json'
     }
   });
 
@@ -218,6 +221,16 @@ module.exports = function loadPlugin(projectPath, Plugin) {
       config: data.config
     }));
   });
+
+  plugin.addJs('we.sharebox', {
+    type: 'plugin', weight: 20, pluginName: 'we-plugin-group',
+    path: 'files/public/we.sharebox.js'
+  });
+  plugin.addCss('we.sharebox', {
+    type: 'plugin', weight: 20, pluginName: 'we-plugin-group',
+    path: 'files/public/we.sharebox.css'
+  });
+
 
   return plugin;
 };

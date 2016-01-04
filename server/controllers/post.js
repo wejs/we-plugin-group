@@ -9,12 +9,19 @@ module.exports = {
 
     // filter by groupId
     if (res.locals.group) {
+      // create link in group
+      res.locals.createPostUrl = '/group/'+res.locals.group.id+'/post/create';
+
+      // set group where filter
       res.locals.query.where.groupId = res.locals.group.id;
 
       res.locals.query.order = [
         ['highlighted', 'DESC'],
         ['createdAt', 'DESC']
       ];
+    } else {
+      // create link
+      res.locals.createPostUrl = '/post/create';
     }
 
     if (req.query.category) {

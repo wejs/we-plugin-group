@@ -6,10 +6,13 @@
   "post.delete": "Delete post",
   "post.find.empty": "No posts found",
   "post.delete.confirm.msg": "Are you sure you want to delete this post?",
+  "post.highlight": "highlight",
+  "post.unhighlight": "unhighlight",
+  "post.findOne": "post",
 
-  "form-post-body": "Text",
+  "form-post-body": "Write your text or something about your file or image",
   "form-placeholder-post-body": " ",
-  "form-helper-post-body": "Write your text or something about your file or image",
+  "form-helper-post-body": " ",
 
   "form-post-category": "Topic or category",
   "form-placeholder-post-category": " ",
@@ -67,5 +70,6 @@
 
   "group.join": "Join",
   "group.leave": "Leave",
-  "group.category.null": "No category"
+  "group.category.null": "No category",
+  "group.category.all": "All posts"
 }

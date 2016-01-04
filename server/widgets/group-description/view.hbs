@@ -1,17 +1,15 @@
 {{#if locals.group}}
 <div class="group-logo">
 {{#link-to 'group.post.find' locals.group.id}}
-{{we-image locals.group.logo 'medium'}}
+{{we-image locals.group.logo 'medium' class="img-thumbnail"}}
 {{/link-to}}
 </div>
 <div class="group-members">{{locals.group.meta.membersCount}} {{t 'group.members'}} - {{t locals.group.privacity}}</div>
 <div class="group-title"><h3>{{locals.group.name}}</h3></div>
-<div>
-{{#can permission='update_group' roleNames=locals.req.userRoleNames}}
-  {{we-action-edit-btn 'group' locals.group locals.req locals.group.id}}
-{{/can}}
-</div>
 <div class="group-actions">
   {{{group-membership-btn groupId=locals.group.id privacity=locals.group.privacity membership=locals.membership locals=locals}}}
+  {{#can permission='update_group' roleNames=locals.req.userRoleNames}}
+    {{we-action-edit-btn 'group' locals.group locals.req locals.group.id}}
+  {{/can}}
 </div>
 {{/if}}

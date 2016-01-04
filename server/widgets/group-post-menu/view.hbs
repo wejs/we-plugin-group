@@ -8,5 +8,9 @@
   <li role="presentation" {{#ifCond locals.req.query.category null}}class="active"{{/ifCond}}>
      <a href="/group/{{locals.group.id}}/post?category=null">{{t 'group.category.null'}}</a>
   </li>
+
+  <li role="presentation" {{#ifCond locals.req.query.category null}}{{else}}{{#unless locals.req.query.category}}class="active"{{/unless}}{{/ifCond}}>
+     <a href="/group/{{locals.group.id}}/post">{{t 'group.category.all'}}</a>
+  </li>
 </ul>
 {{/if}}
