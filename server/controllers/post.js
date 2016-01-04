@@ -49,6 +49,50 @@ module.exports = {
       });
     }
 
+
+
+    // follow
+    if (req.isAuthenticated()) {
+      if (req.query.follow) {
+        res.locals.query.include.push({
+          model: req.we.db.models.follow,
+          as: 'follow',
+          required: false,
+          attributes: ['id'],
+          where: {
+            userId: req.user.id
+          }
+        });
+
+        res.locals.query.where.$or = [
+          [' follow.id IS NOT NULL '],
+          [' `group.follow`.`id` IS NOT NULL '],
+          // TODO add posts from people how you follow
+          // [' `creator.follow`.`id` IS NOT NULL ']
+        ];
+
+        var groupAssoc;
+        for (var i = res.locals.query.include.length - 1; i >= 0; i--) {
+          if (res.locals.query.include[i].as == 'group') {
+            groupAssoc = res.locals.query.include[i];
+            break;
+          }
+        }
+
+        groupAssoc.include = [
+          {
+            model: req.we.db.models.follow,
+            as: 'follow',
+            required: false,
+            attributes: ['id'],
+            where: {
+              userId: req.user.id
+            }
+          }
+        ];
+      }
+    }
+
     res.locals.Model.findAll(res.locals.query)
     .then(function (records) {
 
@@ -85,6 +129,11 @@ module.exports = {
       return res.locals.Model.create(req.body)
       .then(function (record) {
         res.locals.data = record;
+
+        if (!res.locals.redirectTo) {
+          res.locals.redirectTo = record.getUrlPath();
+        }
+
         // if dont are inside one group
         return res.created();
       }).catch(res.queryError);

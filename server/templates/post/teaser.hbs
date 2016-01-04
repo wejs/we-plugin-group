@@ -7,6 +7,14 @@
       {{/link-to}}
       <small>@{{record.creator.username}}</small>
       - <span class="post-date">{{we-time-ago record.createdAt locals=locals}}</span>
+
+      {{#if record.group}}
+        - <span class="group">
+          {{#link-to 'group.findOne' record.groupId}}
+            {{record.group.name}}
+          {{/link-to}}
+        </span>
+      {{/if}}
     </div>
   </div>
 
@@ -32,13 +40,13 @@
 
       {{#if record.groupId}}
         {{{post-highlight-btn postId=record.id highlighted=record.highlighted groupId=locals.group.id locals=locals}}}
-        {{we-action-view-btn locals.resourceName record locals.req record.groupId record.id}}
-        {{we-action-edit-btn locals.resourceName record locals.req record.groupId record.id}}
-        {{we-action-delete-btn locals.resourceName record locals.req record.groupId record.id}}
+        {{we-action-view-btn 'group.post' record locals.req record.groupId record.id}}
+        {{we-action-edit-btn 'group.post' record locals.req record.groupId record.id}}
+        {{we-action-delete-btn 'group.post' record locals.req record.groupId record.id}}
       {{else}}
-        {{we-action-view-btn locals.resourceName record locals.req record.id}}
-        {{we-action-edit-btn locals.resourceName record locals.req record.id}}
-        {{we-action-delete-btn locals.resourceName record locals.req record.id}}
+        {{we-action-view-btn 'post' record locals.req record.id}}
+        {{we-action-edit-btn 'post'  record locals.req record.id}}
+        {{we-action-delete-btn 'post' record locals.req record.id}}
       {{/if}}
     </div>
   </div>

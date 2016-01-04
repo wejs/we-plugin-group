@@ -52,6 +52,7 @@ body.post.findOne .post-teaser {
 
 .post-body {
   font-size: 1.2em;
+  white-space: pre-line;
 }
 
 .post-teaser .post-creator img {

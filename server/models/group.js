@@ -105,6 +105,41 @@ module.exports = function Model(we) {
               modelId: modelId
             }
           }).then(function(r){cb(null, r);}).catch(cb)
+        },
+        /**
+         * Context loader, preload current request record and related data
+         *
+         * @param  {Object}   req  express.js request
+         * @param  {Object}   res  express.js response
+         * @param  {Function} done callback
+         */
+        contextLoader: function contextLoader(req, res, done) {
+          if (!res.locals.id || !res.locals.loadCurrentRecord) return done();
+
+          return this.findOne({
+            where: { id: res.locals.id},
+            include: [{ all: true }]
+          }).then(function (record) {
+            res.locals.data = record;
+
+            if (record) {
+              if ( record.dataValues.creatorId && req.isAuthenticated()) {
+                // set role owner
+                if (record.isOwner(req.user.id)) {
+                  if(req.userRoleNames.indexOf('owner') == -1 ) req.userRoleNames.push('owner');
+                }
+              }
+
+              // redirect to posts list inside group
+              if (res.locals.controller == 'group' && res.locals.action == 'findOne') {
+                return res.redirect(we.router.urlTo(
+                  'group.post.find', [record.id]
+                ));
+              }
+            }
+
+            return done();
+          })
         }
       },
       instanceMethods: {

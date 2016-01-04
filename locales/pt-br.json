@@ -9,6 +9,7 @@
   "post.highlight": "destacar",
   "post.unhighlight": "remover destaque",
   "post.findOne": "postagem",
+  "post.edit": "Editar postagem",
 
   "form-post-body": "Digite o texto que deseja compartilhar ou algo sobre o conteúdo em anexo",
   "form-placeholder-post-body": " ",
@@ -57,6 +58,8 @@
   "form-group-setAlias": "URL do grupo",
   "form-placeholder-group-setAlias": " ",
   "form-helper-group-setAlias": "Digite uma url interna para acessar o seu grupo ou deixe o campo vazio para usar a url padrão. Exemplo: /incrivel-conteudo",
+  "form-post-submit": "Salvar",
+  "form-post-cancel": "Cancelar",
 
   "group.filter.all": "Todos grupos",
   "group.filter.my": "Meus grupos",
@@ -71,5 +74,7 @@
   "group.join": "Entrar",
   "group.leave": "Sair do grupo",
   "group.category.null": "Sem categoria",
-  "group.category.all": "Todos posts"
+  "group.category.all": "Todos posts",
+
+  "sharebox.label.text": "Clique aqui para escrever ou compartilhar algo"
 }

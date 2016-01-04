@@ -113,7 +113,7 @@ module.exports = function Model(we) {
 
               // redirect to post inside group
               if (record.groupId && !res.locals.group) {
-                res.redirect(we.router.urlTo(
+                return res.redirect(we.router.urlTo(
                   'group.post.findOne', [record.groupId, record.id]
                 ));
               }

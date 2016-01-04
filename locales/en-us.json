@@ -9,6 +9,7 @@
   "post.highlight": "highlight",
   "post.unhighlight": "unhighlight",
   "post.findOne": "post",
+  "post.edit": "Edit post",
 
   "form-post-body": "Write your text or something about your file or image",
   "form-placeholder-post-body": " ",
@@ -57,6 +58,8 @@
   "form-group-setAlias": "Group URL",
   "form-placeholder-group-setAlias": " ",
   "form-helper-group-setAlias": "Write one url for your group or skip for use the default url",
+  "form-post-submit": "Save",
+  "form-post-cancel": "Cancel",
 
   "group.filter.all": "All groups",
   "group.filter.my": "My groups",
@@ -71,5 +74,7 @@
   "group.join": "Join",
   "group.leave": "Leave",
   "group.category.null": "No category",
-  "group.category.all": "All posts"
+  "group.category.all": "All posts",
+
+  "sharebox.label.text": "Click here to write or share something"
 }

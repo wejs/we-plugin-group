@@ -11,5 +11,6 @@
   {{#can permission='update_group' roleNames=locals.req.userRoleNames}}
     {{we-action-edit-btn 'group' locals.group locals.req locals.group.id}}
   {{/can}}
+  {{{flag-follow modelName='group' modelId=locals.group.id isFollowing=locals.group.metadata.isFollowing locals=locals }}}
 </div>
 {{/if}}

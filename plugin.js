@@ -3,20 +3,12 @@
  *
  * see http://wejs.org/docs/we/extend.plugin
  */
-var GACL = require('./lib');
 
 module.exports = function loadPlugin(projectPath, Plugin) {
 
   var plugin = new Plugin(__dirname);
   // set plugin configs
   plugin.setConfigs({
-    // default group permissions
-    groupPermissions: {
-      public: require('./lib/permissions/public.json'),
-      private: require('./lib/permissions/private.json'),
-      hidden: require('./lib/permissions/hidden.json')
-    },
-    groupRoles: ['manager', 'moderator', 'member'],
     permissions: {
       'post_highlight': {
         'group': 'group',
@@ -194,32 +186,35 @@ module.exports = function loadPlugin(projectPath, Plugin) {
         if (!group) return res.notFound();
         res.locals.group = group;
 
+        if (!group.metadata) group.metadata = {};
+
         res.locals.widgetContext = 'group-' + group.id;
 
         if (!req.user) return next();
 
-        data.we.db.models.membership.find({
-          where: { userId: req.user.id }
-        }).then(function (membership) {
-          res.locals.membership = membership;
-          req.membership = membership;
+        data.we.utils.async.parallel([
+          function loadMembership(next) {
+            data.we.db.models.membership.find({
+              where: { userId: req.user.id }
+            }).then(function (membership) {
 
-          next();
-        }).catch(res.queryError);
-      });
+              res.locals.membership = membership;
+              req.membership = membership;
+
+              next();
+            }).catch(res.queryError);
+          },
+          function loadFollowStatus(next) {
+            data.we.db.models.follow.isFollowing(req.user.id, 'group', group.id)
+            .then(function (isFollowing) {
+
+              res.locals.group.metadata.isFollowing = isFollowing;
+              next();
+            }).catch(next);
+          }
+        ], next);
+      }).catch(next);
     });
-  });
-
-  plugin.events.on('we:acl:after:init', function (we) {
-    we.acl.group = GACL;
-    we.acl.group.init(we);
-  });
-
-  plugin.events.on('router:add:acl:middleware', function(data) {
-    // bind acl middleware
-    data.middlewares.push(data.we.acl.group.canMiddleware.bind({
-      config: data.config
-    }));
   });
 
   plugin.addJs('we.sharebox', {
