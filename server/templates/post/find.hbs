@@ -1,7 +1,7 @@
 <div class="sharebox-area">
   <div id="sharebox-label">{{t 'sharebox.label.text'}}</div>
 
-  <div id="sharebox">{{{form 'post' action=createPostUrl}}}</div>
+  <div id="sharebox">{{{form 'post' postRecord action=createPostUrl}}}</div>
 
   <script>$(function(){
     we.sharebox.init('#sharebox-label', '#sharebox');

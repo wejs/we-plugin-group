@@ -10,7 +10,7 @@
       "allowNull": false
     },
     "category": {
-      "type": "vocabulary/category",
+      "type": "post/category",
       "vocabularyName": "Group-category",
       "canCreate": false,
       "formFieldMultiple": false,

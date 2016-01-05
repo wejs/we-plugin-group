@@ -1,3 +1,7 @@
+<div class="actions">
+{{we-action-create-btn resourceName req}}
+</div>
+
 {{#if req.user.id}}
 <div class="groups-menu">
   <ul class="nav nav-tabs nav-justified">
@@ -14,9 +18,9 @@
 {{#each data}}
   {{render-record-teaser modelName='group' record=this locals=..}}
 {{else}}
-  <p>{{t 'group.find.empty'}}</p>
+  <br><br>
+  <p class="text-center">{{t 'group.find.empty'}}</p>
 {{/each}}
-
 </div>
 
 {{paginate count=metadata.count limit=query.limit currentPage=query.page req=req}}

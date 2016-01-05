@@ -264,51 +264,6 @@ module.exports = function Model(we) {
           });
         },
 
-        // addContent: function addContent(contentModelName, contentId, cb) {
-        //   we.db.models.groupcontent.findOrCreate({
-        //     where: {
-        //       groupName: 'group',
-        //       groupId: this.id,
-        //       contentModelName: contentModelName,
-        //       contentId: contentId
-        //     },
-        //     defaults: {
-        //       groupName: 'group',
-        //       groupId: this.id,
-        //       contentModelName: contentModelName,
-        //       contentId: contentId
-        //     }
-        //   }).spread(function(groupcontent){
-        //     cb(null, groupcontent);
-        //   }).catch(cb);
-        // },
-
-        // removeContent: function removeContent(contentModelName, contentId, cb) {
-        //   we.db.models.groupcontent.find({
-        //     where: {
-        //       groupName: 'group',
-        //       groupId: this.id,
-        //       contentModelName: contentModelName,
-        //       contentId: contentId
-        //     }
-        //   }).then(function (groupcontent) {
-        //     groupcontent.destroy().then(function(){
-        //       cb();
-        //     }).catch(cb);
-        //   }).catch(cb);
-        // },
-
-        // findContent: function findContent(contentModelName, contentId, cb) {
-        //   we.db.models.groupcontent.find({
-        //     where: {
-        //       groupName: 'group',
-        //       groupId: this.id,
-        //       contentModelName: contentModelName,
-        //       contentId: contentId
-        //     }
-        //   }).then(function(r){cb(null, r);}).catch(cb)
-        // },
-
         loadMembersCount: function loadMembersCount(cb) {
           we.db.models.membership.count({
             where: {
@@ -316,15 +271,6 @@ module.exports = function Model(we) {
             }
           }).then(function(r){cb(null, r);}).catch(cb)
         },
-
-        // loadContentCount: function loadContentCount(cb) {
-        //   we.db.models.groupcontent.count({
-        //     where: {
-        //       groupName: 'group',
-        //       groupId: this.id
-        //     }
-        //   }).then(function(r){cb(null, r);}).catch(cb)
-        // },
 
         loadCounts: function loadCounts(cb) {
           var group = this;
@@ -337,24 +283,57 @@ module.exports = function Model(we) {
                 group.dataValues.meta.membersCount = count;
                 done();
               });
-            },
-            // function loadContentCount(done) {
-            //   group.loadContentCount(function(err, count) {
-            //     if(err) return done(err);
-            //     group.dataValues.meta.contentsCount = count;
-            //     done();
-            //   })
-            // }
+            }
+          ], cb);
+        },
+        generateDefaultWidgets: function generateDefaultWidgets(cb) {
+          var self = this;
+
+          we.utils.async.series([
+            function (done) {
+              we.db.models.widget.bulkCreate([{
+                title: '',
+                type: 'group-description',
+                regionName: 'sidebar',
+                context: 'group-' + self.id,
+                theme: we.config.themes.app
+              },{
+                title: we.i18n.__('group.post.menu.title'),
+                type: 'group-post-menu',
+                regionName: 'sidebar',
+                context: 'group-' + self.id,
+                theme: we.config.themes.app
+              }]).then(function() {
+                done();
+              }).catch(done);
+            }
           ], cb);
         }
       },
       hooks: {
-        // After create default roles and register admin member
+        // After create default user admin and widgets
         afterCreate: function(record, options, next) {
-          record.addMember(record.creatorId, { roles: ['manager']} )
-          .then(function(){
-            next();
-          }).catch(next);
+          we.utils.async.parallel([
+            record.generateDefaultWidgets.bind(record),
+            function registerAdmin(next) {
+              if (!record.creatorId) return next();
+
+              record.addMember(record.creatorId, { roles: ['manager']} )
+              .then(function() {
+                next();
+              }).catch(next);
+            },
+            function registerCreatorFollow(next) {
+              if (!record.creatorId) return next();
+
+              we.db.models.follow
+              .follow('group', record.id, record.creatorId, function (err, follow) {
+                if (err) return next(err);
+                we.log.verbose('we-plugin-group:group:afterCreate:newFollow:', follow);
+                next();
+              });
+            }
+          ], next);
         },
         afterFind: function(record, options, next) {
           if (!record) return next();
@@ -367,47 +346,31 @@ module.exports = function Model(we) {
           } else {
             record.loadCounts(next);
           }
+        },
+
+        afterDestroy: function afterDestroy(record, options, next) {
+          if (!record) return next();
+
+          we.utils.async.parallel([
+            function destroyWidgets(next) {
+              we.db.models.widget.destroy({
+                where: { context: 'group-'+record.id }
+              }).then(function(){
+                next();
+              }).catch(next);
+            },
+            function destroyPosts(next) {
+              we.db.models.post.destroy({
+                where: { groupId: record.id }
+              }).then(function(){
+                next();
+              }).catch(next);
+            }
+          ], next);
         }
       }
     }
   }
-
-  // we.hooks.on('we:before:send:okResponse',  function(data, done) {
-  //   if (data.res.locals.model != 'group') return done();
-
-  //   if (data.res.locals.record) {
-  //     if (_.isArray(data.res.locals.record)) {
-  //       return async.each(data.res.locals.record, function(record, next) {
-  //         record.loadCounts(function(err) {
-  //           if (err) return data.res.serverError(err);
-  //           if (!data.req.user.id) return next();
-
-  //           we.db.models.membership.find({where: {
-  //             modelId: record.id,
-  //             memberId: data.req.user.id
-  //           }}).then(function (result){
-  //             // save current user group membership in metadata
-  //             if (result) record.dataValues.meta.membership = result;
-  //             next();
-  //           });
-  //         });
-  //       }, done);
-  //     } else {
-  //       return data.res.locals.record.loadCounts(function(err) {
-  //         if (err) return data.res.serverError(err);
-  //           if (!data.req.user.id) return done();
-  //           we.db.models.membership.find({where: {
-  //             modelId: data.res.locals.record.id,
-  //             memberId: data.req.user.id
-  //           }}).then(function (result) {
-  //             // save current user group membership in metadata
-  //             if (result) data.res.locals.record.dataValues.meta.membership = result;
-  //             done();
-  //           });
-  //       });
-  //     }
-  //   }
-  // });
 
   return model;
 }

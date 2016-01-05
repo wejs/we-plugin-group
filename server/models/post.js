@@ -66,6 +66,7 @@ module.exports = function Model(we) {
       termFields: {
         category: {
           vocabularyName: 'Group-category',
+          formFieldType: 'post/category',
           canCreate: false,
           formFieldMultiple: false,
           onlyLowercase: false
@@ -125,21 +126,25 @@ module.exports = function Model(we) {
 
         // returns an url for post record alias
         urlAlias: function urlAlias(record) {
+          var alias, target;
+
           if (record.groupId) {
-            return {
-              alias:
-                '/'+ we.i18n.__('group') + record.groupId +
-                '/'+ we.i18n.__('post') +'/' + record.id ,
-              target: '/group/'+record.groupId+'/post/' + record.id,
-            }
+
+            alias = '/'+ we.i18n.__('group') + record.groupId +
+                '/'+ we.i18n.__('post') +'/' + record.id;
+            target = '/group/'+record.groupId+'/post/' + record.id;
           } else {
-            return {
-              alias:
-                '/'+ we.i18n.__('post') +'/' + record.id,
-                target: '/post/' + record.id,
-            }
+            alias  = '/'+ we.i18n.__('post') +'/' + record.id;
+            target = '/post/' + record.id;
           }
 
+          // skip if alias is = target
+          if (alias == target) return null;
+
+          return {
+            alias: alias,
+            target: target
+          }
         }
       },
 
