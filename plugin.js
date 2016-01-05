@@ -225,7 +225,14 @@ module.exports = function loadPlugin(projectPath, Plugin) {
     type: 'plugin', weight: 20, pluginName: 'we-plugin-group',
     path: 'files/public/we.sharebox.css'
   });
-
+  plugin.addCss('we.post', {
+    type: 'plugin', weight: 20, pluginName: 'we-plugin-group',
+    path: 'files/public/we.post.css'
+  });
+  plugin.addCss('we.group', {
+    type: 'plugin', weight: 20, pluginName: 'we-plugin-group',
+    path: 'files/public/we.group.css'
+  });
 
   return plugin;
 };

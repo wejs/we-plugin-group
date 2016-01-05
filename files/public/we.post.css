@@ -1,0 +1,48 @@
+/* session */
+
+body.post.findOne h1,
+body.post.find h1 {
+  display: none;
+}
+
+body.post.findOne .post-teaser {
+  padding-top: 15px;
+}
+
+/* post teaser*/
+
+.post-teaser {,
+  padding: 5px 0px;
+  margin-left: 58px;
+}
+
+.highlighted {
+  border-right: 3px solid red;
+}
+
+.post-body {
+  font-size: 1.2em;
+  white-space: pre-line;
+}
+
+.post-teaser .post-creator img {
+  float: left;
+  margin-top: 3px;
+  margin-left: -58px;
+}
+
+.post-actions {
+  margin: 10px 0px 15px;
+
+}
+
+.post-actions form {
+  display: inline-table;
+}
+
+/* posts */
+.posts {
+  border: 1px solid #aca;
+  padding: 10px;
+}
+s
