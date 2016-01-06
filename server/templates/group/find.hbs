@@ -1,6 +1,4 @@
-<div class="actions">
-{{we-action-create-btn resourceName req}}
-</div>
+<div class="groups-actions">{{we-action-create-btn resourceName req}}</div>
 
 {{#if req.user.id}}
 <div class="groups-menu">
@@ -17,6 +15,7 @@
 <div class="groups">
 {{#each data}}
   {{render-record-teaser modelName='group' record=this locals=..}}
+  <hr>
 {{else}}
   <br><br>
   <p class="text-center">{{t 'group.find.empty'}}</p>
