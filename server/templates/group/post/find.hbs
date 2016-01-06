@@ -1,3 +1,4 @@
+{{#can 'create_post' req.userRoleNames}}
 <div class="sharebox-area">
   <div id="sharebox-label">
     <button type="button" class="btn btn-default">
@@ -12,6 +13,7 @@
     we.sharebox.init('#sharebox-label', '#sharebox');
   })</script>
 </div>
+{{/can}}
 <div class="posts">
 {{#each data}}
   {{render-record-teaser modelName='post' record=this locals=..}}
