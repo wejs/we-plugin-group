@@ -37,14 +37,36 @@ module.exports = function loadPlugin(projectPath, Plugin) {
   });
 
   plugin.setResource({
-    name: 'post'
+    name: 'post',
+    findAll: {
+      search: {
+        since:  {
+          parser: 'since',
+          target: {
+            type: 'field',
+            field: 'createdAt'
+          }
+        }
+      }
+    }
   });
 
   plugin.setResource({
     parent: 'group',
     name: 'post',
     namePrefix: 'group.',
-    templateFolderPrefix: 'group/'
+    templateFolderPrefix: 'group/',
+    findAll: {
+      search: {
+        since:  {
+          parser: 'since',
+          target: {
+            type: 'field',
+            field: 'createdAt'
+          }
+        }
+      }
+    }
   });
 
   // ser plugin routes
@@ -132,36 +154,6 @@ module.exports = function loadPlugin(projectPath, Plugin) {
       responseType  : 'json',
       groupPermission : 'find_members'
     },
-    // 'get /group/:id([0-9]+)': {
-    //   controller    : 'group',
-    //   action        : 'findOne',
-    //   model         : 'group',
-    //   permission    : 'find_group'
-    // },
-    // 'get /group': {
-    //   controller    : 'group',
-    //   action        : 'find',
-    //   model         : 'group',
-    //   permission    : 'find_group'
-    // },
-    // 'post /group': {
-    //   controller    : 'group',
-    //   action        : 'create',
-    //   model         : 'group',
-    //   permission    : 'create_group'
-    // },
-    // 'put /group/:id([0-9]+)': {
-    //   controller    : 'group',
-    //   action        : 'update',
-    //   model         : 'group',
-    //   permission    : 'update_group'
-    // },
-    // 'delete /group/:id([0-9]+)': {
-    //   controller    : 'group',
-    //   action        : 'destroy',
-    //   model         : 'group',
-    //   permission    : 'delete_group'
-    // },
     'get /group/:groupId([0-9]+)/members/invites': {
       controller    : 'membershipinvite',
       action        : 'find',
@@ -220,6 +212,10 @@ module.exports = function loadPlugin(projectPath, Plugin) {
   plugin.addJs('we.sharebox', {
     type: 'plugin', weight: 20, pluginName: 'we-plugin-group',
     path: 'files/public/we.sharebox.js'
+  });
+  plugin.addJs('we.post', {
+    type: 'plugin', weight: 20, pluginName: 'we-plugin-group',
+    path: 'files/public/we.post.js'
   });
   plugin.addCss('we.sharebox', {
     type: 'plugin', weight: 20, pluginName: 'we-plugin-group',

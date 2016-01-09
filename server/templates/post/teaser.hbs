@@ -1,4 +1,4 @@
-<div id="post-teaser-{{record.id}}" class="post-teaser {{#if record.highlighted}}highlighted{{/if}}">
+<div id="post-teaser-{{record.id}}" class="post-teaser {{#if record.highlighted}}highlighted{{/if}}" data-we-model="post" data-we-modelId="{{record.id}}">
   <div class="post-header">
     <div class="post-creator">
       {{#link-to 'user.findOne' record.creatorId}}

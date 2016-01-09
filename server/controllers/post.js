@@ -7,11 +7,13 @@ module.exports = {
   find: function findAll(req, res) {
     var requiredModelsTerms = true;
 
+    // post teaser list, use with responseType=modal query param
+    if (req.query.teaserList)
+      res.locals.template = 'post/teaser-list';
     // filter by groupId
     if (res.locals.group) {
       // create link in group
       res.locals.createPostUrl = '/group/'+res.locals.group.id+'/post/create';
-
       // set group where filter
       res.locals.query.where.groupId = res.locals.group.id;
 
@@ -25,7 +27,6 @@ module.exports = {
     }
 
     if (req.query.category) {
-
       if (req.query.category == 'null') {
         // find posts without category
         req.query.category = null;
@@ -48,8 +49,6 @@ module.exports = {
         }]
       });
     }
-
-
 
     // follow
     if (req.isAuthenticated()) {
