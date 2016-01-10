@@ -6,7 +6,7 @@
 
 we.post = {
   lastCheckData: new Date().toISOString(),
-  checkNewPostsTime: 2000,
+  checkNewPostsTime: 10000,
   count: 0,
 
   init: function init() {

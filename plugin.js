@@ -36,19 +36,33 @@ module.exports = function loadPlugin(projectPath, Plugin) {
     }
   });
 
-  plugin.setResource({
-    name: 'post',
-    findAll: {
-      search: {
-        since:  {
-          parser: 'since',
-          target: {
-            type: 'field',
-            field: 'createdAt'
-          }
-        }
+  var postSearch = {
+    q:  {
+      parser: 'contains',
+      target: {
+        type: 'field',
+        field: 'body'
+      }
+    },
+    since:  {
+      parser: 'since',
+      target: {
+        type: 'field',
+        field: 'createdAt'
+      }
+    },
+    objectType: {
+      parser: 'equal',
+      target: {
+        type: 'field',
+        field: 'objectType'
       }
     }
+  };
+
+  plugin.setResource({
+    name: 'post',
+    findAll: { search: postSearch }
   });
 
   plugin.setResource({
@@ -56,17 +70,7 @@ module.exports = function loadPlugin(projectPath, Plugin) {
     name: 'post',
     namePrefix: 'group.',
     templateFolderPrefix: 'group/',
-    findAll: {
-      search: {
-        since:  {
-          parser: 'since',
-          target: {
-            type: 'field',
-            field: 'createdAt'
-          }
-        }
-      }
-    }
+    findAll: { search: postSearch }
   });
 
   // ser plugin routes

@@ -7,6 +7,8 @@
  */
 
 module.exports = function Model(we) {
+  var isEmpty = we.utils._.isEmpty;
+
   var model = {
     definition: {
       active:{
@@ -26,6 +28,7 @@ module.exports = function Model(we) {
       // image, text, link, video ...
       objectType: {
         type: we.db.Sequelize.STRING,
+        defaultValue: 'text',
         formFieldType: null
       },
       // flag to highlight posts inside group
@@ -88,6 +91,33 @@ module.exports = function Model(we) {
       },
 
       classMethods: {
+        setPostTeaser: function setPostTeaser(post, options, next) {
+          if (!post.body) return next();
+          var postBodyClean = we.utils.string(post.body)
+            .stripTags().s;
+
+          if (!postBodyClean) return next();
+
+          post.teaser = postBodyClean.substr(0, 150);
+
+          next(null, post);
+        },
+        setPostObjectType: function setPostObjectType(post, options, next) {
+
+          if (!isEmpty(post.images) && !isEmpty(post.attachment)) {
+            post.objectType = 'multimedia';
+          } else if (!isEmpty(post.images)) {
+            post.objectType = 'image';
+          } else if (!isEmpty(post.attachment)){
+            post.objectType = 'file';
+          } else if(post.wembedId) {
+            post.objectType = 'link';
+          } else {
+            post.objectType = 'text';
+          }
+
+          next();
+        },
         /**
          * Context loader, preload current request record and related data
          *
@@ -169,27 +199,15 @@ module.exports = function Model(we) {
 
       hooks: {
         beforeCreate: function beforeCreate(post, options, next) {
-          if (!post.body) return next();
-          var postBodyClean = we.utils.string(post.body)
-            .stripTags().s;
-
-          if (!postBodyClean) return next();
-
-          post.teaser = postBodyClean.substr(0, 150);
-
-          next(null, post);
+          we.db.models.post.setPostTeaser(post, options, function(){
+            we.db.models.post.setPostObjectType(post, options, next);
+          });
         },
 
         beforeUpdate: function beforeUpdate(post, options, next) {
-          if (!post.body) return next();
-          var postBodyClean = we.utils.string(post.body)
-            .stripTags().s;
-
-          if (!postBodyClean) return next();
-
-          post.teaser = postBodyClean.substr(0, 150);
-
-          next(null, post);
+          we.db.models.post.setPostTeaser(post, options, function(){
+            we.db.models.post.setPostObjectType(post, options, next);
+          });
         }
       }
     }
