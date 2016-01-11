@@ -160,7 +160,7 @@ module.exports = function Model(we) {
 
           if (record.groupId) {
 
-            alias = '/'+ we.i18n.__('group') + record.groupId +
+            alias = '/'+ we.i18n.__('group') +'/'+ record.groupId +
                 '/'+ we.i18n.__('post') +'/' + record.id;
             target = '/group/'+record.groupId+'/post/' + record.id;
           } else {

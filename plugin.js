@@ -9,6 +9,15 @@ module.exports = function loadPlugin(projectPath, Plugin) {
   var plugin = new Plugin(__dirname);
   // set plugin configs
   plugin.setConfigs({
+    post: {
+      objectTypes: {
+        'text': 'post.objectType.text',
+        'image': 'post.objectType.image',
+        'link': 'post.objectType.link',
+        'file': 'post.objectType.file',
+        'multimedia': 'post.objectType.multimedia'
+      }
+    },
     permissions: {
       'post_highlight': {
         'group': 'group',
@@ -62,7 +71,20 @@ module.exports = function loadPlugin(projectPath, Plugin) {
 
   plugin.setResource({
     name: 'post',
-    findAll: { search: postSearch }
+    findAll: { search: postSearch },
+    findOne: {
+      breadcrumbHandler: function findOneBreadcrumb(req, res, next) {
+        res.locals.breadcrumb =
+          '<ol class="breadcrumb">'+
+            '<li><a href="/">'+res.locals.__('Home')+'</a></li>'+
+            '<li><a href="'+req.we.router.urlTo('post.find', req.paramsArray)+
+          '">'+res.locals.__('post.find')+'</a></li>'+
+            '<li class="active">'+res.locals.__('post.find')+'</li>'+
+          '</ol>';
+
+        next();
+      }
+    }
   });
 
   plugin.setResource({
@@ -70,7 +92,38 @@ module.exports = function loadPlugin(projectPath, Plugin) {
     name: 'post',
     namePrefix: 'group.',
     templateFolderPrefix: 'group/',
-    findAll: { search: postSearch }
+    findAll: {
+      search: postSearch ,
+      breadcrumbHandler: function findBreadcrumb(req, res, next) {
+        if (!res.locals.group) return next();
+
+        res.locals.breadcrumb =
+          '<ol class="breadcrumb">'+
+            '<li><a href="/">'+res.locals.__('Home')+'</a></li>'+
+            '<li><a href="'+req.we.router.urlTo('group.find', req.paramsArray)+
+          '">'+res.locals.__('group.find')+'</a></li>'+
+            '<li class="active">'+res.locals.group.name+'</li>'+
+          '</ol>';
+
+        next();
+      }
+    },
+    findOne: {
+      breadcrumbHandler: function findOneBreadcrumb(req, res, next) {
+        if (!res.locals.group) return next();
+
+        res.locals.breadcrumb =
+          '<ol class="breadcrumb">'+
+            '<li><a href="/">'+res.locals.__('Home')+'</a></li>'+
+            '<li><a href="'+req.we.router.urlTo('group.find', req.paramsArray)+
+          '">'+res.locals.__('group.find')+'</a></li>'+
+            '<li><a href="/group/'+res.locals.group.id+'">'+res.locals.group.name+'</a></li>'+
+            '<li class="active">'+res.locals.__(res.locals.resourceName + '.find')+'</li>'+
+          '</ol>';
+
+        next();
+      }
+    }
   });
 
   // ser plugin routes

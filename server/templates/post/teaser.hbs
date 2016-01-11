@@ -24,7 +24,7 @@
   <div class="post-images">
     {{#ifCond record.images.length 1}}
       {{#each record.images}}
-        {{we-image-fancybox this 'large'}}
+        {{we-image-fancybox this 'medium'}}
       {{/each}}
     {{else}}
       {{we-fancybox-galery images=record.images id=record.id style="medium"}}

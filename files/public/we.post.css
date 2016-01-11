@@ -45,4 +45,7 @@ body.post.findOne .post-teaser {
   border: 1px solid #aca;
   padding: 10px;
 }
-s
+
+.post-search {
+  margin-bottom: 10px;
+}

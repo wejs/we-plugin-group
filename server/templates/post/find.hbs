@@ -1,19 +1,6 @@
-{{#can 'create_post' req.userRoleNames}}
-<div class="sharebox-area">
-  <div id="sharebox-label">
-    <button type="button" class="btn btn-primary">
-      <span class="glyphicon glyphicon-pencil"></span>
-    </button>
-    {{t 'sharebox.label.text'}}
-  </div>
+{{template 'post/sharebox' locals=this}}
+{{template 'post/search' locals=this}}
 
-  <div id="sharebox">{{{form 'post' postRecord action=createPostUrl}}}</div>
-
-  <script>$(function(){
-    we.sharebox.init('#sharebox-label', '#sharebox');
-  })</script>
-</div>
-{{/can}}
 <div id="haveNewPosts" style="display: none" class="text-center alert alert-info" role="alert"><a href="{{req.originalUrl}}">
   <span id="haveNewPostsCount"></span> {{t 'posts.news.count'}}
 </a></div>
