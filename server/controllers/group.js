@@ -119,68 +119,6 @@ module.exports = {
     });
   },
 
-  ///api/v1/group/:id/addContent/:contentModelName/:contentId'
-  addContent: function addContent(req, res, next) {
-    if (!req.params.contentModelName || !req.params.contentId) return next();
-
-    res.locals.group.addContent(
-      req.params.contentModelName, req.params.contentId,
-    function (err, groupcontent) {
-      if (err) return res.serverError(err);
-      if (!groupcontent) return res.serverError('groupcontent is empty in add content');
-
-      return req.we.hooks.trigger('we:before:send:group:addContent', {
-        req: req,
-        res: res,
-        data: groupcontent
-      }, function() {
-        // return 200 for added
-        res.status(200).send({
-          meta: res.locals.metadata
-        });
-      })
-    });
-  },
-
-  removeContent: function removeContent(req, res, next) {
-    if (!req.params.contentModelName || !req.params.contentId) return next();
-
-    res.locals.group.removeContent(
-      req.params.contentModelName, req.params.contentId,
-    function (err) {
-      if (err) return res.serverError(err);
-
-      return req.we.hooks.trigger('we:before:send:group:removeContent', {
-        req: req,
-        res: res
-      }, function() {
-        res.status(204).send();
-      });
-    });
-  },
-
-  findAllContent: function findAllContent(req, res) {
-    res.locals.query.where.groupName = 'group';
-    res.locals.query.where.groupId = res.locals.group.id;
-
-    req.we.db.models.groupcontent.findAndCountAll(res.locals.query)
-    .then(function(result) {
-      res.locals.data = result.rows;
-      return res.status(200).send({
-        groupcontent: result.rows,
-        meta: {
-          count: result.count
-        }
-      });
-    });
-  },
-
-  findContentByType: function findContentByType(req, res) {
-    res.locals.query.where.contentModelName = req.params.contentModelName;
-
-    req.we.controllers.group.findAllContent(req, res);
-  },
-
   inviteMember: function inviteMember(req, res) {
     if (!req.isAuthenticated) return res.forbidden();
 

@@ -142,37 +142,6 @@ module.exports = function loadPlugin(projectPath, Plugin) {
 
     // GROUPS
     //
-    'post /api/v1/group/:groupId([0-9]+)/addContent/:contentModelName/:contentId': {
-      controller    : 'group',
-      action        : 'addContent',
-      model         : 'group',
-      responseType  : 'json',
-      groupPermission : 'add_content'
-    },
-
-    'delete /api/v1/group/:groupId([0-9]+)/addContent/:contentModelName/:contentId': {
-      controller    : 'group',
-      action        : 'removeContent',
-      model         : 'group',
-      responseType  : 'json',
-      groupPermission : 'remove_content'
-    },
-
-    'get /api/v1/group/:groupId([0-9]+)/content': {
-      controller    : 'group',
-      action        : 'findAllContent',
-      model         : 'group',
-      responseType  : 'json',
-      groupPermission : 'find_content'
-    },
-
-    'get /api/v1/group/:groupId([0-9]+)/content/:contentModelName': {
-      controller    : 'group',
-      action        : 'findContentByType',
-      model         : 'group',
-      responseType  : 'json',
-      groupPermission : 'find_content'
-    },
 
     'post /api/v1/group/:groupId([0-9]+)/join': {
       controller    : 'group',
@@ -185,6 +154,12 @@ module.exports = function loadPlugin(projectPath, Plugin) {
       action        : 'leave',
       model         : 'group',
       responseType  : 'json'
+    },
+    'get /group/:groupId([0-9]+)/member/invite': {
+      controller    : 'membershipinvite',
+      action        : 'find',
+      model         : 'membershipinvite',
+      groupPermission    : 'manage_members'
     },
     'get /group/:groupId([0-9]+)/member': {
       controller    : 'group',
@@ -210,13 +185,7 @@ module.exports = function loadPlugin(projectPath, Plugin) {
       action        : 'findRoles',
       responseType  : 'json',
       groupPermission : 'find_members'
-    },
-    'get /group/:groupId([0-9]+)/members/invites': {
-      controller    : 'membershipinvite',
-      action        : 'find',
-      model         : 'membershipinvite',
-      groupPermission    : 'manage_members'
-    },
+    }
   });
 
   plugin.events.on('we:config:getAppBootstrapConfig', function(opts) {
