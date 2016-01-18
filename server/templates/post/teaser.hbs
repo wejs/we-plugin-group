@@ -50,4 +50,6 @@
       {{/if}}
     </div>
   </div>
+
+  {{{comments modelName="post" modelId=record.id comments=record.metadata.comments count=record.metadata.commentsCount locals=locals}}}
 </div>

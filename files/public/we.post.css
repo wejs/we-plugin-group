@@ -13,7 +13,7 @@ body.post.findOne .post-teaser {
 
 .post-teaser {,
   padding: 5px 0px;
-  margin: 5px 0px 15px 58px;
+  margin: 5px 0px 15px 5px;
 }
 
 .highlighted {
@@ -25,10 +25,19 @@ body.post.findOne .post-teaser {
   white-space: pre-line;
 }
 
-.post-teaser .post-creator img {
+/*.post-teaser .post-creator img {
   float: left;
   margin-top: 3px;
   margin-left: -58px;
+}*/
+
+.post-header,
+.post-body {
+  margin-bottom: 5px;
+}
+
+.post-teaser .post-creator img {
+  vertical-align: top;
 }
 
 .post-actions {
@@ -41,8 +50,8 @@ body.post.findOne .post-teaser {
 }
 
 /* posts */
-.posts {
-  border: 1px solid #aca;
+.posts > .post-teaser {
+  box-shadow: 2px 1px 2px 2px #ccc;
   padding: 10px;
 }
 
