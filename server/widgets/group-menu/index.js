@@ -26,22 +26,22 @@ module.exports = function (projectPath, Widget) {
     widget.menu.addLinks([
       {
         id: 'posts',
-        text: '<i class="fa fa-content"></i> '+req.__('group.post.find'),
-        href: '/group/'+res.locals.group.id+'/member',
+        text: '<i class="fa fa-file"></i> '+req.__('group.post.find'),
+        href: '/group/'+res.locals.group.id+'/post',
         weight: 1,
-        name: 'member'
+        name: 'posts'
       },
       {
         id: 'members',
         text: '<i class="fa fa-user"></i> '+req.__('group.findMembers'),
         href: '/group/'+res.locals.group.id+'/member',
-        weight: 1,
+        weight: 3,
         name: 'member'
       },
       {
         id: 'invite',
         text: '<i class="fa fa-plus"></i> '+req.__('membershipinvite.find'),
-        href: '/group/'+res.locals.group.id+'/member-invite',
+        href: '/group/'+res.locals.group.id+'/member/invite',
         weight: 5,
         name: 'member.invite'
       }
