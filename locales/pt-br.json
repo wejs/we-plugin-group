@@ -67,6 +67,8 @@
 
   "widget.group-description.label": "Nome e logo do grupo",
   "widget.groups-search-form.label": "Formulário de busca de grupos",
+  "widget.group-menu.label": "Menu do grupo atual",
+  "widget.group-post-menu.label": "Menu das postagens do grupo atual",
 
   "group.search.title": "Buscar por:",
   "group.find.empty": "Nenhum grupo encontrado",
@@ -89,5 +91,10 @@
   "post.objectType.link": "Link",
   "post.objectType.file": "Arquivo",
   "post.objectType.multimedia": "Multimídia",
-  "post.objectType.submit": "Buscar"
+  "post.objectType.submit": "Buscar",
+
+  "group.findMembers": "Membros",
+  "membershipinvite.find": "Convites",
+  "membershipinvite.invite.error.userNotFound": "O usuário não foi encontrado",
+  "membershipinvite.invite.error.alreadyInvited": "O usuário é membro do grupo ou já foi convidado"
 }

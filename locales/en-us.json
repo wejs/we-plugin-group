@@ -68,6 +68,9 @@
 
   "widget.group-description.label": "Group name and logo",
   "widget.groups-search-form.label": "Groups search form",
+  "widget.group-menu.label": "Current group menu",
+  "widget.group-post-menu.label": "Current group posts menu",
+
   "group.search.title": "Search for:",
   "group.find.empty": "No groups found",
 
@@ -89,5 +92,13 @@
   "post.objectType.link": "Link",
   "post.objectType.file": "File",
   "post.objectType.multimedia": "Multimedia",
-  "post.objectType.submit": "Submit"
+  "post.objectType.submit": "Submit",
+
+  "group.invite.error.same.as.authenticated.user": "This is your email!",
+  "group.invite.error.is.member": "This user is member of this group",
+
+  "group.findMembers": "Members",
+  "membershipinvite.find": "Membership invites",
+  "membershipinvite.invite.error.userNotFound": "User not found",
+  "membershipinvite.invite.error.alreadyInvited": "The user is group member or already are invited"
 }

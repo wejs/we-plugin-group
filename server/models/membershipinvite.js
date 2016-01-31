@@ -22,8 +22,7 @@ module.exports = function Model(we) {
         allowNull: false
       },
       text: {
-        type: we.db.Sequelize.TEXT,
-        allowNull: false
+        type: we.db.Sequelize.TEXT
       },
       email: {
         type: we.db.Sequelize.STRING,
@@ -31,23 +30,14 @@ module.exports = function Model(we) {
       }
     },
     options: {
-      getterMethods   : {
-        acceptUrl: function() {
-          return 'acceptUrl';
-        },
-        refuseUrl: function() {
-          return 'refuseUrl';
-        }
-      },
       instanceMethods: {
-        toJSON: function() {
-          var obj = this.get();
+        sendEmail: function sendEmail (req, res, data, cb) {
 
-          // obj.acceptUrl = this.acceptUrl;
-          // obj.refuseUrl = '';
-
-
-          return obj;
+          we.email.sendEmail('GroupMembershipinvite', {
+            email: data.user.email,
+            subject: res.locals.__('group.membershipinvite.subject.email') + ' - ' + data.group.name,
+            replyTo: data.inviter.displayName + ' <'+data.inviter.email+'>'
+          }, data, cb);
         }
       }
     }

@@ -159,13 +159,49 @@ module.exports = function loadPlugin(projectPath, Plugin) {
       controller    : 'membershipinvite',
       action        : 'find',
       model         : 'membershipinvite',
-      groupPermission    : 'manage_members'
+      groupPermission    : 'manage_members',
+      titleHandler : 'i18n',
+      titleI18n: 'membershipinvite.find'
     },
+    'post /group/:groupId([0-9]+)/member/invite': {
+      controller    : 'membershipinvite',
+      action        : 'find',
+      model         : 'membershipinvite',
+      titleHandler : 'i18n',
+      titleI18n: 'membershipinvite.find'
+    },
+
+    'get /group/:groupId([0-9]+)/member/invite/create': {
+      controller    : 'membershipinvite',
+      action        : 'create',
+      model         : 'membershipinvite',
+      titleHandler : 'i18n',
+      titleI18n: 'membershipinvite.create'
+    },
+    'post /group/:groupId([0-9]+)/member/invite/create': {
+      controller    : 'membershipinvite',
+      action        : 'create',
+      model         : 'membershipinvite',
+      titleHandler : 'i18n',
+      titleI18n: 'membershipinvite.create'
+    },
+
+    'get /group/:groupId([0-9]+)/find-user-to-invite': {
+      controller    : 'membershipinvite',
+      action        : 'find',
+      model         : 'membershipinvite',
+      groupPermission    : 'manage_members',
+      titleHandler : 'i18n',
+      titleI18n: 'membershipinvite.find'
+    },
+
     'get /group/:groupId([0-9]+)/member': {
       controller    : 'group',
       action        : 'findMembers',
       model         : 'membership',
-      groupPermission : 'find_members'
+      groupPermission : 'find_members',
+      titleHandler : 'i18n',
+      titleI18n: 'group.findMembers'
     },
     'post /group/:groupId([0-9]+)/member': {
       controller    : 'group',
@@ -174,12 +210,20 @@ module.exports = function loadPlugin(projectPath, Plugin) {
       responseType  : 'json',
       groupPermission : 'manage_members'
     },
-    'post /group/:groupId([0-9]+)/accept-invite/': {
+
+    'get /group/:groupId([0-9]+)/accept-invite': {
       controller    : 'group',
       action        : 'acceptInvite',
       model         : 'membership',
       responseType  : 'json'
     },
+    'post /group/:groupId([0-9]+)/accept-invite': {
+      controller    : 'group',
+      action        : 'acceptInvite',
+      model         : 'membership',
+      responseType  : 'json'
+    },
+
     'get /group/:groupId([0-9]+)/role': {
       controller    : 'group',
       action        : 'findRoles',
