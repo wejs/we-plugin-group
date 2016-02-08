@@ -285,10 +285,17 @@ module.exports = function Model(we) {
           var hostname = this.req.we.config.hostname;
           var record = this.res.locals.data;
 
+          var localeText;
+          if (record.title) {
+            localeText = 'post.'+record.objectType+'.create.notification.title.withTitle';
+          } else {
+            localeText = 'post.'+record.objectType+'.create.notification.title';
+          }
+
           // after create register one notifications
           this.req.we.db.models.notification.create({
             locale: this.res.locals.locale,
-            title: this.res.locals.__('post.'+record.bjectType+'.create.notification.title', {
+            title: this.res.locals.__(localeText, {
               actorURL: hostname+'/user/'+actor.id,
               recordURL: hostname+'/post/'+record.id,
               hostname: hostname,
@@ -329,12 +336,19 @@ module.exports = function Model(we) {
           var hostname = this.req.we.config.hostname;
           var record = this.res.locals.data;
 
+          var localeText;
+          if (record.title) {
+            localeText = 'post.'+record.objectType+'.create.notification.inGroup.title.withTitle';
+          } else {
+            localeText = 'post.'+record.objectType+'.create.notification.inGroup.title';
+          }
+
           // after create register one notifications
           this.req.we.db.models.notification.create({
             locale: this.res.locals.locale,
-            title: this.res.locals.__('post.'+record.bjectType+'.create.notification.inGroup.title', {
+            title: this.res.locals.__(localeText, {
               actorURL: hostname+'/user/'+actor.id,
-              recorURL: hostname+'/post/'+record.id,
+              recordURL: hostname+'/post/'+record.id,
               groupURL: hostname+'/group/'+group.id,
               hostname: hostname,
               actor: actor,

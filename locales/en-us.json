@@ -106,6 +106,29 @@
   "membershipinvite.invite.error.userNotFound": "User not found",
   "membershipinvite.invite.error.alreadyInvited": "The user is group member or already are invited",
 
-  "post.create.notification.title": "<a href='{{actorURL}}'>{{actor.displayName}}</a> created the post <a href='{{recordURL}}'>{{record.title}}</a>",
-  "post.create.notification.inGroup.title": "<a href='{{actorURL}}'>{{actor.displayName}}</a> created the post <a href='{{recordURL}}'>{{record.title}}</a> in group <a href='{{groupURL}}'>{{groupName}}</a>"
+  "post.text.create.notification.title": "<a href='{{actorURL}}'>{{actor.displayName}}</a> published one text",
+  "post.text.create.notification.inGroup.title": "<a href='{{actorURL}}'>{{actor.displayName}}</a> published one text in <a href='{{groupURL}}'>{{group.name}}</a> group",
+  "post.text.create.notification.title.withTitle": "<a href='{{actorURL}}'>{{actor.displayName}}</a> published the text <a href='{{recordURL}}'>{{record.title}}</a>",
+  "post.text.create.notification.inGroup.title.withTitle": "<a href='{{actorURL}}'>{{actor.displayName}}</a> published the text <a href='{{recordURL}}'>{{record.title}}</a> in <a href='{{groupURL}}'>{{group.name}}</a> group",
+
+  "post.image.create.notification.title": "<a href='{{actorURL}}'>{{actor.displayName}}</a> published one image",
+  "post.image.create.notification.inGroup.title": "<a href='{{actorURL}}'>{{actor.displayName}}</a> published one image in <a href='{{groupURL}}'>{{group.name}}</a> group",
+  "post.image.create.notification.title.withTitle": "<a href='{{actorURL}}'>{{actor.displayName}}</a> published the image <a href='{{recordURL}}'>{{record.title}}</a>",
+  "post.image.create.notification.inGroup.title.withTitle": "<a href='{{actorURL}}'>{{actor.displayName}}</a> published the image <a href='{{recordURL}}'>{{record.title}}</a> in <a href='{{groupURL}}'>{{group.name}}</a> group",
+
+  "post.link.create.notification.title": "<a href='{{actorURL}}'>{{actor.displayName}}</a> send one link",
+  "post.link.create.notification.inGroup.title": "<a href='{{actorURL}}'>{{actor.displayName}}</a> send one link to <a href='{{groupURL}}'>{{group.name}}</a> group",
+  "post.link.create.notification.title.withTitle": "<a href='{{actorURL}}'>{{actor.displayName}}</a> send the link <a href='{{recordURL}}'>{{record.title}}</a>",
+  "post.link.create.notification.inGroup.title.withTitle": "<a href='{{actorURL}}'>{{actor.displayName}}</a> send <a href='{{recordURL}}'>{{record.title}}</a> link in <a href='{{groupURL}}'>{{group.name}}</a> group",
+
+  "post.video.create.notification.title": "<a href='{{actorURL}}'>{{actor.displayName}}</a> send one video",
+  "post.video.create.notification.inGroup.title": "<a href='{{actorURL}}'>{{actor.displayName}}</a> send one video in <a href='{{groupURL}}'>{{group.name}}</a> group",
+  "post.video.create.notification.title.withTitle": "<a href='{{actorURL}}'>{{actor.displayName}}</a> send the <a href='{{recordURL}}'>{{record.title}}</a> video",
+  "post.video.create.notification.inGroup.title.withTitle": "<a href='{{actorURL}}'>{{actor.displayName}}</a> send the <a href='{{recordURL}}'>{{record.title}}</a> video in <a href='{{groupURL}}'>{{group.name}}</a> group",
+
+  "post.file.create.notification.title": "<a href='{{actorURL}}'>{{actor.displayName}}</a> send one file",
+  "post.file.create.notification.inGroup.title": "<a href='{{actorURL}}'>{{actor.displayName}}</a> send one file in <a href='{{groupURL}}'>{{group.name}}</a> group",
+
+  "post.file.create.notification.title.withTitle": "<a href='{{actorURL}}'>{{actor.displayName}}</a> send the <a href='{{recordURL}}'>{{record.title}}</a> file",
+  "post.file.create.notification.inGroup.title.withTitle": "<a href='{{actorURL}}'>{{actor.displayName}}</a> send the file  <a href='{{recordURL}}'>{{record.title}}</a> in <a href='{{groupURL}}'>{{group.name}}</a> group"
 }

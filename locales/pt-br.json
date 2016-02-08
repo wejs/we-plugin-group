@@ -107,24 +107,26 @@
   "post.text.create.notification.title.withTitle": "<a href='{{actorURL}}'>{{actor.displayName}}</a> publicou o texto <a href='{{recordURL}}'>{{record.title}}</a>",
   "post.text.create.notification.inGroup.title.withTitle": "<a href='{{actorURL}}'>{{actor.displayName}}</a> publicou o texto <a href='{{recordURL}}'>{{record.title}}</a> no grupo <a href='{{groupURL}}'>{{group.name}}</a>",
 
-
-
-
   "post.image.create.notification.title": "<a href='{{actorURL}}'>{{actor.displayName}}</a> publicou uma imagem",
   "post.image.create.notification.inGroup.title": "<a href='{{actorURL}}'>{{actor.displayName}}</a> publicou uma imagem no grupo <a href='{{groupURL}}'>{{group.name}}</a>",
-  "post.image.create.notification.title.withTitle": "<a href='{{actorURL}}'>{{actor.displayName}}</a> publicou uma imagem",
-  "post.image.create.notification.inGroup.title.withTitle": "<a href='{{actorURL}}'>{{actor.displayName}}</a> publicou uma imagem no grupo <a href='{{groupURL}}'>{{group.name}}</a>",
+  "post.image.create.notification.title.withTitle": "<a href='{{actorURL}}'>{{actor.displayName}}</a> publicou a imagem <a href='{{recordURL}}'>{{record.title}}</a>",
+  "post.image.create.notification.inGroup.title.withTitle": "<a href='{{actorURL}}'>{{actor.displayName}}</a> publicou a imagem <a href='{{recordURL}}'>{{record.title}}</a> no grupo <a href='{{groupURL}}'>{{group.name}}</a>",
 
   "post.link.create.notification.title": "<a href='{{actorURL}}'>{{actor.displayName}}</a> publicou um link",
   "post.link.create.notification.inGroup.title": "<a href='{{actorURL}}'>{{actor.displayName}}</a> publicou um link no grupo <a href='{{groupURL}}'>{{group.name}}</a>",
-  "post.link.create.notification.title.withTitle": "<a href='{{actorURL}}'>{{actor.displayName}}</a> publicou um link",
-  "post.link.create.notification.inGroup.title.withTitle": "<a href='{{actorURL}}'>{{actor.displayName}}</a> publicou um link no grupo <a href='{{groupURL}}'>{{group.name}}</a>",
-
-
+  "post.link.create.notification.title.withTitle": "<a href='{{actorURL}}'>{{actor.displayName}}</a> publicou o link <a href='{{recordURL}}'>{{record.title}}</a>",
+  "post.link.create.notification.inGroup.title.withTitle": "<a href='{{actorURL}}'>{{actor.displayName}}</a> publicou o link <a href='{{recordURL}}'>{{record.title}}</a> no grupo <a href='{{groupURL}}'>{{group.name}}</a>",
 
   "post.video.create.notification.title": "<a href='{{actorURL}}'>{{actor.displayName}}</a> publicou um vídeo",
   "post.video.create.notification.inGroup.title": "<a href='{{actorURL}}'>{{actor.displayName}}</a> publicou um vídeo no grupo <a href='{{groupURL}}'>{{group.name}}</a>",
 
+  "post.video.create.notification.title.withTitle": "<a href='{{actorURL}}'>{{actor.displayName}}</a> publicou o vídeo <a href='{{recordURL}}'>{{record.title}}</a>",
+  "post.video.create.notification.inGroup.title.withTitle": "<a href='{{actorURL}}'>{{actor.displayName}}</a> publicou o vídeo <a href='{{recordURL}}'>{{record.title}}</a> no grupo <a href='{{groupURL}}'>{{group.name}}</a>",
+
+
   "post.file.create.notification.title": "<a href='{{actorURL}}'>{{actor.displayName}}</a> enviou um arquivo",
-  "post.file.create.notification.inGroup.title": "<a href='{{actorURL}}'>{{actor.displayName}}</a> enviou um arquivo no grupo <a href='{{groupURL}}'>{{group.name}}</a>"
+  "post.file.create.notification.inGroup.title": "<a href='{{actorURL}}'>{{actor.displayName}}</a> enviou um arquivo no grupo <a href='{{groupURL}}'>{{group.name}}</a>",
+
+  "post.file.create.notification.title": "<a href='{{actorURL}}'>{{actor.displayName}}</a> enviou o arquivo <a href='{{recordURL}}'>{{record.title}}</a>",
+  "post.file.create.notification.inGroup.title": "<a href='{{actorURL}}'>{{actor.displayName}}</a> enviou o arquivo <a href='{{recordURL}}'>{{record.title}}</a> no grupo <a href='{{groupURL}}'>{{group.name}}</a>"
 }
