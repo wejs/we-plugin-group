@@ -94,6 +94,24 @@ module.exports = {
 
     res.locals.Model.findAll(res.locals.query)
     .then(function (records) {
+      if (req.we.plugins['we-plugin-notification'] && req.isAuthenticated()) {
+        // mark this posts as read
+        var recordIds = records.map(function(r){
+          return r.id;
+        });
+
+        req.we.db.models.notification.update({
+          read: true
+        }, {
+          where: {
+            modelId: recordIds,
+            modelName: 'post',
+            userId: req.user.id
+          }
+        }).catch(function (err) {
+          req.we.log.error(err);
+        });
+      }
 
       res.locals.data = records;
 
@@ -107,6 +125,28 @@ module.exports = {
 
     }).catch(res.queryError);
   },
+
+  findOne: function findOne(req, res, next) {
+    if (!res.locals.data) return next();
+    // mark this post notifications as read
+    if (req.we.plugins['we-plugin-notification'] && req.isAuthenticated()) {
+
+      req.we.db.models.notification.update({
+        read: true
+      }, {
+        where: {
+          modelId: res.locals.data.id,
+          modelName: 'post' ,
+          userId: req.user.id
+        }
+      }).catch(function (err) {
+        req.we.log.error(err);
+      });
+    }
+
+    return res.ok();
+  },
+
   create: function create(req, res) {
     if (!res.locals.template) res.locals.template = res.locals.model + '/' + 'create';
 
