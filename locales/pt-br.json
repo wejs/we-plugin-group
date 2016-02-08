@@ -11,6 +11,10 @@
   "post.findOne": "postagem",
   "post.edit": "Editar postagem",
 
+  "form-post-title": "Título",
+  "form-helper-post-title": "título ou assunto relacionado há sua postagem (opcional)",
+  "form-placeholder-post-title": " ",
+
   "form-post-body": "Digite o texto que deseja compartilhar ou algo sobre o conteúdo em anexo",
   "form-placeholder-post-body": " ",
   "form-helper-post-body": " ",
@@ -96,5 +100,31 @@
   "group.findMembers": "Membros",
   "membershipinvite.find": "Convites",
   "membershipinvite.invite.error.userNotFound": "O usuário não foi encontrado",
-  "membershipinvite.invite.error.alreadyInvited": "O usuário é membro do grupo ou já foi convidado"
+  "membershipinvite.invite.error.alreadyInvited": "O usuário é membro do grupo ou já foi convidado",
+
+  "post.text.create.notification.title": "<a href='{{actorURL}}'>{{actor.displayName}}</a> publicou um texto",
+  "post.text.create.notification.inGroup.title": "<a href='{{actorURL}}'>{{actor.displayName}}</a> publicou um texto no grupo <a href='{{groupURL}}'>{{group.name}}</a>",
+  "post.text.create.notification.title.withTitle": "<a href='{{actorURL}}'>{{actor.displayName}}</a> publicou o texto <a href='{{recordURL}}'>{{record.title}}</a>",
+  "post.text.create.notification.inGroup.title.withTitle": "<a href='{{actorURL}}'>{{actor.displayName}}</a> publicou o texto <a href='{{recordURL}}'>{{record.title}}</a> no grupo <a href='{{groupURL}}'>{{group.name}}</a>",
+
+
+
+
+  "post.image.create.notification.title": "<a href='{{actorURL}}'>{{actor.displayName}}</a> publicou uma imagem",
+  "post.image.create.notification.inGroup.title": "<a href='{{actorURL}}'>{{actor.displayName}}</a> publicou uma imagem no grupo <a href='{{groupURL}}'>{{group.name}}</a>",
+  "post.image.create.notification.title.withTitle": "<a href='{{actorURL}}'>{{actor.displayName}}</a> publicou uma imagem",
+  "post.image.create.notification.inGroup.title.withTitle": "<a href='{{actorURL}}'>{{actor.displayName}}</a> publicou uma imagem no grupo <a href='{{groupURL}}'>{{group.name}}</a>",
+
+  "post.link.create.notification.title": "<a href='{{actorURL}}'>{{actor.displayName}}</a> publicou um link",
+  "post.link.create.notification.inGroup.title": "<a href='{{actorURL}}'>{{actor.displayName}}</a> publicou um link no grupo <a href='{{groupURL}}'>{{group.name}}</a>",
+  "post.link.create.notification.title.withTitle": "<a href='{{actorURL}}'>{{actor.displayName}}</a> publicou um link",
+  "post.link.create.notification.inGroup.title.withTitle": "<a href='{{actorURL}}'>{{actor.displayName}}</a> publicou um link no grupo <a href='{{groupURL}}'>{{group.name}}</a>",
+
+
+
+  "post.video.create.notification.title": "<a href='{{actorURL}}'>{{actor.displayName}}</a> publicou um vídeo",
+  "post.video.create.notification.inGroup.title": "<a href='{{actorURL}}'>{{actor.displayName}}</a> publicou um vídeo no grupo <a href='{{groupURL}}'>{{group.name}}</a>",
+
+  "post.file.create.notification.title": "<a href='{{actorURL}}'>{{actor.displayName}}</a> enviou um arquivo",
+  "post.file.create.notification.inGroup.title": "<a href='{{actorURL}}'>{{actor.displayName}}</a> enviou um arquivo no grupo <a href='{{groupURL}}'>{{group.name}}</a>"
 }

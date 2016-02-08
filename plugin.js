@@ -71,7 +71,10 @@ module.exports = function loadPlugin(projectPath, Plugin) {
 
   plugin.setResource({
     name: 'post',
-    findAll: { search: postSearch },
+    findAll: {
+      search: postSearch,
+      query: { limit: 10 }
+    },
     findOne: {
       breadcrumbHandler: function findOneBreadcrumb(req, res, next) {
         res.locals.breadcrumb =
@@ -93,6 +96,7 @@ module.exports = function loadPlugin(projectPath, Plugin) {
     namePrefix: 'group.',
     templateFolderPrefix: 'group/',
     findAll: {
+      query: { limit: 10 },
       search: postSearch ,
       breadcrumbHandler: function findBreadcrumb(req, res, next) {
         if (!res.locals.group) return next();

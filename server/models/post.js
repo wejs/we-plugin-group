@@ -16,6 +16,11 @@ module.exports = function Model(we) {
         defaultValue: true,
         formFieldType: null
       },
+      // optional title
+      title: {
+        type: we.db.Sequelize.STRING
+      },
+      // auto set teaser
       teaser: {
         type: we.db.Sequelize.TEXT,
         formFieldType: null
@@ -23,6 +28,8 @@ module.exports = function Model(we) {
       // post content
       body: {
         type: we.db.Sequelize.TEXT,
+        formFieldType: 'html',
+        formFieldHeight: '300',
         allowNull: false
       },
       // image, text, link, video ...
@@ -66,6 +73,8 @@ module.exports = function Model(we) {
     },
 
     options: {
+      titleField: 'title',
+
       termFields: {
         category: {
           vocabularyName: 'Group-category',
@@ -180,7 +189,7 @@ module.exports = function Model(we) {
 
       instanceMethods: {
         /**
-         *et url path instance method
+         * set url path instance method
          *
          * @return {String} url path
          */
@@ -194,6 +203,158 @@ module.exports = function Model(we) {
               'post.findOne', [this.id]
             );
           }
+        },
+
+        registerCreatePostNotifications: function registerCreatePostNotifications(req, res, next) {
+
+          if (
+            !req.we.plugins['we-plugin-notification'] ||
+            !req.we.plugins['we-plugin-flag'] ||
+            !res.locals.data
+          ) return next();
+
+          var record = this;
+
+          var followers = [];
+
+          req.we.utils.async.series([
+            function getFollowers(done) {
+              if (!req.isAuthenticated()) return done();
+
+              var where;
+
+              if (res.locals.data.groupId) {
+                where = {
+                  $or: [
+                    {
+                      modelName: 'group',
+                      modelId: res.locals.group.id
+                    },
+                    {
+                      modelName: 'user',
+                      modelId: req.user.id
+                    },
+                  ]
+                };
+              } else {
+                where = {
+                  modelName: 'user',
+                  modelId: req.user.id
+                };
+              }
+              // get followers
+              req.we.db.models.follow.findAll({
+                Where: where,
+                attributes: ['userId']
+              }).then(function (r) {
+                followers = r;
+                done();
+              }).catch(done);
+            }
+          ], function (err) {
+            if (err) return next(err);
+
+            res.locals.createdPostUserNotified = {};
+
+            if (res.locals.group) {
+              req.we.utils.async.eachSeries(followers, record.createNotificationInGroup.bind({
+                req: req, res: res, we: req.we
+              }), next);
+            } else {
+              req.we.utils.async.eachSeries(followers, record.createNotification.bind({
+                req: req, res: res, we: req.we
+              }), next);
+            }
+          });
+        },
+
+        /**
+         * Create one post notification without group
+         *
+         * @param  {Object}   follower follow record
+         * @param  {Function} done     callback
+         */
+        createNotification: function createNotification(follower, done) {
+          if (
+            this.res.locals.createdPostUserNotified[follower.userId] ||
+            (follower.userId == this.res.locals.data.creatorId)
+          ) return done();
+
+          var self = this;
+          var actor = this.req.user;
+          var hostname = this.req.we.config.hostname;
+          var record = this.res.locals.data;
+
+          // after create register one notifications
+          this.req.we.db.models.notification.create({
+            locale: this.res.locals.locale,
+            title: this.res.locals.__('post.'+record.bjectType+'.create.notification.title', {
+              actorURL: hostname+'/user/'+actor.id,
+              recordURL: hostname+'/post/'+record.id,
+              hostname: hostname,
+              actor: actor,
+              record: record
+            }),
+            text: record.teaser,
+            redirectUrl: hostname+'/post/'+record.id,
+            userId: follower.userId,
+            actorId: actor.id,
+            modelName: 'post',
+            modelId: record.id,
+            type: 'post-created-in-group'
+          }).then(function (r) {
+
+            self.res.locals.createdPostUserNotified[follower.userId] = true;
+
+            self.req.we.log.verbose('New post notification, id: ', r.id);
+            done(null, r);
+          }).catch(done);
+        },
+
+        /**
+         * Create one post notification in group
+         *
+         * @param  {Object}   follower follow record
+         * @param  {Function} done     callback
+         */
+        createNotificationInGroup: function createNotificationInGroup(follower, done) {
+          if (
+            this.res.locals.createdPostUserNotified[follower.userId] ||
+            (follower.userId == this.res.locals.data.creatorId)
+          ) return done();
+
+          var self = this;
+          var group = this.res.locals.group;
+          var actor = this.req.user;
+          var hostname = this.req.we.config.hostname;
+          var record = this.res.locals.data;
+
+          // after create register one notifications
+          this.req.we.db.models.notification.create({
+            locale: this.res.locals.locale,
+            title: this.res.locals.__('post.'+record.bjectType+'.create.notification.inGroup.title', {
+              actorURL: hostname+'/user/'+actor.id,
+              recorURL: hostname+'/post/'+record.id,
+              groupURL: hostname+'/group/'+group.id,
+              hostname: hostname,
+              actor: actor,
+              record: record,
+              group: group
+            }),
+            text: record.teaser,
+            redirectUrl: '/post/'+record.id,
+            userId: follower.userId,
+            actorId: actor.id,
+            modelName: 'post',
+            modelId: record.id,
+            type: 'post-created-in-group'
+          }).then(function (r) {
+
+            self.res.locals.createdPostUserNotified[follower.userId] = true;
+
+            self.req.we.log.verbose('New post notification in group, id: ', r.id);
+            done(null, r);
+          }).catch(done);
         }
       },
 

@@ -69,6 +69,8 @@ module.exports = function Model(we) {
     },
 
     options: {
+      titleField: 'name',
+
       termFields: {
         categories: {
           vocabularyName: 'Group-category',

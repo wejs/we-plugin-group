@@ -11,6 +11,10 @@
   "post.findOne": "post",
   "post.edit": "Edit post",
 
+  "form-post-title": "Title",
+  "form-helper-post-title": "Title or subject about your post (optional)",
+  "form-placeholder-post-title": " ",
+
   "form-post-body": "Write your text or something about your file or image",
   "form-placeholder-post-body": " ",
   "form-helper-post-body": " ",
@@ -100,5 +104,8 @@
   "group.findMembers": "Members",
   "membershipinvite.find": "Membership invites",
   "membershipinvite.invite.error.userNotFound": "User not found",
-  "membershipinvite.invite.error.alreadyInvited": "The user is group member or already are invited"
+  "membershipinvite.invite.error.alreadyInvited": "The user is group member or already are invited",
+
+  "post.create.notification.title": "<a href='{{actorURL}}'>{{actor.displayName}}</a> created the post <a href='{{recordURL}}'>{{record.title}}</a>",
+  "post.create.notification.inGroup.title": "<a href='{{actorURL}}'>{{actor.displayName}}</a> created the post <a href='{{recordURL}}'>{{record.title}}</a> in group <a href='{{groupURL}}'>{{groupName}}</a>"
 }

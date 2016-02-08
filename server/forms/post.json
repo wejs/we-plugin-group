@@ -5,8 +5,12 @@
   "action": "/post/create",
 
   "fields": {
+    "title": {
+      "type": "text",
+      "allowNull": true
+    },
     "body": {
-      "type": "textarea",
+      "type": "html",
       "allowNull": false
     },
     "category": {

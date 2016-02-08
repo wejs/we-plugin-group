@@ -110,16 +110,10 @@ module.exports = {
   create: function create(req, res) {
     if (!res.locals.template) res.locals.template = res.locals.model + '/' + 'create';
 
-    if (!res.locals.data) res.locals.data = {};
-
-     req.we.utils._.merge(res.locals.data, req.query);
+    res.locals.data = req.body;
 
     if (req.method === 'POST') {
       if (req.isAuthenticated()) req.body.creatorId = req.user.id;
-
-      // set temp record for use in validation errors
-      res.locals.data = req.query;
-      req.we.utils._.merge(res.locals.data, req.body);
 
       if (res.locals.group) {
         req.body.groupId = res.locals.group.id;
@@ -129,10 +123,17 @@ module.exports = {
       .then(function (record) {
         res.locals.data = record;
 
+        try {
+          // register notifications in parallel
+          record.registerCreatePostNotifications(req, res, function(err){
+            if (err) req.we.log.error('Error in create post notifications: ',err);
+          });
+        } catch (e) {
+          req.we.log.error(e);
+        }
         if (!res.locals.redirectTo) {
           res.locals.redirectTo = record.getUrlPath();
         }
-
         // if dont are inside one group
         return res.created();
       }).catch(res.queryError);
