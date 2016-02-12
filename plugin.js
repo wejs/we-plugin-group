@@ -174,6 +174,29 @@ module.exports = function loadPlugin(projectPath, Plugin) {
       titleHandler : 'i18n',
       titleI18n: 'membershipinvite.find'
     },
+    'get /group/my-invites': {
+      controller    : 'membershipinvite',
+      action        : 'find',
+      model         : 'membershipinvite',
+      template      : 'membershipinvite/find-my',
+      resourceName  : 'membershipinvite.find',
+      currentUserInvites: true,
+      titleHandler : 'i18n',
+      titleI18n: 'group.my.invites',
+      breadcrumbHandler: function findOneBreadcrumb(req, res, next) {
+
+        res.locals.breadcrumb =
+          '<ol class="breadcrumb">'+
+            '<li><a href="/">'+res.locals.__('Home')+'</a></li>'+
+            '<li><a href="'+req.we.router.urlTo('group.find', req.paramsArray)+'">'+
+              res.locals.__('group.find')+
+            '</a></li>'+
+            '<li class="active">'+res.locals.__('membershipinvite.find')+'</li>'+
+          '</ol>';
+
+        next();
+      }
+    },
 
     'get /group/:groupId([0-9]+)/member/invite/create': {
       controller    : 'membershipinvite',

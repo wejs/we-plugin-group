@@ -36,8 +36,14 @@ body.post.findOne .post-teaser {
   margin-bottom: 5px;
 }
 
-.post-teaser .post-creator img {
+.post-creator img {
   vertical-align: top;
+  float: left;
+  margin: 0px 8px 3px 0px;
+}
+
+.post-creator {
+  min-height: 50px;
 }
 
 .post-actions {
@@ -58,3 +64,4 @@ body.post.findOne .post-teaser {
 .post-search {
   margin-bottom: 10px;
 }
+

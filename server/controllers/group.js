@@ -76,32 +76,41 @@ module.exports = {
   join: function join(req, res) {
     if (!req.isAuthenticated()) return res.forbidden();
 
+    var group = res.locals.group;
+
     res.locals.group.userJoin(req.user.id, function (err, membership) {
       if (err) return res.serverError(err);
+      // delete invites for user in group
+      req.we.db.models.membershipinvite
+      .spentInvite(group.id, req.user.email, req.user.id)
+      .then(function(){
 
-      if (res.locals.group.privacity != 'public') {
-        if (res.locals.redirectTo) {
-          return res.goTo( res.locals.redirectTo );
-        } else {
-          return res.status(200).send({
-            membershiprequest: membership
-          });
+        if (res.locals.group.privacity != 'public') {
+          if (res.locals.redirectTo) {
+            return res.goTo( res.locals.redirectTo );
+          } else {
+            return res.status(200).send({
+              membershiprequest: membership
+            });
+          }
         }
-      }
 
-      req.we.db.models.follow.follow('group', res.locals.group.id, req.user.id, function (err, follow) {
-        if (err) return res.serverError(err);
-        if (!follow) return res.forbidden();
+        req.we.db.models.follow.follow('group', res.locals.group.id, req.user.id, function (err, follow) {
+          if (err) return res.serverError(err);
+          if (!follow) return res.forbidden();
 
-        if (res.locals.redirectTo) {
-          res.goTo( res.locals.redirectTo );
-        } else {
-          res.status(200).send({
-            membership: membership,
-            follow: follow
-          });
-        }
-      });
+          if (res.locals.redirectTo) {
+            res.goTo( res.locals.redirectTo );
+          } else {
+            res.status(200).send({
+              membership: membership,
+              follow: follow
+            });
+          }
+        });
+
+      }).catch(res.queryError);
+
     });
   },
 

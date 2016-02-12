@@ -30,9 +30,29 @@ module.exports = function Model(we) {
       }
     },
     options: {
+      classMethods: {
+        /**
+         * Delete one membership invite record
+         *
+         * @param  {Number} groupId
+         * @param  {String} email
+         * @param  {Number} userId
+         * @return {Object}         Sequelize destroy promisse
+         */
+        spentInvite: function spentInvite(groupId, email, userId) {
+          return we.db.models.membershipinvite.destroy({
+            where: {
+              groupId: groupId,
+              $or: [
+                { email: email },
+                { userId: userId }
+              ]
+            }
+          });
+        }
+      },
       instanceMethods: {
         sendEmail: function sendEmail (req, res, data, cb) {
-
           we.email.sendEmail('GroupMembershipinvite', {
             email: data.user.email,
             subject: res.locals.__('group.membershipinvite.subject.email') + ' - ' + data.group.name,

@@ -10,6 +10,7 @@
   "post.unhighlight": "remover destaque",
   "post.findOne": "postagem",
   "post.edit": "Editar postagem",
+  "post.category.label": "Categoria",
 
   "form-post-title": "Título",
   "form-helper-post-title": "título ou assunto relacionado há sua postagem (opcional)",
@@ -74,7 +75,7 @@
   "widget.group-menu.label": "Menu do grupo atual",
   "widget.group-post-menu.label": "Menu das postagens do grupo atual",
 
-  "group.search.title": "Buscar por:",
+  "group.search.title": "Buscar:",
   "group.find.empty": "Nenhum grupo encontrado",
 
   "group.join": "Entrar",
@@ -128,5 +129,7 @@
   "post.file.create.notification.inGroup.title": "<a href='{{actorURL}}'>{{actor.displayName}}</a> enviou um arquivo no grupo <a href='{{groupURL}}'>{{group.name}}</a>",
 
   "post.file.create.notification.title": "<a href='{{actorURL}}'>{{actor.displayName}}</a> enviou o arquivo <a href='{{recordURL}}'>{{record.title}}</a>",
-  "post.file.create.notification.inGroup.title": "<a href='{{actorURL}}'>{{actor.displayName}}</a> enviou o arquivo <a href='{{recordURL}}'>{{record.title}}</a> no grupo <a href='{{groupURL}}'>{{group.name}}</a>"
+  "post.file.create.notification.inGroup.title": "<a href='{{actorURL}}'>{{actor.displayName}}</a> enviou o arquivo <a href='{{recordURL}}'>{{record.title}}</a> no grupo <a href='{{groupURL}}'>{{group.name}}</a>",
+
+  "membershipinvite.find.my.empty": "Você não tem convites de grupos"
 }

@@ -15,6 +15,16 @@
           {{/link-to}}
         </span>
       {{/if}}
+
+      {{#if record.category}}
+        <br>
+        <span>
+          {{t 'post.category.label'}}:
+          {{#each record.category}}
+            <em>{{this}}</em>
+          {{/each}}
+        </span>
+      {{/if}}
     </div>
   </div>
   {{#if record.title}}

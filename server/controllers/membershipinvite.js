@@ -79,12 +79,19 @@ module.exports = {
   },
 
   find: function findAll(req, res, next) {
+    if (!req.isAuthenticated()) return res.forbidden();
+
     res.locals.query.groupId = req.params.groupId;
 
     var functions = [];
 
+    if (res.locals.currentUserInvites) {
+      res.locals.query.where.email = req.user.email;
+      res.locals.showInvites = true;
+    }
+
     functions.push(function findUserToInvite (done) {
-      if (!req.body.email) return done();
+      if (!req.body.email || res.locals.currentUserInvites) return done();
 
       req.we.db.models.user.findOne({
         where: { email: req.body.email }

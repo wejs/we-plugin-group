@@ -34,7 +34,8 @@ module.exports = function Model(we) {
         formFieldType: 'select' ,
         fieldOptions: {
           'public': 'Public',
-          'private': 'Private'
+          //  TODO add suport to private group
+          // 'private': 'Private'
         }
       },
 
@@ -161,45 +162,6 @@ module.exports = function Model(we) {
             cb(null, membershiprequest);
           }).catch(cb);
         },
-//         addMember: function addMemberWithRole(userId, roleName, cb) {
-//           if (!roleName) roleName = 'member';
-
-//           if (we.config.groupRoles.indexOf(roleName) == -1)
-//             return cb(new Error('Invalid role')) ;
-
-// console.log('<<')
-
-//           we.db.models.membership.findOrCreate({
-//             where: {
-//               memberId: userId,
-//               modelId: this.id
-//             },
-//             defaults: {
-//               memberId: userId,
-//               modelId: this.id,
-//               roles: roleName
-//             }
-//           }).spread(function(membership) {
-//             console.log('>>')
-//             cb(null, membership);
-//           }).catch(cb);
-//         },
-
-        // removeMember: function removeMember(userId, cb) {
-        //   var groupId = this.id;
-        //   we.db.models.membership.find({
-        //     where: {
-        //       memberId: userId,
-        //       modelId: groupId
-        //     }
-        //   }).then(function(membership) {
-        //     if (!membership) return cb(null, null);
-
-        //     membership.destroy().then(function() {
-        //       we.db.models.follow.unFollow('group', groupId, userId, cb);
-        //     }).catch(cb);
-        //   }).catch(cb);
-        // },
 
         /**
          * Invite one user to group
@@ -227,7 +189,15 @@ module.exports = function Model(we) {
           }).catch(cb);
         },
 
+        /**
+         * add user to group (join)
+         *
+         * @param  {String}   userId
+         * @param  {Function} cb     callbak
+         */
         userJoin: function userJoin(userId, cb) {
+          var group = this;
+
           if (this.privacity == 'public') {
             this.addMember(userId, {
               roles: 'member'
@@ -235,7 +205,22 @@ module.exports = function Model(we) {
               cb();
             }).catch(cb);
           } else {
-            this.createRequestMembership(userId, cb);
+            we.db.models.membershipinvite.findOne({
+              where: {
+                groupId: group.id,
+                userId: userId
+              }
+            }).then(function(invite) {
+              if (invite) {
+                group.addMember(userId, {
+                  roles: 'member'
+                }).then(function(){
+                  cb();
+                }).catch(cb);
+              } else {
+                group.createRequestMembership(userId, cb);
+              }
+            }).catch(cb);
           }
         },
 
