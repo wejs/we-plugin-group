@@ -283,13 +283,22 @@ module.exports = function Model(we) {
                 type: 'group-description',
                 regionName: 'sidebar',
                 context: 'group-' + self.id,
-                theme: we.config.themes.app
+                theme: we.config.themes.app,
+                weight: 0
+              },{
+                title: we.i18n.__('group.menu.title'),
+                type: 'group-menu',
+                regionName: 'sidebar',
+                context: 'group-' + self.id,
+                theme: we.config.themes.app,
+                weight: 1
               },{
                 title: we.i18n.__('group.post.menu.title'),
                 type: 'group-post-menu',
                 regionName: 'sidebar',
                 context: 'group-' + self.id,
-                theme: we.config.themes.app
+                theme: we.config.themes.app,
+                weight: 2
               }]).then(function() {
                 done();
               }).catch(done);

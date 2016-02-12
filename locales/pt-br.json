@@ -135,5 +135,7 @@
 
   "group.membershipinvite.subject.email": "{{inviter.displayName}} convidou você para o grupo {{group.name}}",
 
-  "group.join.success": "Agora você é membro do grupo {{group.name}}"
+  "group.join.success": "Agora você é membro do grupo {{group.name}}",
+
+  "group.menu.title": "Menu"
 }
