@@ -43,7 +43,8 @@ module.exports = function (projectPath, Widget) {
         text: '<i class="fa fa-plus"></i> '+req.__('membershipinvite.find'),
         href: '/group/'+res.locals.group.id+'/member/invite',
         weight: 5,
-        name: 'member.invite'
+        name: 'member.invite',
+        role: 'groupManager'
       }
     ]);
 

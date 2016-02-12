@@ -5,8 +5,8 @@
  */
 
 module.exports = function loadPlugin(projectPath, Plugin) {
-
   var plugin = new Plugin(__dirname);
+
   // set plugin configs
   plugin.setConfigs({
     post: {
@@ -29,6 +29,64 @@ module.exports = function loadPlugin(projectPath, Plugin) {
       'post': __dirname + '/server/forms/post.json'
     }
   });
+
+  //- BREADCRUMB
+
+  plugin.router.breadcrumb.add('findOnePost', function findOneBreadcrumb(req, res, next) {
+    res.locals.breadcrumb =
+      '<ol class="breadcrumb">'+
+        '<li><a href="/">'+res.locals.__('Home')+'</a></li>'+
+        '<li><a href="'+req.we.router.urlTo('post.find', req.paramsArray)+
+      '">'+res.locals.__('post.find')+'</a></li>'+
+        '<li class="active">'+res.locals.__('post.find')+'</li>'+
+      '</ol>';
+
+    next();
+  });
+
+  plugin.router.breadcrumb.add('findAllPostInGroup', function findAllPostInGroupBreadcrumb(req, res, next) {
+    if (!res.locals.group) return next();
+
+    res.locals.breadcrumb =
+      '<ol class="breadcrumb">'+
+        '<li><a href="/">'+res.locals.__('Home')+'</a></li>'+
+        '<li><a href="'+req.we.router.urlTo('group.find', req.paramsArray)+
+      '">'+res.locals.__('group.find')+'</a></li>'+
+        '<li class="active">'+res.locals.group.name+'</li>'+
+      '</ol>';
+
+    next();
+  });
+
+  plugin.router.breadcrumb.add('findOnePostInGroup', function findOnePostInGroupBreadcrumb(req, res, next) {
+    if (!res.locals.group) return next();
+
+    res.locals.breadcrumb =
+      '<ol class="breadcrumb">'+
+        '<li><a href="/">'+res.locals.__('Home')+'</a></li>'+
+        '<li><a href="'+req.we.router.urlTo('group.find', req.paramsArray)+
+      '">'+res.locals.__('group.find')+'</a></li>'+
+        '<li><a href="/group/'+res.locals.group.id+'">'+res.locals.group.name+'</a></li>'+
+        '<li class="active">'+res.locals.__(res.locals.resourceName + '.find')+'</li>'+
+      '</ol>';
+
+    next();
+  });
+
+  plugin.router.breadcrumb.add('findUserGroupInvite', function findUserGroupInviteBreadcrumb(req, res, next) {
+    res.locals.breadcrumb =
+      '<ol class="breadcrumb">'+
+        '<li><a href="/">'+res.locals.__('Home')+'</a></li>'+
+        '<li><a href="'+req.we.router.urlTo('group.find', req.paramsArray)+'">'+
+          res.locals.__('group.find')+
+        '</a></li>'+
+        '<li class="active">'+res.locals.__('membershipinvite.find')+'</li>'+
+      '</ol>';
+
+    next();
+  });
+
+  //-- ROUTES
 
   plugin.setResource({
     name: 'group',
@@ -76,17 +134,7 @@ module.exports = function loadPlugin(projectPath, Plugin) {
       query: { limit: 10 }
     },
     findOne: {
-      breadcrumbHandler: function findOneBreadcrumb(req, res, next) {
-        res.locals.breadcrumb =
-          '<ol class="breadcrumb">'+
-            '<li><a href="/">'+res.locals.__('Home')+'</a></li>'+
-            '<li><a href="'+req.we.router.urlTo('post.find', req.paramsArray)+
-          '">'+res.locals.__('post.find')+'</a></li>'+
-            '<li class="active">'+res.locals.__('post.find')+'</li>'+
-          '</ol>';
-
-        next();
-      }
+      breadcrumbHandler: 'findOnePost'
     }
   });
 
@@ -98,35 +146,10 @@ module.exports = function loadPlugin(projectPath, Plugin) {
     findAll: {
       query: { limit: 10 },
       search: postSearch ,
-      breadcrumbHandler: function findBreadcrumb(req, res, next) {
-        if (!res.locals.group) return next();
-
-        res.locals.breadcrumb =
-          '<ol class="breadcrumb">'+
-            '<li><a href="/">'+res.locals.__('Home')+'</a></li>'+
-            '<li><a href="'+req.we.router.urlTo('group.find', req.paramsArray)+
-          '">'+res.locals.__('group.find')+'</a></li>'+
-            '<li class="active">'+res.locals.group.name+'</li>'+
-          '</ol>';
-
-        next();
-      }
+      breadcrumbHandler: 'findAllPostInGroup'
     },
     findOne: {
-      breadcrumbHandler: function findOneBreadcrumb(req, res, next) {
-        if (!res.locals.group) return next();
-
-        res.locals.breadcrumb =
-          '<ol class="breadcrumb">'+
-            '<li><a href="/">'+res.locals.__('Home')+'</a></li>'+
-            '<li><a href="'+req.we.router.urlTo('group.find', req.paramsArray)+
-          '">'+res.locals.__('group.find')+'</a></li>'+
-            '<li><a href="/group/'+res.locals.group.id+'">'+res.locals.group.name+'</a></li>'+
-            '<li class="active">'+res.locals.__(res.locals.resourceName + '.find')+'</li>'+
-          '</ol>';
-
-        next();
-      }
+      breadcrumbHandler: 'findOnePostInGroup'
     }
   });
 
@@ -146,7 +169,6 @@ module.exports = function loadPlugin(projectPath, Plugin) {
 
     // GROUPS
     //
-
     'post /api/v1/group/:groupId([0-9]+)/join': {
       controller    : 'group',
       action        : 'join',
@@ -182,20 +204,8 @@ module.exports = function loadPlugin(projectPath, Plugin) {
       resourceName  : 'membershipinvite.find',
       currentUserInvites: true,
       titleHandler : 'i18n',
-      titleI18n: 'group.my.invites',
-      breadcrumbHandler: function findOneBreadcrumb(req, res, next) {
-
-        res.locals.breadcrumb =
-          '<ol class="breadcrumb">'+
-            '<li><a href="/">'+res.locals.__('Home')+'</a></li>'+
-            '<li><a href="'+req.we.router.urlTo('group.find', req.paramsArray)+'">'+
-              res.locals.__('group.find')+
-            '</a></li>'+
-            '<li class="active">'+res.locals.__('membershipinvite.find')+'</li>'+
-          '</ol>';
-
-        next();
-      }
+      titleI18n: 'group.invites',
+      breadcrumbHandler: 'findUserGroupInvite'
     },
 
     'get /group/:groupId([0-9]+)/member/invite/create': {
@@ -250,7 +260,6 @@ module.exports = function loadPlugin(projectPath, Plugin) {
       model         : 'membership',
       responseType  : 'json'
     },
-
     'get /group/:groupId([0-9]+)/role': {
       controller    : 'group',
       action        : 'findRoles',
@@ -267,44 +276,57 @@ module.exports = function loadPlugin(projectPath, Plugin) {
 
   plugin.events.on('we:express:set:params', function (data) {
     // group pre-loader
-    data.express.param('groupId', function (req, res, next, id) {
-      if (!/^\d+$/.exec(String(id))) return res.notFound();
+    data.express.param('groupId', plugin.expressGroupIdParams);
+  });
 
-      data.we.db.models.group.findById(id)
-      .then(function (group) {
-        if (!group) return res.notFound();
-        res.locals.group = group;
+  plugin.expressGroupIdParams = function expressGroupIdParams(req, res, next, id) {
+    if (!/^\d+$/.exec(String(id))) return res.notFound();
 
-        if (!group.metadata) group.metadata = {};
+    var we = req.we;
 
-        res.locals.widgetContext = 'group-' + group.id;
+    we.db.models.group.findById(id)
+    .then(function (group) {
+      if (!group) return res.notFound();
+      res.locals.group = group;
 
-        if (!req.user) return next();
+      if (!group.metadata) group.metadata = {};
 
-        data.we.utils.async.parallel([
-          function loadMembership(next) {
-            data.we.db.models.membership.find({
-              where: { userId: req.user.id }
-            }).then(function (membership) {
+      res.locals.widgetContext = 'group-' + group.id;
+
+      if (!req.user) return next();
+
+      we.utils.async.parallel([
+        function loadMembership(next) {
+          we.db.models.membership.find({
+            where: { userId: req.user.id }
+          }).then(function (membership) {
+
+            if (membership) {
+              var roles = membership.roles;
+              req.userRoleNames = req.userRoleNames.concat(roles.map(function (r) {
+                return 'group' + r.charAt(0).toUpperCase() + r.slice(1);
+              }));
+
+              req.userRoleNames.push('groupMember');
 
               res.locals.membership = membership;
               req.membership = membership;
+            }
 
-              next();
-            }).catch(res.queryError);
-          },
-          function loadFollowStatus(next) {
-            data.we.db.models.follow.isFollowing(req.user.id, 'group', group.id)
-            .then(function (isFollowing) {
+            next();
+          }).catch(res.queryError);
+        },
+        function loadFollowStatus(next) {
+          we.db.models.follow.isFollowing(req.user.id, 'group', group.id)
+          .then(function (isFollowing) {
 
-              res.locals.group.metadata.isFollowing = isFollowing;
-              next();
-            }).catch(next);
-          }
-        ], next);
-      }).catch(next);
-    });
-  });
+            res.locals.group.metadata.isFollowing = isFollowing;
+            next();
+          }).catch(next);
+        }
+      ], next);
+    }).catch(next);
+  }
 
   plugin.addJs('we.sharebox', {
     type: 'plugin', weight: 20, pluginName: 'we-plugin-group',

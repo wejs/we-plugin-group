@@ -94,6 +94,8 @@ module.exports = {
             });
           }
         }
+        // add message
+
 
         req.we.db.models.follow.follow('group', res.locals.group.id, req.user.id, function (err, follow) {
           if (err) return res.serverError(err);
