@@ -4,16 +4,18 @@ module.exports = {
     if (!req.isAuthenticated()) return res.forbidden();
     if (!res.locals.template) res.locals.template = res.locals.model + '/' + 'create';
 
+    var we = req.we;
+
     res.locals.data = null;
     res.locals.cantInviteMessage = null;
     var user;
 
     if (req.method === 'POST') {
 
-      req.we.utils.async.series([
+      we.utils.async.series([
         function checkIfUserCanBeInvited(done) {
           // check if user exists
-          req.we.db.models.user.findOne({
+          we.db.models.user.findOne({
             where: { id: req.body.userId }
           }).then(function (u) {
             if (!u) {
@@ -25,8 +27,8 @@ module.exports = {
 
             // check if user is member or already are invited
             res.locals.group.hasMember(user)
-            .then(function (isMember){
-              if (!isMember) {
+            .then(function (isMember) {
+              if (isMember) {
                 res.locals.cantInviteMessage = 'membershipinvite.invite.error.alreadyInvited';
               }
 
@@ -34,6 +36,27 @@ module.exports = {
             }).catch(done);
           }).catch(done);
         },
+
+        function checkIfAreInvited(done) {
+          if (!user) return done();
+
+          we.db.models.membershipinvite.findOne({
+            where: {
+              groupId: res.locals.group.id,
+              $or: [
+                { userId: user.id },
+                { email: user.email }
+              ]
+            }
+          }).then(function(membershipinvite) {
+            if (membershipinvite) {
+              res.locals.cantInviteMessage = 'membershipinvite.invite.error.alreadyInvited';
+            }
+
+            done();
+          }).catch(done);
+        },
+
         function createInvite(done) {
           if (res.locals.cantInviteMessage) return done();
 
@@ -49,12 +72,15 @@ module.exports = {
           }).catch(done);
         },
         function sendEmail(done) {
-          if (!res.locals.record || !user) return done();
+          if (!res.locals.data || !user) return done();
           // send email
-          res.locals.record.sendEmail(req, res, {
+          res.locals.data.sendEmail(req, res, {
             user: user,
             inviter: req.user,
-            group: res.locals.group
+            group: res.locals.group,
+            acceptURL: we.config.hostname +'/group/'+ res.locals.group.id+'/join/'+res.locals.data.id,
+            groupURL: we.config.hostname +'/group/'+ res.locals.group.id,
+            we: we
           },function (err) {
             if (err) req.we.log.error('membershipinvite:sendEmail:', err);
             done();

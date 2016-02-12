@@ -133,5 +133,9 @@
   "post.file.create.notification.title.withTitle": "<a href='{{actorURL}}'>{{actor.displayName}}</a> send the <a href='{{recordURL}}'>{{record.title}}</a> file",
   "post.file.create.notification.inGroup.title.withTitle": "<a href='{{actorURL}}'>{{actor.displayName}}</a> send the file  <a href='{{recordURL}}'>{{record.title}}</a> in <a href='{{groupURL}}'>{{group.name}}</a> group",
 
-  "membershipinvite.find.my.empty": "You dont have new group invites"
+  "membershipinvite.find.my.empty": "You dont have new group invites",
+
+  "group.membershipinvite.subject.email": "{{inviter.displayName}} invited you to {{group.name}} group",
+
+  "group.join.success": "Now you are member of {{group.name}} group"
 }

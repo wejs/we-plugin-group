@@ -1,8 +1,36 @@
-{{#we-grid items=data cols=4}}
-<div class="group-member-teaser">
-  {{#link-to 'user.findOne' user.id}}
-  <div class="member-avatar">{{we-avatar id=userId style='medium'}}</div>
-  <div class="member-name">{{user.displayName}}</div>
-  {{/link-to}}
-</div>
-{{/we-grid}}
+<table class="table">
+
+<tbody>
+  {{#each data}}
+    <tr class="group-member-teaser">
+      <td>
+        {{#link-to 'user.findOne' user.id}}
+          <span class="member-avatar">{{we-avatar id=userId style='medium'}}</span>
+          <span class="member-username">{{user.username}}</span><br>
+          <span class="member-name">{{user.displayName}}</span>
+        {{/link-to}}
+      </td>
+      <td>
+        {{roles}}
+      </td>
+      <td>
+
+        <div class="actions">
+          <div><a href="#">Follow</a></div>
+          <a href="#">Follow</a>
+        </div>
+
+      </td>
+    </tr>
+  {{else}}
+    <tr>
+      <td>
+        <div class="jumbotron text-center">
+          {{t 'group.member.empty'}}
+        </div>
+      </td>
+    </tr>
+  {{/each}}
+</tbody>
+
+</table>

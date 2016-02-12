@@ -55,7 +55,11 @@ module.exports = function Model(we) {
         sendEmail: function sendEmail (req, res, data, cb) {
           we.email.sendEmail('GroupMembershipinvite', {
             email: data.user.email,
-            subject: res.locals.__('group.membershipinvite.subject.email') + ' - ' + data.group.name,
+            subject: res.locals.__('group.membershipinvite.subject.email', {
+              inviter: data.inviter,
+              user: data.user,
+              group: data.group
+            }),
             replyTo: data.inviter.displayName + ' <'+data.inviter.email+'>'
           }, data, cb);
         }

@@ -175,6 +175,14 @@ module.exports = function loadPlugin(projectPath, Plugin) {
       model         : 'group',
       responseType  : 'json'
     },
+
+    'get /api/v1/group/:groupId([0-9]+)/join/:membershpinviteKeyId([0-9]+)': {
+      controller    : 'group',
+      action        : 'join',
+      model         : 'group',
+      responseType  : 'json'
+    },
+
     'post /api/v1/group/:groupId([0-9]+)/leave': {
       controller    : 'group',
       action        : 'leave',
@@ -277,6 +285,8 @@ module.exports = function loadPlugin(projectPath, Plugin) {
   plugin.events.on('we:express:set:params', function (data) {
     // group pre-loader
     data.express.param('groupId', plugin.expressGroupIdParams);
+
+    data.express.param('membershpinviteKeyId', plugin.expressValidInviteParams);
   });
 
   plugin.expressGroupIdParams = function expressGroupIdParams(req, res, next, id) {
@@ -325,6 +335,17 @@ module.exports = function loadPlugin(projectPath, Plugin) {
           }).catch(next);
         }
       ], next);
+    }).catch(next);
+  }
+
+  /**
+   * Valid one route with membershpinviteKeyId param
+   */
+  plugin.expressValidInviteParams = function expressValidInviteParams(req, res, next, id) {
+    req.we.db.models.membershipinvite.findById(id)
+    .then(function (membershipinvite) {
+      if (!membershipinvite) return res.notFound();
+      next();
     }).catch(next);
   }
 

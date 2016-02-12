@@ -95,7 +95,12 @@ module.exports = {
           }
         }
         // add message
-
+        res.addMessage('success', {
+          text: 'group.join.success',
+          vars :{
+            group: group
+          }
+        });
 
         req.we.db.models.follow.follow('group', res.locals.group.id, req.user.id, function (err, follow) {
           if (err) return res.serverError(err);

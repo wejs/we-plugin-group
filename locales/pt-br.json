@@ -131,5 +131,9 @@
   "post.file.create.notification.title": "<a href='{{actorURL}}'>{{actor.displayName}}</a> enviou o arquivo <a href='{{recordURL}}'>{{record.title}}</a>",
   "post.file.create.notification.inGroup.title": "<a href='{{actorURL}}'>{{actor.displayName}}</a> enviou o arquivo <a href='{{recordURL}}'>{{record.title}}</a> no grupo <a href='{{groupURL}}'>{{group.name}}</a>",
 
-  "membershipinvite.find.my.empty": "Você não tem convites de grupos"
+  "membershipinvite.find.my.empty": "Você não tem convites de grupos",
+
+  "group.membershipinvite.subject.email": "{{inviter.displayName}} convidou você para o grupo {{group.name}}",
+
+  "group.join.success": "Agora você é membro do grupo {{group.name}}"
 }
