@@ -132,7 +132,7 @@ module.exports = function loadPlugin(projectPath, Plugin) {
       parser: 'equal',
       target: {
         type: 'field',
-        field: 'objectType'
+        field: 'objectType0'
       }
     }
   };
@@ -199,6 +199,7 @@ module.exports = function loadPlugin(projectPath, Plugin) {
       model         : 'group',
       responseType  : 'json'
     },
+    // find and list
     'get /group/:groupId([0-9]+)/member/invite': {
       controller    : 'membershipinvite',
       action        : 'find',
@@ -226,7 +227,7 @@ module.exports = function loadPlugin(projectPath, Plugin) {
       titleI18n: 'group.invites',
       breadcrumbHandler: 'findUserGroupInvite'
     },
-
+    // create
     'get /group/:groupId([0-9]+)/member/invite/create': {
       controller    : 'membershipinvite',
       action        : 'create',

@@ -48,7 +48,7 @@ module.exports = {
                 { email: user.email }
               ]
             }
-          }).then(function(membershipinvite) {
+          }).then(function (membershipinvite) {
             if (membershipinvite) {
               res.locals.cantInviteMessage = 'membershipinvite.invite.error.alreadyInvited';
             }
@@ -122,6 +122,11 @@ module.exports = {
       req.we.db.models.user.findOne({
         where: { email: req.body.email }
       }).then(function (user) {
+        if (!user) {
+          res.addMessage('warn', {
+            text: 'membershipinvite.invite.error.userNotFound'
+          });
+        }
         res.locals.userToInvite = user;
         done();
       }).catch(done);
@@ -138,7 +143,6 @@ module.exports = {
       }
 
       res.locals.group.hasMember(res.locals.userToInvite);
-
       done();
     });
 

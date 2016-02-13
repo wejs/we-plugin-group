@@ -53,7 +53,7 @@ module.exports = function Model(we) {
       },
       instanceMethods: {
         sendEmail: function sendEmail (req, res, data, cb) {
-          we.email.sendEmail('GroupMembershipinvite', {
+          we.email.sendEmail('GroupMembershipInvite', {
             email: data.user.email,
             subject: res.locals.__('group.membershipinvite.subject.email', {
               inviter: data.inviter,

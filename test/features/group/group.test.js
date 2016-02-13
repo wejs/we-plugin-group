@@ -2,6 +2,7 @@ var assert = require('assert');
 var request = require('supertest');
 var helpers = require('we-test-tools').helpers;
 var stubs = require('we-test-tools').stubs;
+var sinon = require('sinon');
 var http, async, we, _;
 
 describe('groupFeature', function () {
@@ -363,5 +364,46 @@ describe('groupFeature', function () {
       });
     });
 
+  });
+
+
+
+  describe('groupMembers.invite', function () {
+    it('post /group/:groupId([0-9]+)/member/invite route should' +
+     'create one membershipinvite and send email', function (done) {
+      // hide log
+      var showDebugEmail = we.email.showDebugEmail;
+      // check if is called
+      we.email.showDebugEmail = function() {};
+      sinon.spy(we.email, 'showDebugEmail');
+
+      authenticatedRequest
+      .post('/group/'+salvedGroup.id+'/member/invite/create')
+      .send({
+        userId: salvedUser2.id
+      })
+      .set('Accept', 'application/json')
+      .expect(302)
+      .end(function (err, res) {
+        if (err) throw err;
+
+        assert.equal(res.header.location, '/group/'+salvedGroup.id+'/member/invite');
+
+        assert(we.email.showDebugEmail.called);
+
+        we.email.showDebugEmail.restore();
+        we.email.showDebugEmail = showDebugEmail;
+
+        we.db.models.membershipinvite.findOne({
+          where: {
+            userId: salvedUser2.id
+          }
+        }).then(function (invite) {
+          assert.equal(invite.userId,  salvedUser2.id);
+
+          done();
+        }).catch(done);
+      });
+    });
   });
 });
