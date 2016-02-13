@@ -273,7 +273,7 @@ module.exports = function Model(we) {
             limit: 2
           }).then(function (r) {
             // no managers in this group ... something is wrong
-            if (!r) return cb(null, null);
+            if (!r || !r.length) return cb(null, null);
 
             // more than one manager
             if (r.length > 1) return cb(null, false);
