@@ -12,7 +12,23 @@ module.exports = {
   install: function install(we, done) {
     we.utils.async.series([
       /**
-       * CCreate default group vocabulary
+       * Create default group roles
+       *
+       * @param  {object} we
+       * @param  {Function} cb callback
+       */
+      function registerDefaultRoles(done) {
+        we.utils.async.parallel([
+          function memberRole(done) {
+            we.acl.registerOneDefaltRole(we, 'groupMember', done);
+          },
+          function managerRole(done) {
+            we.acl.registerOneDefaltRole(we, 'groupManager', done);
+          }
+        ], done);
+      },
+      /**
+       * Create default group vocabulary
        *
        * @param  {object} we
        * @param  {Function} cb callback
