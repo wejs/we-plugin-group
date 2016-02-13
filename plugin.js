@@ -132,7 +132,7 @@ module.exports = function loadPlugin(projectPath, Plugin) {
       parser: 'equal',
       target: {
         type: 'field',
-        field: 'objectType0'
+        field: 'objectType'
       }
     }
   };
