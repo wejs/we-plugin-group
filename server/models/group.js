@@ -134,7 +134,11 @@ module.exports = function Model(we) {
               }
 
               // redirect to posts list inside group
-              if (res.locals.controller == 'group' && res.locals.action == 'findOne') {
+              if (
+                res.locals.controller == 'group' &&
+                res.locals.action == 'findOne' &&
+                res.locals.responseType != 'json'
+              ) {
                 return res.redirect(we.router.urlTo(
                   'group.post.find', [record.id]
                 ));
@@ -283,7 +287,7 @@ module.exports = function Model(we) {
                 type: 'group-description',
                 regionName: 'sidebar',
                 context: 'group-' + self.id,
-                theme: we.config.themes.app,
+                theme: null,
                 weight: 0
               },{
                 title: we.i18n.__('group.menu.title'),
@@ -297,7 +301,7 @@ module.exports = function Model(we) {
                 type: 'group-post-menu',
                 regionName: 'sidebar',
                 context: 'group-' + self.id,
-                theme: we.config.themes.app,
+                theme: null,
                 weight: 2
               }]).then(function() {
                 done();
