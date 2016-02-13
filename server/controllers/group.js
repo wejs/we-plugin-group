@@ -104,7 +104,6 @@ module.exports = {
 
         req.we.db.models.follow.follow('group', res.locals.group.id, req.user.id, function (err, follow) {
           if (err) return res.serverError(err);
-          if (!follow) return res.forbidden();
 
           if (res.locals.redirectTo) {
             res.goTo( res.locals.redirectTo );
@@ -240,31 +239,34 @@ module.exports = {
     res.locals.query.where.groupId = res.locals.group.id;
 
     if (req.query.roleNames && req.we.utils._.isArray(req.query.roleNames)) {
-      var roles = [];
-      req.query.roleNames.forEach(function(r) {
-        if (typeof r != 'string') return;
-        if (we.config.groupRoles.indexOf(r) > -1) roles.push(r);
-      });
 
       var or = [];
-      roles.forEach(function (r) {
+      req.query.roleNames.forEach(function (r) {
         or.push({ $like: '%'+r+'%' })
       });
 
-      if ( !req.we.utils._.isEmpty(or) ) res.locals.query.where.roles = { $or: or };
+      if ( !req.we.utils._.isEmpty(or) )
+        res.locals.query.where.roles = { $or: or };
     }
 
     // load associated user record
-    res.locals.query.include =[{ model: we.db.models.user, as: 'user'} ];
+    res.locals.query.include =[{
+      model: we.db.models.user, as: 'user',
+      include: [{
+        model: we.db.models.follow, as: 'follow'
+      }]
+    }];
 
-    we.db.models.membership.findAndCountAll(res.locals.query)
+    we.db.models.membership.findAll(res.locals.query)
     .then(function (result) {
-      res.locals.data = result.rows;
-      res.locals.metadata.count = result.count;
-      res.ok();
-    }).catch(function(err) {
-      next(err);
-    });
+      res.locals.data = result;
+
+      we.db.models.membership.count(res.locals.query)
+      .then(function (count) {
+        res.locals.metadata.count = count;
+        res.ok();
+      }).catch(res.queryError);
+    }).catch(next);
   },
 
   findUserGroups: function(req, res, next) {
@@ -280,12 +282,6 @@ module.exports = {
       res.ok();
     }).catch(function (err){
       next(err);
-    });
-  },
-
-  findRoles: function(req, res) {
-    return res.send({
-      role: req.we.config.groupRoles
     });
   }
 }

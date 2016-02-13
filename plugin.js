@@ -23,6 +23,16 @@ module.exports = function loadPlugin(projectPath, Plugin) {
         'group': 'group',
         'title': 'Highlight group post',
         'description': ' '
+      },
+      'manage_group': {
+        'group': 'group',
+        'title': 'Manage group',
+        'description': ' '
+      },
+      'find_group_member': {
+        'group': 'group',
+        'title': 'Find group members',
+        'description': ' '
       }
     },
     forms: {
@@ -193,16 +203,17 @@ module.exports = function loadPlugin(projectPath, Plugin) {
       controller    : 'membershipinvite',
       action        : 'find',
       model         : 'membershipinvite',
-      groupPermission    : 'manage_members',
       titleHandler : 'i18n',
-      titleI18n: 'membershipinvite.find'
+      titleI18n: 'membershipinvite.find',
+      permission : 'manage_group'
     },
     'post /group/:groupId([0-9]+)/member/invite': {
       controller    : 'membershipinvite',
       action        : 'find',
       model         : 'membershipinvite',
       titleHandler : 'i18n',
-      titleI18n: 'membershipinvite.find'
+      titleI18n: 'membershipinvite.find',
+      permission : 'manage_group'
     },
     'get /group/my-invites': {
       controller    : 'membershipinvite',
@@ -221,39 +232,41 @@ module.exports = function loadPlugin(projectPath, Plugin) {
       action        : 'create',
       model         : 'membershipinvite',
       titleHandler : 'i18n',
-      titleI18n: 'membershipinvite.create'
+      titleI18n: 'membershipinvite.create',
+      permission: 'manage_group'
     },
     'post /group/:groupId([0-9]+)/member/invite/create': {
       controller    : 'membershipinvite',
       action        : 'create',
       model         : 'membershipinvite',
       titleHandler : 'i18n',
-      titleI18n: 'membershipinvite.create'
+      titleI18n: 'membershipinvite.create',
+      permission: 'manage_group'
     },
 
     'get /group/:groupId([0-9]+)/find-user-to-invite': {
       controller    : 'membershipinvite',
       action        : 'find',
       model         : 'membershipinvite',
-      groupPermission    : 'manage_members',
       titleHandler : 'i18n',
-      titleI18n: 'membershipinvite.find'
+      titleI18n: 'membershipinvite.find',
+      permission: 'manage_group'
     },
 
     'get /group/:groupId([0-9]+)/member': {
       controller    : 'group',
       action        : 'findMembers',
       model         : 'membership',
-      groupPermission : 'find_members',
       titleHandler : 'i18n',
-      titleI18n: 'group.findMembers'
+      titleI18n: 'group.findMembers',
+      permission: 'find_group_member'
     },
     'post /group/:groupId([0-9]+)/member': {
       controller    : 'group',
       action        : 'inviteMember',
       model         : 'membership',
       responseType  : 'json',
-      groupPermission : 'manage_members'
+      permission: 'find_group_member'
     },
 
     'get /group/:groupId([0-9]+)/accept-invite': {
@@ -272,8 +285,15 @@ module.exports = function loadPlugin(projectPath, Plugin) {
       controller    : 'group',
       action        : 'findRoles',
       responseType  : 'json',
-      groupPermission : 'find_members'
-    }
+      permission: 'manage_group'
+    },
+
+    // 'post /group/:groupId([0-9]+)/member/:membershipId([0-9]+)/role': {
+    //   controller    : 'group',
+    //   action        : 'findRoles',
+    //   responseType  : 'json',
+    //   permission: 'manage_group'
+    // }
   });
 
   plugin.events.on('we:config:getAppBootstrapConfig', function(opts) {

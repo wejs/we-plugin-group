@@ -14,6 +14,8 @@
     "rimraf": "^2.4.5",
     "supertest": "^1.1.0",
     "we-core": "^0.3.111",
+    "we-plugin-file": "^1.0.1",
+    "we-plugin-flag": "^1.0.1",
     "we-plugin-vocabulary": "^0.3.20",
     "we-test-tools": "^0.3.10",
     "we-theme-admin-default": "^0.3.12",

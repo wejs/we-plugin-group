@@ -11,15 +11,28 @@
         {{/link-to}}
       </td>
       <td>
-        {{roles}}
+        {{#each roles}}{{this}}{{/each}}
       </td>
       <td>
-
         <div class="actions">
-          <div><a href="#">Follow</a></div>
-          <a href="#">Follow</a>
+          <div>
+            {{#ifCond user.id ../req.user.id}}{{else}}
+              {{{flag-follow
+                modelName='user'
+                modelId=user.id
+                isFollowing=user.follow
+                locals=..
+              }}}
+            {{/ifCond}}
+          </div>
+          <div>
+            {{#we-contains roles 'manager'}}
+              tem
+            {{else}}
+              não tem
+            {{/we-contains}}
+          </div>
         </div>
-
       </td>
     </tr>
   {{else}}
