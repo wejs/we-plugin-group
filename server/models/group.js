@@ -137,7 +137,7 @@ module.exports = function Model(we) {
               if (
                 res.locals.controller == 'group' &&
                 res.locals.action == 'findOne' &&
-                res.locals.responseType != 'json'
+                res.locals.responseType == 'html'
               ) {
                 return res.redirect(we.router.urlTo(
                   'group.post.find', [record.id]
