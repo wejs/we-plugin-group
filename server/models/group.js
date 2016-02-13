@@ -104,8 +104,8 @@ module.exports = function Model(we) {
         findOneMember: function findOneMember(modelId, userId, cb) {
           we.db.models.membership.find({
             where: {
-              memberId: userId,
-              modelId: modelId
+              userId: userId,
+              groupId: modelId
             }
           }).then(function(r){cb(null, r);}).catch(cb)
         },
@@ -205,8 +205,12 @@ module.exports = function Model(we) {
           if (this.privacity == 'public') {
             this.addMember(userId, {
               roles: 'member'
-            }).then(function(){
-              cb();
+            }).then(function (r){
+              cb(null, {
+                id: r[0][0],
+                userId: userId,
+                groupId: group.id
+              });
             }).catch(cb);
           } else {
             we.db.models.membershipinvite.findOne({
@@ -214,12 +218,16 @@ module.exports = function Model(we) {
                 groupId: group.id,
                 userId: userId
               }
-            }).then(function(invite) {
+            }).then(function (invite) {
               if (invite) {
                 group.addMember(userId, {
                   roles: 'member'
-                }).then(function(){
-                  cb();
+                }).then(function (r) {
+                  cb(null, {
+                    id: r[0][0],
+                    userId: userId,
+                    groupId: group.id
+                  });
                 }).catch(cb);
               } else {
                 group.createRequestMembership(userId, cb);
