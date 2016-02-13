@@ -137,5 +137,10 @@
 
   "group.join.success": "Agora você é membro do grupo {{group.name}}",
 
-  "group.menu.title": "Menu"
+  "group.menu.title": "Menu",
+
+  "group.member.removeRole.last.member": "Você não pode remover o perfil de administrador do último gerente desse grupo",
+
+  "group.member.remove.manager.role": "Remover gerente",
+  "group.member.add.manager.role": "Promover à gerente"
 }

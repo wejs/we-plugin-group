@@ -139,5 +139,12 @@
 
   "group.join.success": "Now you are member of {{group.name}} group",
 
-  "group.menu.title": "Menu"
+  "group.menu.title": "Menu",
+
+  "group.member.removeRole.last.member": "You cant remove the manager role from last manager member in this group",
+
+
+  "group.member.remove.manager.role": "Remove from managers",
+  "group.member.add.manager.role": "Set as manager"
+
 }

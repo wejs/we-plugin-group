@@ -11,7 +11,7 @@
         {{/link-to}}
       </td>
       <td>
-        {{#each roles}}{{this}}{{/each}}
+        {{#each roles}} {{this}} <br>{{/each}}
       </td>
       <td>
         <div class="actions">
@@ -27,9 +27,17 @@
           </div>
           <div>
             {{#we-contains roles 'manager'}}
-              tem
+              <form action="/group/{{groupId}}/member/{{userId}}/removeRole" method="post">
+                <input type="hidden" name="redirectTo" value="{{../req.url}}">
+                <input type="hidden" name="role" value="manager">
+                <button class="btn btn-sm btn-danger">{{t 'group.member.remove.manager.role'}}</button>
+              </form>
             {{else}}
-              não tem
+              <form action="/group/{{groupId}}/member/{{userId}}/addRole" method="post">
+                  <input type="hidden" name="redirectTo" value="{{../req.url}}">
+                <input type="hidden" name="role" value="manager">
+                <button class="btn btn-sm btn-success">{{t 'group.member.add.manager.role'}}</button>
+              </form>
             {{/we-contains}}
           </div>
         </div>

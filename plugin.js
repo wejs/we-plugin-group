@@ -282,19 +282,20 @@ module.exports = function loadPlugin(projectPath, Plugin) {
       model         : 'membership',
       responseType  : 'json'
     },
-    'get /group/:groupId([0-9]+)/role': {
+    // change user role
+    'post /group/:groupId([0-9]+)/member/:memberId([0-9]+)/addRole': {
       controller    : 'group',
-      action        : 'findRoles',
+      action        : 'addMemberRole',
       responseType  : 'json',
       permission: 'manage_group'
     },
-
-    // 'post /group/:groupId([0-9]+)/member/:membershipId([0-9]+)/role': {
-    //   controller    : 'group',
-    //   action        : 'findRoles',
-    //   responseType  : 'json',
-    //   permission: 'manage_group'
-    // }
+    // change user role
+    'post /group/:groupId([0-9]+)/member/:memberId([0-9]+)/removeRole': {
+      controller    : 'group',
+      action        : 'removeMemberRole',
+      responseType  : 'json',
+      permission: 'manage_group'
+    }
   });
 
   plugin.events.on('we:config:getAppBootstrapConfig', function(opts) {

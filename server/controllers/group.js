@@ -123,14 +123,36 @@ module.exports = {
   leave: function leave(req, res) {
     if (!req.isAuthenticated) return res.forbidden();
 
-    res.locals.group.userLeave(req.user.id, function (err) {
+
+    res.locals.group.checkIfMemberIslastmanager(req.user.id, function (err, isLastManager) {
       if (err) return res.serverError(err);
 
-      if (res.locals.redirectTo) {
-        res.goTo( res.locals.redirectTo );
-      } else {
-        res.status(204).send();
+      if (isLastManager) {
+        // add message
+        res.addMessage('warning', {
+          text: 'group.member.leave.last.member',
+          vars :{
+            group: res.locals.group,
+            user: req.user
+          }
+        });
+
+        if (res.locals.redirectTo) {
+          return res.goTo( res.locals.redirectTo );
+        } else {
+          return res.ok();
+        }
       }
+
+      res.locals.group.userLeave(req.user.id, function (err) {
+        if (err) return res.serverError(err);
+
+        if (res.locals.redirectTo) {
+          res.goTo( res.locals.redirectTo );
+        } else {
+          res.status(204).send();
+        }
+      });
     });
   },
 
@@ -283,5 +305,87 @@ module.exports = {
     }).catch(function (err){
       next(err);
     });
+  },
+
+  addMemberRole: function(req, res) {
+    var we = req.we;
+
+    var role = req.body.role;
+
+    we.db.models.membership.findOne({
+      where: {
+        groupId: req.params.groupId,
+        userId: req.params.memberId
+      }
+    }).then(function (membership) {
+      var roles = membership.roles;
+
+      if (roles.indexOf(role) == -1) {
+        roles.push(role);
+        membership.roles = roles;
+      }
+
+      membership.save()
+      .then(function () {
+        if (res.locals.redirectTo) {
+          res.goTo( res.locals.redirectTo );
+        } else {
+          res.ok(membership);
+        }
+      }).catch(req.queryError);
+    }).catch(res.queryError);
+  },
+
+  removeMemberRole: function(req, res) {
+    var we = req.we;
+
+    var role = req.body.role;
+
+    we.db.models.membership.findOne({
+      where: {
+        groupId: req.params.groupId,
+        userId: req.params.memberId
+      }
+    }).then(function (membership) {
+      if (!membership) return res.notFound();
+
+      res.locals.group.checkIfMemberIslastmanager(membership.userId, function (err, isLastManager) {
+        if (err) return res.serverError(err);
+
+        if (isLastManager && role == 'manager') {
+          // add message
+          res.addMessage('warning', {
+            text: 'group.member.removeRole.last.member',
+            vars :{
+              group: res.locals.group
+            }
+          });
+
+          if (res.locals.redirectTo) {
+            return res.goTo( res.locals.redirectTo );
+          } else {
+            return res.ok(membership);
+          }
+        }
+
+        var roles = membership.roles;
+
+        var index = roles.indexOf(role);
+        if (index > -1) {
+          roles.splice(index, 1);
+          membership.roles = roles;
+        }
+
+        membership.save()
+        .then(function () {
+          if (res.locals.redirectTo) {
+            res.goTo( res.locals.redirectTo );
+          } else {
+            res.ok(membership);
+          }
+        }).catch(req.queryError);
+      });
+
+    }).catch(res.queryError);
   }
 }

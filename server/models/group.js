@@ -263,6 +263,28 @@ module.exports = function Model(we) {
           });
         },
 
+        checkIfMemberIslastmanager: function checkIfMemberIslastmanager(userId, cb) {
+          we.db.models.membership.findAll({
+            where: {
+              roles: { $like: '%manager%' },
+              groupId: this.id
+            },
+            attributes: ['userId'],
+            limit: 2
+          }).then(function (r) {
+            // no managers in this group ... something is wrong
+            if (!r) return cb(null, null);
+
+            // more than one manager
+            if (r.length > 1) return cb(null, false);
+
+            // not are the current manager
+            if (r[0].userId != userId) return cb(null, false)
+            // is the last manager member
+            cb(null, true);
+          }).catch(cb);
+        },
+
         loadMembersCount: function loadMembersCount(cb) {
           we.db.models.membership.count({
             where: {
