@@ -11,8 +11,8 @@ body.post.findOne .post-teaser {
 
 /* post teaser*/
 
-.post-teaser {,
-  padding: 5px 0px;
+.post-teaser {
+  padding: 8px;
   margin: 5px 0px 15px 5px;
   background-color: #fff;
 }
