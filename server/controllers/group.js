@@ -288,7 +288,7 @@ module.exports = {
       model: we.db.models.user, as: 'user',
       include: [{
         required: false,
-        model: we.db.models.follow, as: 'follow',
+        model: we.db.models.follow, as: 'following',
         where: {
           model: 'group',
           modelId: res.locals.group.id
