@@ -25,7 +25,7 @@
               }}}
             {{/ifCond}}
           </div>
-          {{#can permission='manager_group' roleNames=../req.userRoleNames}}
+          {{#can permission='manage_group' roleNames=../req.userRoleNames}}
             <div>
               {{#we-contains roles 'manager'}}
                 <form action="/group/{{groupId}}/member/{{userId}}/removeRole" method="post">
