@@ -34,22 +34,22 @@ module.exports = function loadPlugin(projectPath, Plugin) {
         'title': 'Find group members',
         'description': ' '
       },
-      'find_post_in_group': {
+      'find_group.post': {
         'group': 'group',
         'title': 'Create one post inside group',
         'description': ' '
       },
-      'create_post_in_group': {
+      'create_group.post': {
         'group': 'group',
         'title': 'Create one post inside group',
         'description': ' '
       },
-      'update_post_in_group': {
+      'update_group.post': {
         'group': 'group',
         'title': 'Update one post inside group',
         'description': ' '
       },
-      'delete_post_in_group': {
+      'delete_group.post': {
         'group': 'group',
         'title': 'Delete one post inside group',
         'description': ' '
@@ -177,20 +177,20 @@ module.exports = function loadPlugin(projectPath, Plugin) {
       query: { limit: 10 },
       search: postSearch ,
       breadcrumbHandler: 'findAllPostInGroup',
-      permission: 'find_post_in_group'
+      permission: 'find_group.post'
     },
     findOne: {
       breadcrumbHandler: 'findOnePostInGroup',
-      permission: 'find_post_in_group'
+      permission: 'find_group.post'
     },
     create: {
-      permission: 'create_post_in_group'
+      permission: 'create_group.post'
     },
     update: {
-      permission: 'update_post_in_group'
+      permission: 'update_group.post'
     },
     delete: {
-      permission: 'delete_post_in_group'
+      permission: 'delete_group.post'
     }
   });
 
