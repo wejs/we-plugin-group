@@ -61,7 +61,8 @@ module.exports = function Model(we) {
         type: 'belongsToMany',
         model: 'user',
         through: 'membership',
-        inverse: 'groups'
+        inverse: 'groups',
+        constraints: false
       },
       creator: {
         type: 'belongsTo',
