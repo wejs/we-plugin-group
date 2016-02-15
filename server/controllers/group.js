@@ -76,6 +76,18 @@ module.exports = {
   join: function join(req, res) {
     if (!req.isAuthenticated()) return res.forbidden();
 
+    if (res.locals.membership) {
+      // already are member
+      res.addMessage('warning', {
+        text: 'group.join.already.member',
+        vars :{
+          group: group
+        }
+      });
+
+      return res.goTo( res.locals.redirectTo || '/group/'+res.locals.group.id );
+    }
+
     var group = res.locals.group;
 
     res.locals.group.userJoin(req.user.id, function (err, membership) {
@@ -275,7 +287,12 @@ module.exports = {
     res.locals.query.include =[{
       model: we.db.models.user, as: 'user',
       include: [{
-        model: we.db.models.follow, as: 'follow'
+        required: false,
+        model: we.db.models.follow, as: 'follow',
+        where: {
+          model: 'group',
+          modelId: res.locals.group.id
+        }
       }]
     }];
 

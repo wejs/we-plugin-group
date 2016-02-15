@@ -204,7 +204,7 @@ module.exports = function Model(we) {
 
           if (this.privacity == 'public') {
             this.addMember(userId, {
-              roles: 'member'
+              roles: ['member']
             }).then(function (r){
               cb(null, {
                 id: r[0][0],
@@ -221,7 +221,7 @@ module.exports = function Model(we) {
             }).then(function (invite) {
               if (invite) {
                 group.addMember(userId, {
-                  roles: 'member'
+                  roles: ['member']
                 }).then(function (r) {
                   cb(null, {
                     id: r[0][0],
