@@ -1,14 +1,32 @@
-{{#can permission='create_post' roleNames=req.userRoleNames}}
-<div class="sharebox-area">
-  <div id="sharebox-label">
-    <button type="button" class="btn btn-primary">
-      <span class="glyphicon glyphicon-pencil"></span>
-    </button>
-    {{t 'sharebox.label.text'}}
+{{#if group.id}}
+  {{#can permission='create_post_in_group' roleNames=req.userRoleNames}}
+  <div class="sharebox-area">
+    <div id="sharebox-label">
+      <button type="button" class="btn btn-primary">
+        <span class="glyphicon glyphicon-pencil"></span>
+      </button>
+      {{t 'sharebox.label.text'}}
+    </div>
+    <div id="sharebox">{{{form 'post' postRecord action=createPostUrl}}}</div>
+    <script>$(function(){
+      we.sharebox.init('#sharebox-label', '#sharebox');
+    })</script>
   </div>
-  <div id="sharebox">{{{form 'post' postRecord action=createPostUrl}}}</div>
-  <script>$(function(){
-    we.sharebox.init('#sharebox-label', '#sharebox');
-  })</script>
-</div>
-{{/can}}
+  {{/can}}
+{{else}}
+  {{#can permission='create_post' roleNames=req.userRoleNames}}
+  <div class="sharebox-area">
+    <div id="sharebox-label">
+      <button type="button" class="btn btn-primary">
+        <span class="glyphicon glyphicon-pencil"></span>
+      </button>
+      {{t 'sharebox.label.text'}}
+    </div>
+    <div id="sharebox">{{{form 'post' postRecord action=createPostUrl}}}</div>
+    <script>$(function(){
+      we.sharebox.init('#sharebox-label', '#sharebox');
+    })</script>
+  </div>
+  {{/can}}
+{{/if}}
+
