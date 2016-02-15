@@ -28,7 +28,8 @@ module.exports = {
                 isSystemRole: true,
                 permissions: [
                   'find_group',
-                  'find_post'
+                  'find_post',
+                  'create_post_in_group'
                 ]
               }
             }).spread(function (role) {
@@ -50,7 +51,10 @@ module.exports = {
                   'delete_group',
                   'manage_group',
                   'find_group_member',
-                  'post_highlight'
+                  'post_highlight',
+                  'create_post_in_group',
+                  'update_post_in_group',
+                  'delete_post_in_group'
                 ]
               }
             }).spread(function (role) {
