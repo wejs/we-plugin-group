@@ -142,5 +142,7 @@
   "group.member.removeRole.last.member": "Você não pode remover o perfil de administrador do último gerente desse grupo",
 
   "group.member.remove.manager.role": "Remover gerente",
-  "group.member.add.manager.role": "Promover à gerente"
+  "group.member.add.manager.role": "Promover à gerente",
+
+  "group.member.leave.last.member": "Você não pode sair desse grupo porque é o ultimo gerente."
 }
