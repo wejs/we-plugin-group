@@ -7,6 +7,12 @@
 module.exports = function MembershipModel(we) {
   return {
     definition: {
+      id: {
+        type: we.db.Sequelize.INTEGER,
+        autoIncrement: true,
+        primaryKey: true
+      },
+
       // active or blocked
       status: {
         type: we.db.Sequelize.STRING,
