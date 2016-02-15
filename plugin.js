@@ -330,7 +330,7 @@ module.exports = function loadPlugin(projectPath, Plugin) {
       we.utils.async.parallel([
         function loadMembership(next) {
           we.db.models.membership.find({
-            where: { userId: req.user.id }
+            where: { userId: req.user.id, groupId: group.id }
           }).then(function (membership) {
 
             if (membership) {
