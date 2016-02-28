@@ -383,6 +383,18 @@ module.exports = function Model(we) {
           we.db.models.post.setPostTeaser(post, options, function(){
             we.db.models.post.setPostObjectType(post, options, next);
           });
+        },
+
+        // After create add user as follower
+        afterCreate: function afterCreate(record, options, next) {
+          if (!record.creatorId) return next();
+
+          we.db.models.follow
+          .follow('post', record.id, record.creatorId, function (err, follow) {
+            if (err) return next(err);
+            we.log.verbose('we-plugin-group:post:afterCreate:newFollow:', follow);
+            next();
+          });
         }
       }
     }
