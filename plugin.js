@@ -123,7 +123,7 @@ module.exports = function loadPlugin(projectPath, Plugin) {
     findAll: {
       search: {
         name:  {
-          parser: 'contains',
+          parser: 'groupSearch',
           target: {
             type: 'field',
             field: 'name'
@@ -135,7 +135,7 @@ module.exports = function loadPlugin(projectPath, Plugin) {
 
   var postSearch = {
     q:  {
-      parser: 'contains',
+      parser: 'postSearch',
       target: {
         type: 'field',
         field: 'body'
@@ -328,6 +328,33 @@ module.exports = function loadPlugin(projectPath, Plugin) {
       permission: 'manage_group'
     }
   });
+
+  /**
+   * Custom group search parser
+   */
+  plugin.router.search.parsers.groupSearch = function groupSearch(searchName, field, value, w) {
+    return w.$or = {
+      name: {
+        $like: '%'+value+'%'
+      },
+      description: {
+        $like: '%'+value+'%'
+      }
+    }
+  };
+  /**
+   * Custom post search parser
+   */
+  plugin.router.search.parsers.postSearch = function postSearch(searchName, field, value, w) {
+    return w.$or = {
+      title: {
+        $like: '%'+value+'%'
+      },
+      body: {
+        $like: '%'+value+'%'
+      }
+    }
+  };
 
   plugin.events.on('we:config:getAppBootstrapConfig', function(opts) {
     if (opts.context && opts.context.widgetContext && opts.context.group) {
