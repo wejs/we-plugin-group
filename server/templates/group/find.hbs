@@ -1,6 +1,5 @@
 {{template 'group/find-header'}}
 
-{{#if data}}
 <div class="groups-search">
   <form class="form-inline" method="get">
     <div class="form-group">
@@ -14,7 +13,6 @@
     <input name="my" type="hidden" value="{{req.query.my}}">
   </form>
 </div>
-{{/if}}
 
 <div class="groups">
 {{#each data}}
