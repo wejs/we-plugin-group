@@ -9,6 +9,32 @@ module.exports = function loadPlugin(projectPath, Plugin) {
 
   // set plugin configs
   plugin.setConfigs({
+    roles: {
+      groupMember: {
+        name: 'groupMember',
+        isSystemRole: true,
+        permissions: [
+          'find_group',
+          'find_post',
+          'create_post_in_group'
+        ]
+      },
+      groupManager: {
+        name: 'groupManager',
+        isSystemRole: true,
+        permissions: [
+          'update_group',
+          'find_group',
+          'delete_group',
+          'manage_group',
+          'find_group_member',
+          'post_highlight',
+          'create_post_in_group',
+          'update_post_in_group',
+          'delete_post_in_group'
+        ]
+      }
+    },
     post: {
       objectTypes: {
         'text': 'post.objectType.text',
