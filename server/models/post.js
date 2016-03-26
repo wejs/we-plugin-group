@@ -244,7 +244,7 @@ module.exports = function Model(we) {
               }
               // get followers
               req.we.db.models.follow.findAll({
-                Where: where,
+                where: where,
                 attributes: ['userId']
               }).then(function (r) {
                 followers = r;
