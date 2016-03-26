@@ -45,6 +45,28 @@
   <script>$(function(){ $("#post-teaser-{{record.id}} > .post-images > a").fancybox(); });</script>
   {{/if}}
 
+  {{#if record.attachment}}
+    <br>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>{{t 'name'}}</th>
+          <th>{{t 'actions'}}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each record.attachment}}
+          <tr>
+            <td>{{originalname}}</td>
+            <td>
+              <a class="btn btn-default btn-sm" href="{{urls.original}}">{{t 'download'}}</a>
+            </td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  {{/if}}
+
   <div class="post-footer">
     <div class="post-actions">
       {{{flag-like modelName='post' modelId=record.id isFlagged=record.metadata.isFlagged count=record.metadata.flagCount locals=locals}}}
