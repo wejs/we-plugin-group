@@ -4,8 +4,7 @@
   "version": "0.3.10",
   "main": "lib/index.js",
   "scripts": {
-    "test": "NODE_ENV=test LOG_LV=info ./node_modules/.bin/mocha test/bootstrap.js test/**/*.test.js -b ",
-    "prepublish": "npm prune"
+    "test": "NODE_ENV=test LOG_LV=info ./node_modules/.bin/mocha test/bootstrap.js test/**/*.test.js -b "
   },
   "devDependencies": {
     "fs-extra": "^0.26.3",
@@ -22,8 +21,12 @@
     "we-theme-admin-default": "^0.3.12",
     "we-theme-site-wejs": "^0.3.31"
   },
-  "publishConfig": {
-    "registry": "http://registry.npmjs.org"
-  },
-  "license": "MIT"
+  "license": "MIT",
+  "wejs": {
+    "dependencies": {
+      "we-plugin-file": true,
+      "we-plugin-flag": true,
+      "we-plugin-vocabulary": true
+    }
+  }
 }

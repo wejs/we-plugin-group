@@ -1,17 +1,13 @@
 # We.js group plugin
 
-> We.js group plugin, use this plugin to build fóruns or social networks
+We.js group plugin, use this plugin to build fóruns or social networks
+
+# Looking for maintainer!
 
 # how to install
 ```
-npm install we-plugin-group --save
+we i we-plugin-group
 ```
-
-# Requirements
-
-- we-plugin-flag: `npm install we-plugin-flag --save`
-
-# API
 
 
 ## Links
