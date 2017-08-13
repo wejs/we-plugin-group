@@ -1,14 +1,14 @@
 
 module.exports = {
-  create: function create(req, res) {
+  create(req, res) {
     if (!req.isAuthenticated()) return res.forbidden();
     if (!res.locals.template) res.locals.template = res.locals.model + '/' + 'create';
 
-    var we = req.we;
+    const we = req.we;
 
     res.locals.data = null;
     res.locals.cantInviteMessage = null;
-    var user;
+    let user;
 
     if (req.method === 'POST') {
 
@@ -17,24 +17,31 @@ module.exports = {
           // check if user exists
           we.db.models.user.findOne({
             where: { id: req.body.userId }
-          }).then(function (u) {
+          })
+          .then( (u)=> {
             if (!u) {
               res.locals.cantInviteMessage = 'membershipinvite.invite.error.userNotFound';
-              return done();
+              done();
+              return null;
             }
 
             user = u;
 
             // check if user is member or already are invited
             res.locals.group.hasMember(user)
-            .then(function (isMember) {
+            .then( (isMember)=> {
               if (isMember) {
                 res.locals.cantInviteMessage = 'membershipinvite.invite.error.alreadyInvited';
               }
 
               done();
-            }).catch(done);
-          }).catch(done);
+              return null;
+            })
+            .catch(done);
+
+            return null;
+          })
+          .catch(done);
         },
 
         function checkIfAreInvited(done) {
@@ -48,13 +55,16 @@ module.exports = {
                 { email: user.email }
               ]
             }
-          }).then(function (membershipinvite) {
+          })
+          .then( (membershipinvite)=> {
             if (membershipinvite) {
               res.locals.cantInviteMessage = 'membershipinvite.invite.error.alreadyInvited';
             }
 
             done();
-          }).catch(done);
+            return null;
+          })
+          .catch(done);
         },
 
         function createInvite(done) {
@@ -66,10 +76,12 @@ module.exports = {
           req.body.groupId = res.locals.group.id;
 
           return res.locals.Model.create(req.body)
-          .then(function (record) {
+          .then( (record)=> {
             res.locals.data = record;
             done();
-          }).catch(done);
+            return null;
+          })
+          .catch(done);
         },
         function sendEmail(done) {
           if (!res.locals.data || !user) return done();
@@ -81,12 +93,12 @@ module.exports = {
             acceptURL: we.config.hostname +'/group/'+ res.locals.group.id+'/join/'+res.locals.data.id,
             groupURL: we.config.hostname +'/group/'+ res.locals.group.id,
             we: we
-          },function (err) {
+          }, (err)=> {
             if (err) req.we.log.error('membershipinvite:sendEmail:', err);
             done();
           });
         }
-      ], function (err) {
+      ], (err)=> {
         if (err) return res.queryError(err);
 
         if (res.locals.cantInviteMessage) {
@@ -104,12 +116,12 @@ module.exports = {
     }
   },
 
-  find: function findAll(req, res, next) {
+  find(req, res, next) {
     if (!req.isAuthenticated()) return res.forbidden();
 
     res.locals.query.groupId = req.params.groupId;
 
-    var functions = [];
+    const functions = [];
 
     if (res.locals.currentUserInvites) {
       res.locals.query.where.email = req.user.email;
@@ -121,7 +133,8 @@ module.exports = {
 
       req.we.db.models.user.findOne({
         where: { email: req.body.email }
-      }).then(function (user) {
+      })
+      .then( (user)=> {
         if (!user) {
           res.addMessage('warn', {
             text: 'membershipinvite.invite.error.userNotFound'
@@ -129,7 +142,9 @@ module.exports = {
         }
         res.locals.userToInvite = user;
         done();
-      }).catch(done);
+        return null;
+      })
+      .catch(done);
     });
 
     functions.push(function checkIfisCurerntUser (done) {
@@ -146,12 +161,11 @@ module.exports = {
       done();
     });
 
-
     functions.push(function checkIfIsMember (done) {
       if (!res.locals.userToInvite) return done();
 
       res.locals.group.hasMember(res.locals.userToInvite)
-      .then(function (result) {
+      .then( (result)=> {
         if (result) {
           res.addMessage('warn', {
             text: 'group.invite.error.is.member'
@@ -160,19 +174,23 @@ module.exports = {
         }
 
         done();
-      }).catch(done);
+        return null;
+      })
+      .catch(done);
     });
 
-    req.we.utils.async.series(functions, function(err){
+    req.we.utils.async.series(functions, (err)=> {
       if (err) return next(err);
 
       res.locals.Model.findAndCountAll(res.locals.query)
-      .then(function(record) {
+      .then( (record)=> {
         if (!record) return next();
         res.locals.metadata.count = record.count;
         res.locals.data = record.rows;
-        return res.ok();
-      }).catch(res.queryError);
+        res.ok();
+        return null;
+      })
+      .catch(res.queryError);
     });
   }
 };

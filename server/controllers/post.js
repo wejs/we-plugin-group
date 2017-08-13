@@ -4,8 +4,8 @@
  * @module    :: Controller
  */
 module.exports = {
-  find: function findAll(req, res) {
-    var requiredModelsTerms = true;
+  find(req, res) {
+    let requiredModelsTerms = true;
 
     // post teaser list, use with responseType=modal query param
     if (req.query.teaserList)
@@ -70,8 +70,8 @@ module.exports = {
           // [' `creator.follow`.`id` IS NOT NULL ']
         ];
 
-        var groupAssoc;
-        for (var i = res.locals.query.include.length - 1; i >= 0; i--) {
+        let groupAssoc;
+        for (let i = res.locals.query.include.length - 1; i >= 0; i--) {
           if (res.locals.query.include[i].as == 'group') {
             groupAssoc = res.locals.query.include[i];
             break;
@@ -93,10 +93,10 @@ module.exports = {
     }
 
     res.locals.Model.findAll(res.locals.query)
-    .then(function (records) {
+    .then( (records)=> {
       if (req.we.plugins['we-plugin-notification'] && req.isAuthenticated()) {
         // mark this posts as read
-        var recordIds = records.map(function(r){
+        let recordIds = records.map( (r)=> {
           return r.id;
         });
 
@@ -108,25 +108,30 @@ module.exports = {
             modelName: 'post',
             userId: req.user.id
           }
-        }).catch(function (err) {
+        })
+        .catch( (err)=> {
           req.we.log.error(err);
+          return null;
         });
       }
 
       res.locals.data = records;
 
       res.locals.Model.count(res.locals.query)
-      .then(function (count) {
+      .then( (count)=> {
 
         res.locals.metadata.count = count;
         res.ok();
+        return null;
+      })
+      .catch(res.queryError);
 
-      }).catch(res.queryError);
-
-    }).catch(res.queryError);
+      return null;
+    })
+    .catch(res.queryError);
   },
 
-  findOne: function findOne(req, res, next) {
+  findOne(req, res, next) {
     if (!res.locals.data) return next();
     // mark this post notifications as read
     if (req.we.plugins['we-plugin-notification'] && req.isAuthenticated()) {
@@ -139,15 +144,17 @@ module.exports = {
           modelName: 'post' ,
           userId: req.user.id
         }
-      }).catch(function (err) {
+      })
+      .catch( (err)=> {
         req.we.log.error(err);
+        return null;
       });
     }
 
     return res.ok();
   },
 
-  create: function create(req, res) {
+  create(req, res) {
     if (!res.locals.template) res.locals.template = res.locals.model + '/' + 'create';
 
     res.locals.data = req.body;
@@ -160,12 +167,12 @@ module.exports = {
       }
 
       return res.locals.Model.create(req.body)
-      .then(function (record) {
+      .then( (record)=> {
         res.locals.data = record;
 
         try {
           // register notifications in parallel
-          record.registerCreatePostNotifications(req, res, function(err){
+          record.registerCreatePostNotifications(req, res, (err)=> {
             if (err) req.we.log.error('Error in create post notifications: ',err);
           });
         } catch (e) {
@@ -175,7 +182,8 @@ module.exports = {
           res.locals.redirectTo = record.getUrlPath();
         }
         // if dont are inside one group
-        return res.created();
+        res.created();
+        return null;
       }).catch(res.queryError);
     } else {
       res.locals.data = req.query;

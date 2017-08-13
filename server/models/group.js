@@ -5,9 +5,9 @@
  */
 
 module.exports = function Model(we) {
-  var async = we.utils.async;
+  const async = we.utils.async;
 
-  var model = {
+  const model = {
     definition: {
       name: {
         type: we.db.Sequelize.STRING,
@@ -96,19 +96,29 @@ module.exports = function Model(we) {
       // },
 
       classMethods: {
-        findAllMembers: function findAllMembers(modelId, cb) {
+        findAllMembers(modelId, cb) {
           we.db.models.membership.findAll({
             where: { modelId: modelId}
-          }).then(function(r){cb(null, r);}).catch(cb)
+          })
+          .then( (r)=> {
+            cb(null, r);
+            return null;
+          })
+          .catch(cb)
         },
 
-        findOneMember: function findOneMember(modelId, userId, cb) {
+        findOneMember(modelId, userId, cb) {
           we.db.models.membership.find({
             where: {
               userId: userId,
               groupId: modelId
             }
-          }).then(function(r){cb(null, r);}).catch(cb)
+          })
+          .then( (r)=> {
+            cb(null, r);
+            return null;
+          })
+          .catch(cb)
         },
         /**
          * Context loader, preload current request record and related data
@@ -117,13 +127,14 @@ module.exports = function Model(we) {
          * @param  {Object}   res  express.js response
          * @param  {Function} done callback
          */
-        contextLoader: function contextLoader(req, res, done) {
+        contextLoader(req, res, done) {
           if (!res.locals.id || !res.locals.loadCurrentRecord) return done();
 
           return this.findOne({
             where: { id: res.locals.id},
             include: [{ all: true }]
-          }).then(function (record) {
+          })
+          .then( (record)=> {
             res.locals.data = record;
 
             if (record) {
@@ -146,7 +157,8 @@ module.exports = function Model(we) {
               }
             }
 
-            return done();
+            done();
+            return null;
           })
         }
       },
@@ -154,8 +166,8 @@ module.exports = function Model(we) {
         // createRole: function createRole(roleName, cb) {
         //   we.db.models.group.createRole(this.id, roleName, cb);
         // },
-        createRequestMembership: function(userId, cb) {
-          var self = this;
+        createRequestMembership(userId, cb) {
+          const self = this;
           we.db.models.membershiprequest.findOrCreate({
             where: {
               userId: userId, groupId: self.id
@@ -163,9 +175,12 @@ module.exports = function Model(we) {
             defaults: {
               userId: userId, groupId: self.id
             }
-          }).spread(function(membershiprequest) {
+          })
+          .spread( (membershiprequest)=> {
             cb(null, membershiprequest);
-          }).catch(cb);
+            return null;
+          })
+          .catch(cb);
         },
 
         /**
@@ -176,8 +191,8 @@ module.exports = function Model(we) {
          * @param  {[type]}   userId invited user id
          * @param  {Function} cb     callback
          */
-        inviteMember: function inviteMember(inviterId, userId, name, text, email, cb) {
-          var self = this;
+        inviteMember(inviterId, userId, name, text, email, cb) {
+          const self = this;
           we.db.models.membershipinvite.findOrCreate({
             where: {
               email: email, groupId: self.id
@@ -189,9 +204,12 @@ module.exports = function Model(we) {
               text: text,
               email: email
             }
-          }).spread(function(membershiprequest) {
+          })
+          .spread( (membershiprequest)=> {
             cb(null, membershiprequest);
-          }).catch(cb);
+            return null;
+          })
+          .catch(cb);
         },
 
         /**
@@ -200,30 +218,35 @@ module.exports = function Model(we) {
          * @param  {String}   userId
          * @param  {Function} cb     callbak
          */
-        userJoin: function userJoin(userId, cb) {
-          var group = this;
+        userJoin(userId, cb) {
+          const group = this;
 
           if (this.privacity == 'public') {
             this.addMember(userId, {
               roles: ['member']
-            }).then(function (r){
+            })
+            .then(function (r){
               cb(null, {
                 id: r[0][0],
                 userId: userId,
                 groupId: group.id
               });
-            }).catch(cb);
+              return null;
+            })
+            .catch(cb);
           } else {
             we.db.models.membershipinvite.findOne({
               where: {
                 groupId: group.id,
                 userId: userId
               }
-            }).then(function (invite) {
+            })
+            .then( (invite)=> {
               if (invite) {
                 group.addMember(userId, {
                   roles: ['member']
-                }).then(function (r) {
+                })
+                .then(function (r) {
                   cb(null, {
                     id: r[0][0],
                     userId: userId,
@@ -233,14 +256,19 @@ module.exports = function Model(we) {
               } else {
                 group.createRequestMembership(userId, cb);
               }
-            }).catch(cb);
+              return null;
+            })
+            .catch(cb);
           }
         },
 
-        userLeave: function userLeave(userId, cb) {
-          this.removeMember(userId).then(function(){
+        userLeave(userId, cb) {
+          this.removeMember(userId)
+          .then( ()=> {
             cb();
-          }).catch(cb);
+            return null;
+          })
+          .catch(cb);
         },
 
         // findAllRoles: function(cb) {
@@ -250,21 +278,30 @@ module.exports = function Model(we) {
         //   we.db.models.group.findAllGroupRoles(this.id, cb);
         // },
 
-        findAllMembers: function(cb) {
-          we.db.models.group.findAllMembers(this.id, function(err, memberships){
-            if (err) return cb(err);
-            return cb(null, memberships);
+        findAllMembers(cb) {
+          we.db.models.group.findAllMembers(this.id, (err, memberships)=> {
+            if (err) {
+              cb(err);
+            } else {
+              cb(null, memberships);
+            }
+
+            return null;
           });
         },
 
-        findOneMember: function(userId, cb) {
-          we.db.models.group.findOneMember(this.id, userId, function(err, membership) {
-            if (err) return cb(err);
-            return cb(null, membership);
+        findOneMember(userId, cb) {
+          we.db.models.group.findOneMember(this.id, userId, (err, membership)=> {
+            if (err) {
+              cb(err);
+            } else {
+              cb(null, membership);
+            }
+            return null;
           });
         },
 
-        checkIfMemberIslastmanager: function checkIfMemberIslastmanager(userId, cb) {
+        checkIfMemberIslastmanager(userId, cb) {
           we.db.models.membership.findAll({
             where: {
               roles: { $like: '%manager%' },
@@ -272,35 +309,48 @@ module.exports = function Model(we) {
             },
             attributes: ['userId'],
             limit: 2
-          }).then(function (r) {
+          })
+          .then( (r)=> {
             // no managers in this group ... something is wrong
-            if (!r || !r.length) return cb(null, null);
-
+            if (!r || !r.length) {
+              cb(null, null);
+            } else if (r.length > 1) {
             // more than one manager
-            if (r.length > 1) return cb(null, false);
-
-            // not are the current manager
-            if (r[0].userId != userId) return cb(null, false)
-            // is the last manager member
-            cb(null, true);
-          }).catch(cb);
+              cb(null, false);
+            } else if (r[0].userId != userId) {
+              // not are the current manager
+              cb(null, false)
+            } else {
+              // is the last manager member
+              cb(null, true);
+            }
+            return null;
+          })
+          .catch(cb);
         },
 
-        loadMembersCount: function loadMembersCount(cb) {
+        loadMembersCount(cb) {
           we.db.models.membership.count({
             where: {
               groupId: this.id
             }
-          }).then(function(r){cb(null, r);}).catch(cb)
+          })
+          .then( (r)=> {
+            cb(null, r);
+            return null;
+          })
+          .catch(cb)
         },
 
-        loadCounts: function loadCounts(cb) {
-          var group = this;
-          if (!group.dataValues.meta) group.dataValues.meta = {};
+        loadCounts(cb) {
+          const group = this;
+          if (!group.dataValues.meta) {
+            group.dataValues.meta = {};
+          }
 
           async.parallel([
             function loadMembers(done) {
-              group.loadMembersCount(function(err, count) {
+              group.loadMembersCount( (err, count)=> {
                 if (err) return done(err);
                 group.dataValues.meta.membersCount = count;
                 done();
@@ -308,8 +358,8 @@ module.exports = function Model(we) {
             }
           ], cb);
         },
-        generateDefaultWidgets: function generateDefaultWidgets(cb) {
-          var self = this;
+        generateDefaultWidgets(cb) {
+          const self = this;
 
           we.utils.async.series([
             function (done) {
@@ -334,68 +384,85 @@ module.exports = function Model(we) {
                 context: 'group-' + self.id,
                 theme: null,
                 weight: 2
-              }]).then(function() {
+              }])
+              .then( ()=> {
                 done();
-              }).catch(done);
+                return null;
+              })
+              .catch(done);
             }
           ], cb);
         }
       },
       hooks: {
         // After create default user admin and widgets
-        afterCreate: function(record, options, next) {
+        afterCreate(record, options, next) {
           we.utils.async.parallel([
             record.generateDefaultWidgets.bind(record),
             function registerAdmin(next) {
-              if (!record.creatorId) return next();
+              if (!record.creatorId) {
+                return next();
+              }
 
               record.addMember(record.creatorId, { roles: ['manager']} )
-              .then(function() {
+              .then( ()=> {
                 next();
-              }).catch(next);
+                return null;
+              })
+              .catch(next);
             },
             function registerCreatorFollow(next) {
               if (!record.creatorId) return next();
 
               we.db.models.follow
-              .follow('group', record.id, record.creatorId, function (err, follow) {
-                if (err) return next(err);
+              .follow('group', record.id, record.creatorId, (err, follow)=> {
+                if (err) {
+                  return next(err);
+                }
                 we.log.verbose('we-plugin-group:group:afterCreate:newFollow:', follow);
                 next();
+                return null;
               });
             }
           ], next);
         },
-        afterFind: function(record, options, next) {
+        afterFind(record, options, next) {
           if (!record) return next();
           if ( we.utils._.isArray(record) ) {
-            async.each(record, function(r, next){
+            async.each(record, (r, next)=> {
               r.loadCounts(next);
-            }, function (err){
+            }, (err)=> {
               next(err);
+              return null;
             });
           } else {
             record.loadCounts(next);
           }
         },
 
-        afterDestroy: function afterDestroy(record, options, next) {
+        afterDestroy(record, options, next) {
           if (!record) return next();
 
           we.utils.async.parallel([
             function destroyWidgets(next) {
               we.db.models.widget.destroy({
                 where: { context: 'group-'+record.id }
-              }).then(function(){
+              })
+              .then( ()=> {
                 next();
-              }).catch(next);
+                return null;
+              })
+              .catch(next);
             },
             function destroyPosts(next) {
               we.db.models.post.destroy({
                 where: { groupId: record.id }
-              }).then(function(){
+              })
+              .then( ()=> {
                 next();
-              }).catch(next);
+                return null;
+              })
+              .catch(next);
             }
           ], next);
         }

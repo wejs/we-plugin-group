@@ -7,9 +7,9 @@
  */
 
 module.exports = function Model(we) {
-  var isEmpty = we.utils._.isEmpty;
+  const isEmpty = we.utils._.isEmpty;
 
-  var model = {
+  const model = {
     definition: {
       active:{
         type: we.db.Sequelize.BOOLEAN,
@@ -100,9 +100,9 @@ module.exports = function Model(we) {
       },
 
       classMethods: {
-        setPostTeaser: function setPostTeaser(post, options, next) {
+        setPostTeaser(post, options, next) {
           if (!post.body) return next();
-          var postBodyClean = we.utils.string(post.body)
+          const postBodyClean = we.utils.string(post.body)
             .stripTags().s;
 
           if (!postBodyClean) return next();
@@ -111,7 +111,7 @@ module.exports = function Model(we) {
 
           next(null, post);
         },
-        setPostObjectType: function setPostObjectType(post, options, next) {
+        setPostObjectType(post, options, next) {
 
           if (!isEmpty(post.images) && !isEmpty(post.attachment)) {
             post.objectType = 'multimedia';
@@ -134,41 +134,45 @@ module.exports = function Model(we) {
          * @param  {Object}   res  express.js response
          * @param  {Function} done callback
          */
-        contextLoader: function contextLoader(req, res, done) {
+        contextLoader(req, res, done) {
           if (!res.locals.id || !res.locals.loadCurrentRecord) return done();
 
           return this.findOne({
             where: { id: res.locals.id},
             include: [{ all: true }]
-          }).then(function (record) {
+          })
+          .then( (record)=> {
             res.locals.data = record;
 
             if (record) {
               if ( record.dataValues.creatorId && req.isAuthenticated()) {
                 // set role owner
                 if (record.isOwner(req.user.id)) {
-                  if(req.userRoleNames.indexOf('owner') == -1 ) req.userRoleNames.push('owner');
+                  if(req.userRoleNames.indexOf('owner') == -1 ) {
+                    req.userRoleNames.push('owner');
+                  }
                 }
               }
 
               // redirect to post inside group
               if (record.groupId && !res.locals.group) {
-                return res.redirect(we.router.urlTo(
+                res.redirect(we.router.urlTo(
                   'group.post.findOne', [record.groupId, record.id]
                 ));
+                return null;
               }
             }
 
-            return done();
+            done();
+            return null;
           })
         },
 
         // returns an url for post record alias
-        urlAlias: function urlAlias(record) {
-          var alias, target;
+        urlAlias(record) {
+          let alias, target;
 
           if (record.groupId) {
-
             alias = '/'+ we.i18n.__('group') +'/'+ record.groupId +
                 '/'+ we.i18n.__('post') +'/' + record.id;
             target = '/group/'+record.groupId+'/post/' + record.id;
@@ -178,7 +182,9 @@ module.exports = function Model(we) {
           }
 
           // skip if alias is = target
-          if (alias == target) return null;
+          if (alias == target) {
+            return null;
+          }
 
           return {
             alias: alias,
@@ -193,7 +199,7 @@ module.exports = function Model(we) {
          *
          * @return {String} url path
          */
-        getUrlPath: function getUrlPath() {
+        getUrlPath() {
           if (this.groupId) {
             return we.router.urlTo(
               'group.post.findOne', [this.groupId, this.id]
@@ -205,23 +211,26 @@ module.exports = function Model(we) {
           }
         },
 
-        registerCreatePostNotifications: function registerCreatePostNotifications(req, res, next) {
+        registerCreatePostNotifications(req, res, next) {
 
           if (
             !req.we.plugins['we-plugin-notification'] ||
             !req.we.plugins['we-plugin-flag'] ||
             !res.locals.data
-          ) return next();
+          ) {
+            return next();
+          }
 
-          var record = this;
-
-          var followers = [];
+          let record = this;
+          let followers = [];
 
           req.we.utils.async.series([
             function getFollowers(done) {
-              if (!req.isAuthenticated()) return done();
+              if (!req.isAuthenticated()) {
+                return done();
+              }
 
-              var where;
+              let where;
 
               if (res.locals.data.groupId) {
                 where = {
@@ -243,15 +252,19 @@ module.exports = function Model(we) {
                 };
               }
               // get followers
-              req.we.db.models.follow.findAll({
+              req.we.db.models.follow
+              .findAll({
                 where: where,
                 attributes: ['userId']
-              }).then(function (r) {
+              })
+              .then( (r)=> {
                 followers = r;
                 done();
-              }).catch(done);
+                return null;
+              })
+              .catch(done);
             }
-          ], function (err) {
+          ], (err)=> {
             if (err) return next(err);
 
             res.locals.createdPostUserNotified = {};
@@ -265,6 +278,7 @@ module.exports = function Model(we) {
                 req: req, res: res, we: req.we
               }), next);
             }
+            return null;
           });
         },
 
@@ -274,18 +288,20 @@ module.exports = function Model(we) {
          * @param  {Object}   follower follow record
          * @param  {Function} done     callback
          */
-        createNotification: function createNotification(follower, done) {
+        createNotification(follower, done) {
           if (
             this.res.locals.createdPostUserNotified[follower.userId] ||
             (follower.userId == this.res.locals.data.creatorId)
-          ) return done();
+          ) {
+            return done();
+          }
 
-          var self = this;
-          var actor = this.req.user;
-          var hostname = this.req.we.config.hostname;
-          var record = this.res.locals.data;
+          const self = this,
+            actor = this.req.user,
+            hostname = this.req.we.config.hostname,
+            record = this.res.locals.data;
 
-          var localeText;
+          let localeText;
           if (record.title) {
             localeText = 'post.'+record.objectType+'.create.notification.title.withTitle';
           } else {
@@ -309,13 +325,16 @@ module.exports = function Model(we) {
             modelName: 'post',
             modelId: record.id,
             type: 'post-created-in-group'
-          }).then(function (r) {
+          })
+          .then( (r)=> {
 
             self.res.locals.createdPostUserNotified[follower.userId] = true;
 
             self.req.we.log.verbose('New post notification, id: ', r.id);
             done(null, r);
-          }).catch(done);
+            return null;
+          })
+          .catch(done);
         },
 
         /**
@@ -324,19 +343,21 @@ module.exports = function Model(we) {
          * @param  {Object}   follower follow record
          * @param  {Function} done     callback
          */
-        createNotificationInGroup: function createNotificationInGroup(follower, done) {
+        createNotificationInGroup(follower, done) {
           if (
             this.res.locals.createdPostUserNotified[follower.userId] ||
             (follower.userId == this.res.locals.data.creatorId)
-          ) return done();
+          ) {
+            return done();
+          }
 
-          var self = this;
-          var group = this.res.locals.group;
-          var actor = this.req.user;
-          var hostname = this.req.we.config.hostname;
-          var record = this.res.locals.data;
+          const self = this,
+            group = this.res.locals.group,
+            actor = this.req.user,
+            hostname = this.req.we.config.hostname,
+            record = this.res.locals.data;
 
-          var localeText;
+          let localeText;
           if (record.title) {
             localeText = 'post.'+record.objectType+'.create.notification.inGroup.title.withTitle';
           } else {
@@ -362,38 +383,40 @@ module.exports = function Model(we) {
             modelName: 'post',
             modelId: record.id,
             type: 'post-created-in-group'
-          }).then(function (r) {
-
+          })
+          .then( (r)=> {
             self.res.locals.createdPostUserNotified[follower.userId] = true;
-
             self.req.we.log.verbose('New post notification in group, id: ', r.id);
             done(null, r);
-          }).catch(done);
+            return null;
+          })
+          .catch(done);
         }
       },
 
       hooks: {
-        beforeCreate: function beforeCreate(post, options, next) {
-          we.db.models.post.setPostTeaser(post, options, function(){
+        beforeCreate(post, options, next) {
+          we.db.models.post.setPostTeaser(post, options, ()=> {
             we.db.models.post.setPostObjectType(post, options, next);
           });
         },
 
-        beforeUpdate: function beforeUpdate(post, options, next) {
-          we.db.models.post.setPostTeaser(post, options, function(){
+        beforeUpdate(post, options, next) {
+          we.db.models.post.setPostTeaser(post, options, ()=> {
             we.db.models.post.setPostObjectType(post, options, next);
           });
         },
 
         // After create add user as follower
-        afterCreate: function afterCreate(record, options, next) {
+        afterCreate(record, options, next) {
           if (!record.creatorId) return next();
 
           we.db.models.follow
-          .follow('post', record.id, record.creatorId, function (err, follow) {
+          .follow('post', record.id, record.creatorId, (err, follow)=> {
             if (err) return next(err);
             we.log.verbose('we-plugin-group:post:afterCreate:newFollow:', follow);
             next();
+            return null;
           });
         }
       }

@@ -1,6 +1,7 @@
 {{#if locals.group}}
 <div class="group-logo">
 {{#link-to 'group.post.find' locals.group.id}}
+{{log locals.group.logo}}
 {{we-image locals.group.logo 'medium' class="img-thumbnail"}}
 {{/link-to}}
 </div>
