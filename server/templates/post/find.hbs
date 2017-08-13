@@ -1,4 +1,6 @@
-{{template 'post/sharebox' locals=this}}
+{{#if req.user.id}}
+  {{template 'post/sharebox' locals=this}}
+{{/if}}
 {{template 'post/search' locals=this}}
 
 <div id="haveNewPosts" style="display: none" class="text-center alert alert-info" role="alert"><a href="{{req.originalUrl}}">
