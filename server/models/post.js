@@ -18,7 +18,8 @@ module.exports = function Model(we) {
       },
       // optional title
       title: {
-        type: we.db.Sequelize.STRING
+        type: we.db.Sequelize.STRING,
+        formFieldType: null
       },
       // auto set teaser
       teaser: {
