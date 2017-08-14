@@ -1,4 +1,12 @@
 module.exports = {
+  detail(req, res) {
+    const we = req.we,
+      group = res.locals.group;
+
+
+    console.log('det');
+  },
+
   find(req, res) {
     let membersJoinRequired = false;
 
@@ -56,6 +64,84 @@ module.exports = {
     .catch(res.queryError);
   },
 
+  findOne(req, res) {
+
+    const we = req.we,
+      group = res.locals.group;
+
+    if (!group) return res.notFound();
+
+    // redirect to posts list inside group
+    // if (
+    //   res.locals.controller == 'group' &&
+    //   res.locals.action == 'findOne' &&
+    //   req.accepts('html')
+    // ) {
+    //   return res.redirect(we.router.urlTo(
+    //     'group.post.find', [record.id]
+    //   ));
+    // }
+    let userId;
+
+    if (req.isAuthenticated()) {
+      userId = req.user.id;
+    }
+
+    group.userCanAccessGroup(userId, (err, can)=> {
+      if (can) {
+        if (we.plugins['we-plugin-view'] && req.accepts('html')) {
+          return res.redirect(we.router.urlTo(
+            'group.post.find', [group.id]
+          ));
+        } else {
+          // default json send data:
+          res.send();
+        }
+      } else {
+        return res.redirect(we.router.urlTo(
+          'group.detail', [group.id]
+        ));
+      }
+
+    });
+
+    if (group.privacity == 'public' || group.activity == null) {
+      // go to /posts
+      //
+    }
+
+    // grupo público
+
+      // deslogado
+
+      // logado
+
+      // membro
+
+    // restrito
+
+      // deslogado
+
+      // logado
+
+      // membro
+
+    // privado
+
+      // deslogado
+
+      // logado
+
+      // membro
+
+
+
+
+    // console.log('>>>>>', res.locals.data);
+
+    // findOneMember
+  },
+
   findNewGroupsToUser(req, res, next) {
     if (!req.params.userId) return next();
 
@@ -86,6 +172,8 @@ module.exports = {
   join(req, res) {
     if (!req.isAuthenticated()) return res.forbidden();
 
+    const group = res.locals.group;
+
     if (res.locals.membership) {
       // already are member
       res.addMessage('warning', {
@@ -97,8 +185,6 @@ module.exports = {
 
       return res.goTo( res.locals.redirectTo || '/group/'+res.locals.group.id );
     }
-
-    const group = res.locals.group;
 
     res.locals.group.userJoin(req.user.id, (err, membership)=> {
       if (err) return res.serverError(err);
@@ -138,7 +224,6 @@ module.exports = {
         });
       })
       .catch(res.queryError);
-
     });
   },
 

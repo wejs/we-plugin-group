@@ -256,6 +256,16 @@ module.exports = function loadPlugin(projectPath, Plugin) {
       model         : 'group',
       responseType  : 'json'
     },
+
+    // group details route with group information to members and not members
+    'get /group/:groupId([0-9]+)/detail': {
+      controller    : 'group',
+      action        : 'detail',
+      model         : 'group',
+      titleHandler  : 'i18n',
+      titleI18n     : 'group.datails',
+      permission    : true
+    },
     // find and list
     'get /group/:groupId([0-9]+)/member/invite': {
       controller    : 'membershipinvite',

@@ -144,17 +144,6 @@ module.exports = function Model(we) {
                   if(req.userRoleNames.indexOf('owner') == -1 ) req.userRoleNames.push('owner');
                 }
               }
-
-              // redirect to posts list inside group
-              if (
-                res.locals.controller == 'group' &&
-                res.locals.action == 'findOne' &&
-                res.locals.responseType == 'html'
-              ) {
-                return res.redirect(we.router.urlTo(
-                  'group.post.find', [record.id]
-                ));
-              }
             }
 
             done();
@@ -299,6 +288,30 @@ module.exports = function Model(we) {
             }
             return null;
           });
+        },
+
+        userCanAccessGroup(userId, cb) {
+          switch(this.privacity) {
+            case 'restrict':
+            case 'private':
+              if (!userId) return cb(null, false); // unAuthenticated
+
+              this.findOneMember(userId, (err, is)=> {
+                if (err) return cb(err);
+
+                if (is) {
+                  return cb(null, true);
+                } else {
+                  return cb(null, false);
+                }
+              })
+
+              break;
+            default:
+              // public
+              return cb(null, true);
+          }
+
         },
 
         checkIfMemberIslastmanager(userId, cb) {
