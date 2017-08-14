@@ -5,10 +5,6 @@
   "action": "/post/create",
 
   "fields": {
-    "title": {
-      "type": "text",
-      "allowNull": true
-    },
     "body": {
       "type": "html",
       "allowNull": false
