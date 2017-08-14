@@ -5,7 +5,7 @@
  */
 
 module.exports = function loadPlugin(projectPath, Plugin) {
-  var plugin = new Plugin(__dirname);
+  const plugin = new Plugin(__dirname);
 
   // set plugin configs
   plugin.setConfigs({
@@ -401,35 +401,42 @@ module.exports = function loadPlugin(projectPath, Plugin) {
   plugin.events.on('we:express:set:params', function (data) {
     // group pre-loader
     data.express.param('groupId', plugin.expressGroupIdParams);
-
     data.express.param('membershpinviteKeyId', plugin.expressValidInviteParams);
   });
 
   plugin.expressGroupIdParams = function expressGroupIdParams(req, res, next, id) {
     if (!/^\d+$/.exec(String(id))) return res.notFound();
 
-    var we = req.we;
+    const we = req.we;
 
     we.db.models.group.findById(id)
-    .then(function (group) {
-      if (!group) return res.notFound();
+    .then( (group)=> {
+      if (!group) {
+        res.notFound();
+        return null;
+      }
+
       res.locals.group = group;
 
       if (!group.metadata) group.metadata = {};
 
       res.locals.widgetContext = 'group-' + group.id;
 
-      if (!req.user) return next();
+      if (!req.user) {
+        next();
+        return null;
+      }
 
       we.utils.async.parallel([
         function loadMembership(next) {
           we.db.models.membership.find({
             where: { userId: req.user.id, groupId: group.id }
-          }).then(function (membership) {
+          })
+          .then( (membership)=> {
 
             if (membership) {
-              var roles = membership.roles;
-              req.userRoleNames = req.userRoleNames.concat(roles.map(function (r) {
+              let roles = membership.roles;
+              req.userRoleNames = req.userRoleNames.concat(roles.map( (r)=> {
                 return 'group' + r.charAt(0).toUpperCase() + r.slice(1);
               }));
 
@@ -440,18 +447,23 @@ module.exports = function loadPlugin(projectPath, Plugin) {
             }
 
             next();
-          }).catch(res.queryError);
+            return null;
+          })
+          .catch(res.queryError);
         },
         function loadFollowStatus(next) {
           we.db.models.follow.isFollowing(req.user.id, 'group', group.id)
-          .then(function (isFollowing) {
-
+          .then( (isFollowing)=> {
             res.locals.group.metadata.isFollowing = isFollowing;
             next();
-          }).catch(next);
+            return null;
+          })
+          .catch(next);
         }
       ], next);
-    }).catch(next);
+      return null;
+    })
+    .catch(next);
   }
 
   /**
@@ -459,10 +471,16 @@ module.exports = function loadPlugin(projectPath, Plugin) {
    */
   plugin.expressValidInviteParams = function expressValidInviteParams(req, res, next, id) {
     req.we.db.models.membershipinvite.findById(id)
-    .then(function (membershipinvite) {
-      if (!membershipinvite) return res.notFound();
-      next();
-    }).catch(next);
+    .then( (membershipinvite)=> {
+      if (!membershipinvite) {
+        res.notFound();
+      } else {
+        next();
+      }
+
+      return null;
+    })
+    .catch(next);
   }
 
   plugin.addJs('we.sharebox', {
