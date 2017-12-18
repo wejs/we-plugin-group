@@ -44,6 +44,16 @@ module.exports = function Model(we) {
         type: we.db.Sequelize.BOOLEAN,
         formFieldType: null,
         defaultValue: false
+      },
+      firstImage: {
+        type: we.db.Sequelize.VIRTUAL,
+        get() {
+          const images = this.images;
+          if (images && images.length) {
+            return images[0];
+          }
+          return null;
+        }
       }
     },
 

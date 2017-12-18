@@ -1,0 +1,158 @@
+  {{!-- your widget html here... the widget object is avaible as widget variable and res.locals is avaible as locals variable --}}
+
+{{#ifCond widget.layout "home"}}
+  <div class="container">
+    <div class="row">
+    {{#each widget.posts}}
+      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+        <div id="post-teaser-{{id}}" class="post-teaser match-grid-col-scroll post-{{objectType}}" data-we-model="post" data-we-modelId="{{id}}">
+          <div class="post-header">
+            <div class="post-creator">
+              {{#link-to 'user.findOne' creatorId}}
+              {{we-avatar id=creatorId style='thumbnail' width="25px" height="25px"}}
+              <strong>{{creator.displayName}}</strong>
+              {{/link-to}}
+              - <span class="post-date">{{we-time-ago createdAt locals=locals}}</span>
+
+              {{#if group}}
+                - <span class="group">
+                  {{#link-to 'group.findOne' groupId}}
+                    {{group.name}}
+                  {{/link-to}}
+                </span>
+              {{/if}}
+
+              {{#if category}}
+                <br>
+                <span>
+                  {{t 'post.category.label'}}:
+                  {{#each category}}
+                    <em>{{this}}</em>
+                  {{/each}}
+                </span>
+              {{/if}}
+            </div>
+          </div>
+          {{#if title}}
+            <div class="post-title"><h3>{{title}}</h3></div>
+          {{/if}}
+
+          {{#if images}}
+            <div class="post-images">
+              {{#if firstImage}}
+                {{we-image-fancybox firstImage 'medium'}}
+              {{/if}}
+            </div>
+            <script>$(function(){ $("#post-teaser-{{id}} > .post-images > a").fancybox(); });</script>
+          {{/if}}
+
+          <div class="post-body">{{{teaser}}}</div>
+
+          {{#if attachment}}
+            <br>
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>{{t 'name'}}</th>
+                  <th>{{t 'actions'}}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {{#each attachment}}
+                  <tr>
+                    <td>{{originalname}}</td>
+                    <td>
+                      <a class="btn btn-default btn-sm" href="{{urls.original}}" download>{{t 'download'}}</a>
+                    </td>
+                  </tr>
+                {{/each}}
+              </tbody>
+            </table>
+          {{/if}}
+
+          <div class="post-footer">
+            <a href="/post/{{id}}" class="btn btn-default btn-sm">Ver mais</a>
+          </div>
+        </div>
+
+      </div>
+      {{/each}}
+    </div>
+  </div>
+{{else}}
+  {{#ifCond widget.regionName "sidebar"}}
+    {{#each widget.posts}}
+      <div id="post-teaser-{{id}}" class="post-teaser match-grid-col-scroll post-{{objectType}}" data-we-model="post" data-we-modelId="{{id}}">
+        <div class="post-header">
+          <div class="post-creator">
+            {{#link-to 'user.findOne' creatorId}}
+            {{we-avatar id=creatorId style='thumbnail' width="25px" height="25px"}}
+            <strong>{{creator.displayName}}</strong>
+            {{/link-to}}
+            - <span class="post-date">{{we-time-ago createdAt locals=locals}}</span>
+
+            {{#if group}}
+              - <span class="group">
+                {{#link-to 'group.findOne' groupId}}
+                  {{group.name}}
+                {{/link-to}}
+              </span>
+            {{/if}}
+
+            {{#if category}}
+              <br>
+              <span>
+                {{t 'post.category.label'}}:
+                {{#each category}}
+                  <em>{{this}}</em>
+                {{/each}}
+              </span>
+            {{/if}}
+          </div>
+        </div>
+        {{#if title}}
+          <div class="post-title"><h3>{{title}}</h3></div>
+        {{/if}}
+
+        {{#if images}}
+          <div class="post-images">
+            {{#if firstImage}}
+              {{we-image-fancybox firstImage 'medium'}}
+            {{/if}}
+          </div>
+          <script>$(function(){ $("#post-teaser-{{id}} > .post-images > a").fancybox(); });</script>
+        {{/if}}
+
+        <div class="post-body">{{{teaser}}}</div>
+
+        {{#if attachment}}
+          <br>
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>{{t 'name'}}</th>
+                <th>{{t 'actions'}}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {{#each attachment}}
+                <tr>
+                  <td>{{originalname}}</td>
+                  <td>
+                    <a class="btn btn-default btn-sm" href="{{urls.original}}" download>{{t 'download'}}</a>
+                  </td>
+                </tr>
+              {{/each}}
+            </tbody>
+          </table>
+        {{/if}}
+
+        <div class="post-footer">
+          <a href="/post/{{id}}" class="btn btn-default btn-sm">Ver mais</a>
+        </div>
+      </div>
+    {{/each}}
+  {{/ifCond}}
+{{/ifCond}}
+
+
