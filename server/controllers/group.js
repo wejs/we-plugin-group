@@ -1,10 +1,9 @@
 module.exports = {
   detail(req, res) {
-    const we = req.we,
-      group = res.locals.group;
+    // const we = req.we,
+    //   group = res.locals.group;
 
-
-    console.log('det');
+    res.ok();
   },
 
   find(req, res) {
