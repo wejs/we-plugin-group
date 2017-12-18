@@ -263,7 +263,7 @@ module.exports = function loadPlugin(projectPath, Plugin) {
       action        : 'detail',
       model         : 'group',
       titleHandler  : 'i18n',
-      titleI18n     : 'group.datails',
+      titleI18n     : 'group.details',
       permission    : true
     },
     // find and list
