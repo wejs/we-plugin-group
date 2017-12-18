@@ -237,18 +237,18 @@ module.exports = function Model(we) {
                 where = {
                   $or: [
                     {
-                      modelName: 'group',
+                      model: 'group',
                       modelId: res.locals.group.id
                     },
                     {
-                      modelName: 'user',
+                      model: 'user',
                       modelId: req.user.id
                     },
                   ]
                 };
               } else {
                 where = {
-                  modelName: 'user',
+                  model: 'user',
                   modelId: req.user.id
                 };
               }

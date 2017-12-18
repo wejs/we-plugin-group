@@ -28,7 +28,8 @@ module.exports = {
             user = u;
 
             // check if user is member or already are invited
-            res.locals.group.hasMember(user)
+            res.locals.group
+            .hasMember(user)
             .then( (isMember)=> {
               if (isMember) {
                 res.locals.cantInviteMessage = 'membershipinvite.invite.error.alreadyInvited';
@@ -47,7 +48,8 @@ module.exports = {
         function checkIfAreInvited(done) {
           if (!user) return done();
 
-          we.db.models.membershipinvite.findOne({
+          we.db.models.membershipinvite
+          .findOne({
             where: {
               groupId: res.locals.group.id,
               $or: [
@@ -75,7 +77,8 @@ module.exports = {
           req.body.email = user.email;
           req.body.groupId = res.locals.group.id;
 
-          return res.locals.Model.create(req.body)
+          return res.locals.Model
+          .create(req.body)
           .then( (record)=> {
             res.locals.data = record;
             done();
@@ -182,7 +185,8 @@ module.exports = {
     req.we.utils.async.series(functions, (err)=> {
       if (err) return next(err);
 
-      res.locals.Model.findAndCountAll(res.locals.query)
+      res.locals.Model
+      .findAndCountAll(res.locals.query)
       .then( (record)=> {
         if (!record) return next();
         res.locals.metadata.count = record.count;

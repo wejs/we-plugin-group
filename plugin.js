@@ -83,6 +83,49 @@ module.exports = function loadPlugin(projectPath, Plugin) {
     },
     forms: {
       'post': __dirname + '/server/forms/post.json'
+    },
+    emailTypes: {
+      GroupMembershipInvite: {
+        label: 'Email de aviso de convite para entrar em um grupo',
+        templateVariables: {
+          displayName: {
+            example: 'Alberto Souza',
+            description: 'Nome da pessoa convidada'
+          },
+          email: {
+            example: 'contact@linkysysytems.com',
+            description: 'Email da pessoa convidada'
+          },
+          inviterName: {
+            example: 'Santos',
+            description: 'Nome da pessoa que convidou'
+          },
+          acceptURL: {
+            example: '/group/1/accept',
+            description: 'URL para aceitar o convite e participar do grupo'
+          },
+          groupURL: {
+            example: '/group/1',
+            description: 'URL de acesso ao grupo'
+          },
+          groupName: {
+            example: 'Grupo de trabalho',
+            description: 'Nome do grupo'
+          },
+          groupDescription: {
+            example: 'Grupo incrível',
+            description: 'Descrição do grupo'
+          },
+          siteName: {
+            example: 'Site Name',
+            description: 'Nome deste site'
+          },
+          siteUrl: {
+            example: '/#example',
+            description: 'Endereço deste site'
+          }
+        }
+      }
     }
   });
 

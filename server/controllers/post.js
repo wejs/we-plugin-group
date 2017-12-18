@@ -100,7 +100,8 @@ module.exports = {
           return r.id;
         });
 
-        req.we.db.models.notification.update({
+        req.we.db.models.notification
+        .update({
           read: true
         }, {
           where: {
@@ -136,7 +137,8 @@ module.exports = {
     // mark this post notifications as read
     if (req.we.plugins['we-plugin-notification'] && req.isAuthenticated()) {
 
-      req.we.db.models.notification.update({
+      req.we.db.models.notification
+      .update({
         read: true
       }, {
         where: {
