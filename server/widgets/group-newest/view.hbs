@@ -1,0 +1,47 @@
+{{#ifCond widget.layout "home"}}
+  <div class="container">
+    <div class="row centered">
+      {{#each widget.groups}}
+        <div class="col-md-3">
+          <div class="thumbnail">
+            {{#link-to 'group.post.find' id}}
+              {{we-image logo 'medium'}}
+            {{/link-to}}
+            <div class="caption">
+              <h4 class="group-teaser-title">
+                {{#link-to 'group.post.find' id}}
+                  {{we-strip-tags text=name maxLength=40}}
+                {{/link-to}}
+              </h4>
+              {{#if meta.membersCount}}
+                <div class="group-teaser-members-counter">{{meta.membersCount}} membros</div>
+              {{/if}}
+            </div>
+          </div>
+        </div>
+      {{/each}}
+    </div>
+  </div>
+{{else}}
+  <div class="row centered">
+    {{#each widget.groups}}
+      <div class="col-md-3">
+        <div class="thumbnail">
+          {{#link-to 'group.post.find' id}}
+            {{we-image logo 'medium'}}
+          {{/link-to}}
+          <div class="caption">
+            <h4 class="group-teaser-title">
+              {{#link-to 'group.post.find' id}}
+                {{we-strip-tags text=name maxLength=40}}
+              {{/link-to}}
+            </h4>
+            {{#if meta.membersCount}}
+              <div class="group-teaser-members-counter">{{meta.membersCount}} membros</div>
+            {{/if}}
+          </div>
+        </div>
+      </div>
+    {{/each}}
+  </div>
+{{/ifCond}}
