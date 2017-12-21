@@ -9,7 +9,17 @@ module.exports = {
   find(req, res) {
     let membersJoinRequired = false;
 
-    if (req.isAuthenticated()) {
+    if (req.query.member && Number(req.query.member)) {
+      res.locals.query.where.privacity = 'public';
+
+      res.locals.query.include.push({
+        model: req.we.db.models.user, as: 'members',
+        required: true,
+        where: {
+          id: req.query.member
+        }
+      });
+    } else if(req.isAuthenticated()) {
 
       if (req.query.my === true || req.query.my == 'true') {
         // find user groups
@@ -63,8 +73,19 @@ module.exports = {
     .catch(res.queryError);
   },
 
-  findOne(req, res) {
+  /**
+   * Get current user public groups
+   */
+  findUserGroup(req, res, next) {
+    if (!res.locals.user || !res.locals.user.id) {
+      return res.notFound();
+    }
 
+    req.query.member = res.locals.user.id;
+    req.we.controllers.group.find(req, res, next);
+  },
+
+  findOne(req, res) {
     const we = req.we,
       group = res.locals.group;
 

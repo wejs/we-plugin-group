@@ -132,6 +132,16 @@ module.exports = {
     .catch(res.queryError);
   },
 
+  findUserPosts(req, res, next) {
+    if (!res.locals.user || !res.locals.user.id) {
+      return res.notFound();
+    }
+
+    res.locals.query.where.creatorId = res.locals.user.id;
+
+    req.we.controllers.user.find(req, res, next);
+  },
+
   findOne(req, res, next) {
     if (!res.locals.data) return next();
     // mark this post notifications as read

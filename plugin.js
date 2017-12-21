@@ -263,6 +263,108 @@ module.exports = function loadPlugin(projectPath, Plugin) {
     }
   });
 
+  plugin.setResource({
+    parent: 'user',
+    name: 'post',
+    namePrefix: 'user.',
+    templateFolderPrefix: 'user/',
+
+    findAll: {
+      action: 'findUserPosts',
+      layoutName: 'user-layout',
+      query: { limit: 10 },
+      search: postSearch ,
+      permission: 'find_post'
+    },
+    findOne: {
+      layoutName: 'user-layout',
+      permission: 'find_post',
+      breadcrumbHandler(req, res) {
+        res.goTo('/post/'+res.locals.id);
+      }
+    },
+    create: {
+      layoutName: 'user-layout',
+      permission: 'create_post',
+      breadcrumbHandler(req, res) {
+        res.goTo('/post/'+res.locals.id);
+      }
+    },
+    update: {
+      layoutName: 'user-layout',
+      permission: 'update_post',
+      breadcrumbHandler(req, res) {
+        res.goTo('/post/'+res.locals.id);
+      }
+    },
+    delete: {
+      layoutName: 'user-layout',
+      permission: 'delete_post',
+      breadcrumbHandler(req, res) {
+        res.goTo('/post/'+res.locals.id);
+      }
+    }
+  });
+
+  plugin.setResource({
+    parent: 'user',
+    name: 'group',
+    namePrefix: 'user.',
+    templateFolderPrefix: 'user/',
+
+    findAll: {
+      action: 'findUserGroup',
+      layoutName: 'user-layout',
+      query: { limit: 10 },
+      breadcrumbHandler(req, res, next) {
+        if (!res.locals.user) return next();
+
+        let name = plugin.we.utils.string(res.locals.user.displayName).truncate(40).s;
+
+        res.locals.breadcrumb =
+          '<ol class="breadcrumb">'+
+            '<li><a href="/">'+res.locals.__('Home')+'</a></li>'+
+            '<li><a href="'+req.we.router.urlTo('user.find', req.paramsArray)+
+          '">'+res.locals.__('user.find')+'</a></li>'+
+            '<li><a href="'+req.we.router.urlTo('user.findOne', req.paramsArray)+
+          '">'+name+'</a></li>'+
+            '<li class="active">'+res.locals.__('group.find')+'</li>'+
+          '</ol>';
+
+        next();
+      },
+      permission: 'find_post'
+    },
+    findOne: {
+      layoutName: 'user-layout',
+      permission: 'find_post',
+      breadcrumbHandler(req, res) {
+        res.goTo('/group/'+res.locals.id);
+      }
+    },
+    create: {
+      layoutName: 'user-layout',
+      permission: 'create_post',
+      breadcrumbHandler(req, res) {
+        res.goTo('/group/'+res.locals.id);
+      }
+    },
+    update: {
+      layoutName: 'user-layout',
+      permission: 'update_post',
+      breadcrumbHandler(req, res) {
+        res.goTo('/group/'+res.locals.id);
+      }
+    },
+    delete: {
+      layoutName: 'user-layout',
+      permission: 'delete_post',
+      breadcrumbHandler(req, res) {
+        res.goTo('/group/'+res.locals.id);
+      }
+    }
+  });
+
   // ser plugin routes
   plugin.setRoutes({
     'get /user/:userId([0-9]+)/membership': {
