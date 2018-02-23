@@ -409,75 +409,86 @@ module.exports = function Model(we) {
       },
       hooks: {
         // After create default user admin and widgets
-        afterCreate(record, options, next) {
-          we.utils.async.parallel([
-            record.generateDefaultWidgets.bind(record),
-            function registerAdmin(next) {
-              if (!record.creatorId) {
-                return next();
-              }
-
-              record.addMember(record.creatorId, { roles: ['manager']} )
-              .then( ()=> {
-                next();
-                return null;
-              })
-              .catch(next);
-            },
-            function registerCreatorFollow(next) {
-              if (!record.creatorId) return next();
-
-              we.db.models.follow
-              .follow('group', record.id, record.creatorId, (err, follow)=> {
-                if (err) {
-                  return next(err);
+        afterCreate(record) {
+          return new Promise( (resolve, reject)=> {
+            we.utils.async.parallel([
+              record.generateDefaultWidgets.bind(record),
+              function registerAdmin(next) {
+                if (!record.creatorId) {
+                  return next();
                 }
-                we.log.verbose('we-plugin-group:group:afterCreate:newFollow:', follow);
-                next();
+
+                record.addMember(record.creatorId, { roles: ['manager']} )
+                .then( ()=> {
+                  next();
+                  return null;
+                })
+                .catch(next);
+              },
+              function registerCreatorFollow(next) {
+                if (!record.creatorId) return next();
+
+                we.db.models.follow
+                .follow('group', record.id, record.creatorId, (err, follow)=> {
+                  if (err) {
+                    return next(err);
+                  }
+                  we.log.verbose('we-plugin-group:group:afterCreate:newFollow:', follow);
+                  next();
+                  return null;
+                });
+              }
+            ], (err)=> {
+              if (err) return reject(err);
+              resolve();
+            });
+          });
+        },
+        afterFind(record) {
+          return new Promise( (resolve)=> {
+            if (!record) return resolve();
+            if ( we.utils._.isArray(record) ) {
+              async.each(record, (r, next)=> {
+                r.loadCounts(next);
+              }, (err)=> {
+                resolve(err);
                 return null;
               });
+            } else {
+              record.loadCounts(resolve);
             }
-          ], next);
+          });
         },
-        afterFind(record, options, next) {
-          if (!record) return next();
-          if ( we.utils._.isArray(record) ) {
-            async.each(record, (r, next)=> {
-              r.loadCounts(next);
-            }, (err)=> {
-              next(err);
-              return null;
+        afterDestroy(record) {
+          return new Promise( (resolve, reject)=> {
+            if (!record) return resolve();
+
+            we.utils.async.parallel([
+              function destroyWidgets(next) {
+                we.db.models.widget.destroy({
+                  where: { context: 'group-'+record.id }
+                })
+                .then( ()=> {
+                  next();
+                  return null;
+                })
+                .catch(next);
+              },
+              function destroyPosts(next) {
+                we.db.models.post.destroy({
+                  where: { groupId: record.id }
+                })
+                .then( ()=> {
+                  next();
+                  return null;
+                })
+                .catch(next);
+              }
+            ], (err)=> {
+              if (err) return reject(err);
+              resolve();
             });
-          } else {
-            record.loadCounts(next);
-          }
-        },
-
-        afterDestroy(record, options, next) {
-          if (!record) return next();
-
-          we.utils.async.parallel([
-            function destroyWidgets(next) {
-              we.db.models.widget.destroy({
-                where: { context: 'group-'+record.id }
-              })
-              .then( ()=> {
-                next();
-                return null;
-              })
-              .catch(next);
-            },
-            function destroyPosts(next) {
-              we.db.models.post.destroy({
-                where: { groupId: record.id }
-              })
-              .then( ()=> {
-                next();
-                return null;
-              })
-              .catch(next);
-            }
-          ], next);
+          });
         }
       }
     }

@@ -41,7 +41,6 @@ module.exports = function MembershipModel(we) {
         }
       }
     },
-
     associations: {
       user: {
         type: 'belongsTo',
@@ -49,53 +48,65 @@ module.exports = function MembershipModel(we) {
         constraints: false
       }
     },
-
     options: {
       classMethods: {},
       instanceMethods: {
-        addRole: function(roleName) {
-          var r = this.roles;
+        addRole(roleName) {
+          let r = this.roles;
           if (r.indexOf(roleName) === -1) r.push(roleName);
           this.roles = r;
           return this.save();
         },
-        removeRole: function(roleName) {
-          var r = this.roles;
-          var index = r.indexOf(roleName);
+        removeRole(roleName) {
+          let r = this.roles;
+          let index = r.indexOf(roleName);
           if (index + -1) r.splice(index, 1);
           this.roles = r;
           return this.save();
         },
-        haveRole: function(roleName) {
-          var r = this.roles;
+        haveRole(roleName) {
+          let r = this.roles;
           if (r.indexOf(roleName) > -1) return true;
           return false;
         }
       },
       hooks: {
-        afterCreate: function(instance, options, done) {
-          we.utils.async.parallel([
-            function deleteRequests(done) {
-              we.db.models.membershiprequest.destroy({
-                where: {
-                  userId: instance.memberId,
-                  groupId: instance.modelId
-                }
-              }).then(function () {
-                done()
-              }).catch(done);
-            },
-            function deleteInvites(done) {
-              we.db.models.membershipinvite.destroy({
-                where: {
-                  userId: instance.memberId,
-                  groupId: instance.modelId
-                }
-              }).then(function () {
-                done()
-              }).catch(done);
-            }
-          ], done);
+        afterCreate(instance) {
+          return new Promise( (resolve, reject)=> {
+            we.utils.async.parallel([
+              function deleteRequests(done) {
+                we.db.models.membershiprequest
+                .destroy({
+                  where: {
+                    userId: instance.memberId,
+                    groupId: instance.modelId
+                  }
+                })
+                .then(function () {
+                  done();
+                  return null;
+                })
+                .catch(done);
+              },
+              function deleteInvites(done) {
+                we.db.models.membershipinvite
+                .destroy({
+                  where: {
+                    userId: instance.memberId,
+                    groupId: instance.modelId
+                  }
+                })
+                .then(function () {
+                  done();
+                  return null;
+                })
+                .catch(done);
+              }
+            ], (err)=> {
+              if (err) return reject(err);
+              resolve();
+            });
+          });
         }
       }
     }

@@ -8,6 +8,7 @@ module.exports = {
 
   find(req, res) {
     let membersJoinRequired = false;
+    const Op = req.we.Op;
 
     if (req.query.member && Number(req.query.member)) {
       res.locals.query.where.privacity = 'public';
@@ -27,7 +28,7 @@ module.exports = {
         res.locals.showUserGroups = true;
       } else if(req.query.my === false || req.query.my == 'false') {
         // find new groups to user
-        res.locals.query.where.$and = [
+        res.locals.query.where[Op.and] = [
           [' members.id IS NULL ', []],
           { privacity: 'public' }
         ];
@@ -35,7 +36,7 @@ module.exports = {
         res.locals.showNewGroups = true;
       } else {
         // find user groups and new groups
-        res.locals.query.where.$or = [
+        res.locals.query.where[Op.or] = [
           [' members.id IS NOT NULL ', []],
           { privacity: 'public' }
         ];
@@ -54,20 +55,20 @@ module.exports = {
       res.locals.query.where.privacity = 'public';
     }
 
-    res.locals.Model.findAll(res.locals.query)
+    res.locals.Model
+    .findAll(res.locals.query)
     .then( (records)=> {
 
       res.locals.data = records;
 
-      res.locals.Model.count(res.locals.query)
+      res.locals.Model
+      .count(res.locals.query)
       .then( (count)=> {
         res.locals.metadata.count = count;
 
-        res.ok();
-        return null;
+        return res.ok();
       })
       .catch(res.queryError);
-
       return null;
     })
     .catch(res.queryError);
@@ -165,24 +166,26 @@ module.exports = {
   findNewGroupsToUser(req, res, next) {
     if (!req.params.userId) return next();
 
+    const Op = req.we.Op;
+
     res.locals.query.include.push({
       model: req.we.db.models.user , as: 'members', required: true,
       where: {
-        id: { $ne: req.params.userId }
+        id: { [Op.ne]: req.params.userId }
       }
     });
 
-    res.locals.Model.findAll(res.locals.query)
+    res.locals.Model
+    .findAll(res.locals.query)
     .then( (record)=> {
-      res.locals.Model.count(res.locals.query).then( (count)=> {
+      res.locals.Model.count(res.locals.query)
+      .then( (count)=> {
         res.locals.metadata.count = count;
         res.locals.data = record;
-        res.ok();
-        return null;
+        return res.ok();
       })
       .catch( (err)=> {
-        res.serverError(err);
-        return null;
+        return res.serverError(err);
       });
       return null;
     })
@@ -392,6 +395,7 @@ module.exports = {
 
   findMembers(req, res, next) {
     const we = req.we;
+    const Op = we.Op;
 
     res.locals.query.where.groupId = res.locals.group.id;
 
@@ -399,11 +403,11 @@ module.exports = {
 
       const or = [];
       req.query.roleNames.forEach( (r)=> {
-        or.push({ $like: '%'+r+'%' })
+        or.push({ [Op.like]: '%'+r+'%' })
       });
 
       if ( !req.we.utils._.isEmpty(or) )
-        res.locals.query.where.roles = { $or: or };
+        res.locals.query.where.roles = { [Op.or]: or };
     }
 
     // load associated user record

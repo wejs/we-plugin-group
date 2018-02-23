@@ -7,6 +7,8 @@
 module.exports = function loadPlugin(projectPath, Plugin) {
   const plugin = new Plugin(__dirname);
 
+  const Op = plugin.we.db.Sequelize.Op;
+
   // set plugin configs
   plugin.setConfigs({
     roles: {
@@ -514,12 +516,13 @@ module.exports = function loadPlugin(projectPath, Plugin) {
    * Custom group search parser
    */
   plugin.router.search.parsers.groupSearch = function groupSearch(searchName, field, value, w) {
-    return w.$or = {
+
+    return w[Op.or] = {
       name: {
-        $like: '%'+value+'%'
+        [Op.like]: '%'+value+'%'
       },
       description: {
-        $like: '%'+value+'%'
+        [Op.like]: '%'+value+'%'
       }
     }
   };
@@ -527,12 +530,12 @@ module.exports = function loadPlugin(projectPath, Plugin) {
    * Custom post search parser
    */
   plugin.router.search.parsers.postSearch = function postSearch(searchName, field, value, w) {
-    return w.$or = {
+    return w[Op.or] = {
       title: {
-        $like: '%'+value+'%'
+        [Op.like]: '%'+value+'%'
       },
       body: {
-        $like: '%'+value+'%'
+        [Op.like]: '%'+value+'%'
       }
     }
   };
