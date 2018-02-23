@@ -425,7 +425,7 @@ module.exports = function Model(we) {
           we.db.models.follow
           .follow('post', record.id, record.creatorId, (err, follow)=> {
             if (err) return next(err);
-            we.log.verbose('we-plugin-group:post:afterCreate:newFollow:', follow);
+            we.log.verbose('we-plugin-group:post:afterCreate:newFollow:', JSON.stringify(follow));
             next();
             return null;
           });

@@ -178,14 +178,17 @@ module.exports = {
         req.body.groupId = res.locals.group.id;
       }
 
-      return res.locals.Model.create(req.body)
+      return res.locals.Model
+      .create(req.body)
       .then( (record)=> {
         res.locals.data = record;
 
         try {
           // register notifications in parallel
           record.registerCreatePostNotifications(req, res, (err)=> {
-            if (err) req.we.log.error('Error in create post notifications: ',err);
+            if (err) {
+              req.we.log.error('Error in create post notifications: ',err);
+            }
           });
         } catch (e) {
           req.we.log.error(e);
@@ -193,10 +196,10 @@ module.exports = {
         if (!res.locals.redirectTo) {
           res.locals.redirectTo = record.getUrlPath();
         }
-        // if dont are inside one group
-        res.created();
-        return null;
-      }).catch(res.queryError);
+
+        return res.goTo(res.locals.redirectTo);
+      })
+      .catch(res.queryError);
     } else {
       res.locals.data = req.query;
       res.ok();
