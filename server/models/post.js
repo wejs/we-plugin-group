@@ -47,6 +47,7 @@ module.exports = function Model(we) {
       },
       firstImage: {
         type: we.db.Sequelize.VIRTUAL,
+        formFieldType: null,
         get() {
           const images = this.images;
           if (images && images.length) {
