@@ -212,9 +212,9 @@ module.exports = function Model(we) {
 
           if (this.privacity == 'public') {
             this.addMember(userId, {
-              roles: ['member']
+              through: { roles: ['member'] }
             })
-            .then(function (r){
+            .then(function (r) {
               cb(null, {
                 id: r[0][0],
                 userId: userId,
@@ -224,7 +224,8 @@ module.exports = function Model(we) {
             })
             .catch(cb);
           } else {
-            we.db.models.membershipinvite.findOne({
+            we.db.models.membershipinvite
+            .findOne({
               where: {
                 groupId: group.id,
                 userId: userId
@@ -233,7 +234,7 @@ module.exports = function Model(we) {
             .then( (invite)=> {
               if (invite) {
                 group.addMember(userId, {
-                  roles: ['member']
+                  through: { roles: ['member'] }
                 })
                 .then(function (r) {
                   cb(null, {
@@ -317,7 +318,7 @@ module.exports = function Model(we) {
         checkIfMemberIslastmanager(userId, cb) {
           we.db.models.membership.findAll({
             where: {
-              roles: { $like: '%manager%' },
+              roles: { [we.Op.like]: '%manager%' },
               groupId: this.id
             },
             attributes: ['userId'],
@@ -418,7 +419,9 @@ module.exports = function Model(we) {
                   return next();
                 }
 
-                record.addMember(record.creatorId, { roles: ['manager']} )
+                record.addMember(record.creatorId, {
+                  through: { roles: ['manager'] }
+                })
                 .then( ()=> {
                   next();
                   return null;

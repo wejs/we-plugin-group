@@ -1,3 +1,12 @@
 {
-	"user": "user"
+	"user": "user",
+	"response.serveError.title": "response.serveError.title",
+	"group.menu.title": "group.menu.title",
+	"group.post.menu.title": "group.post.menu.title",
+	"response.notFound.title": "response.notFound.title",
+	"Home": "Home",
+	"group.find": "group.find",
+	"group.join.already.member": "group.join.already.member",
+	"group.member.leave.last.member": "group.member.leave.last.member",
+	"group.join.success": "group.join.success"
 }

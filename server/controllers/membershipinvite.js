@@ -52,7 +52,7 @@ module.exports = {
           .findOne({
             where: {
               groupId: res.locals.group.id,
-              $or: [
+              [we.Op.or]: [
                 { userId: user.id },
                 { email: user.email }
               ]

@@ -246,7 +246,7 @@ module.exports = function Model(we) {
 
               if (res.locals.data.groupId) {
                 where = {
-                  $or: [
+                  [we.Op.or]: [
                     {
                       model: 'group',
                       modelId: res.locals.group.id
@@ -407,29 +407,44 @@ module.exports = function Model(we) {
       },
 
       hooks: {
-        beforeCreate(post, options, next) {
-          we.db.models.post.setPostTeaser(post, options, ()=> {
-            we.db.models.post.setPostObjectType(post, options, next);
+        beforeCreate(post, options) {
+          return new Promise( (resolve, reject)=> {
+            we.db.models.post.setPostTeaser(post, options, (err)=> {
+              if (err) return reject(err);
+              we.db.models.post.setPostObjectType(post, options, (err)=> {
+                if (err) return reject(err);
+                resolve();
+              });
+            });
           });
         },
 
-        beforeUpdate(post, options, next) {
-          we.db.models.post.setPostTeaser(post, options, ()=> {
-            we.db.models.post.setPostObjectType(post, options, next);
+        beforeUpdate(post, options) {
+          return new Promise( (resolve, reject)=> {
+            we.db.models.post.setPostTeaser(post, options, (err)=> {
+              if (err) return reject(err);
+              we.db.models.post.setPostObjectType(post, options, (err)=> {
+                if (err) return reject(err);
+                resolve();
+              });
+            });
           });
         },
 
         // After create add user as follower
-        afterCreate(record, options, next) {
-          if (!record.creatorId) return next();
+        afterCreate(record) {
+          if (!record.creatorId) return record;
 
-          we.db.models.follow
-          .follow('post', record.id, record.creatorId, (err, follow)=> {
-            if (err) return next(err);
-            we.log.verbose('we-plugin-group:post:afterCreate:newFollow:', JSON.stringify(follow));
-            next();
-            return null;
+          return new Promise( (resolve, reject)=> {
+            we.db.models.follow
+            .follow('post', record.id, record.creatorId, (err, follow)=> {
+              if (err) return reject(err);
+              we.log.verbose('we-plugin-group:post:afterCreate:newFollow:', JSON.stringify(follow));
+              resolve();
+              return null;
+            });
           });
+
         }
       }
     }

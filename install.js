@@ -18,12 +18,16 @@ module.exports = {
        * @param  {Function} cb callback
        */
       function creategroupVocabulary(done) {
-        we.db.models.vocabulary.findOrCreate({
+        we.db.models.vocabulary
+        .findOrCreate({
           where: { name: 'Group-category' },
           defaults: { name: 'Group-category' },
-        }).then(function(){
+        })
+        .then(function(){
           done();
-        }).catch(done);
+          return null;
+        })
+        .catch(done);
       }
     ], done);
   }

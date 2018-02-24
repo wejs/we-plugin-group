@@ -6,6 +6,8 @@
 module.exports = {
   find(req, res) {
     let requiredModelsTerms = true;
+    const we = req.we;
+    const sequelize = req.we.db.defaultConnection;
 
     // post teaser list, use with responseType=modal query param
     if (req.query.teaserList)
@@ -32,8 +34,8 @@ module.exports = {
         req.query.category = null;
         requiredModelsTerms = false;
 
-        res.locals.query.where.$and = [
-          [' categoryField.termId IS NULL ', []]
+        res.locals.query.where[we.Op.and] = [
+          sequelize.literal('categoryField.termId IS NULL')
         ];
       }
 
@@ -63,9 +65,9 @@ module.exports = {
           }
         });
 
-        res.locals.query.where.$or = [
-          [' follow.id IS NOT NULL '],
-          [' `group.follow`.`id` IS NOT NULL '],
+        res.locals.query.where[we.Op.or] = [
+          sequelize.literal('follow.id IS NOT NULL'),
+          sequelize.literal('`group.follow`.`id` IS NOT NULL')
           // TODO add posts from people how you follow
           // [' `creator.follow`.`id` IS NOT NULL ']
         ];
@@ -78,21 +80,18 @@ module.exports = {
           }
         }
 
-        groupAssoc.include = [
-          {
-            model: req.we.db.models.follow,
-            as: 'follow',
-            required: false,
-            attributes: ['id'],
-            where: {
-              userId: req.user.id
-            }
-          }
-        ];
+        groupAssoc.include = [{
+          model: req.we.db.models.follow,
+          as: 'follow',
+          required: false,
+          attributes: ['id'],
+          where: { userId: req.user.id }
+        }];
       }
     }
 
-    res.locals.Model.findAll(res.locals.query)
+    res.locals.Model
+    .findAll(res.locals.query)
     .then( (records)=> {
       if (req.we.plugins['we-plugin-notification'] && req.isAuthenticated()) {
         // mark this posts as read
@@ -118,16 +117,12 @@ module.exports = {
 
       res.locals.data = records;
 
-      res.locals.Model.count(res.locals.query)
+      return res.locals.Model
+      .count(res.locals.query)
       .then( (count)=> {
-
         res.locals.metadata.count = count;
-        res.ok();
-        return null;
-      })
-      .catch(res.queryError);
-
-      return null;
+        return res.ok();
+      });
     })
     .catch(res.queryError);
   },
@@ -138,7 +133,6 @@ module.exports = {
     }
 
     res.locals.query.where.creatorId = res.locals.user.id;
-
     req.we.controllers.user.find(req, res, next);
   },
 
@@ -197,7 +191,11 @@ module.exports = {
           res.locals.redirectTo = record.getUrlPath();
         }
 
-        return res.goTo(res.locals.redirectTo);
+        if (req.accepts('html')) {
+          return res.goTo(res.locals.redirectTo);
+        } else {
+          res.created();
+        }
       })
       .catch(res.queryError);
     } else {

@@ -1,14 +1,15 @@
-var assert = require('assert');
-var request = require('supertest');
-var helpers = require('we-test-tools').helpers;
-var stubs = require('we-test-tools').stubs;
-var sinon = require('sinon');
-var http, async, we, _;
+const assert = require('assert'),
+  request = require('supertest'),
+  helpers = require('we-test-tools').helpers,
+  stubs = require('we-test-tools').stubs,
+  sinon = require('sinon');
+
+let http, async, we, _;
 
 describe('groupFeature', function () {
-  var salvedGroup, salvedUser, salvedUserPassword, salvedUser2, salvedUser2Password, salvedImage;
-  var salvedPosts;
-  var authenticatedRequest, authenticatedRequest2;
+  let salvedGroup, salvedUser, salvedUserPassword, salvedUser2, salvedUser2Password, salvedImage;
+  let salvedPosts;
+  let authenticatedRequest, authenticatedRequest2;
 
   before(function (done) {
     http = helpers.getHttp();
@@ -16,7 +17,7 @@ describe('groupFeature', function () {
     async = we.utils.async;
     _ = we.utils._;
 
-    var userStub = stubs.userStub();
+    let userStub = stubs.userStub();
 
     helpers.createUser(userStub, function (err, user) {
       if (err) return done(err);
@@ -32,13 +33,14 @@ describe('groupFeature', function () {
         if(err) throw err;
         salvedImage = imgRes.body.image;
 
-        var stub = stubs.groupStub(user.id);
-        we.db.models.group.create(stub)
+        let stub = stubs.groupStub(user.id);
+        we.db.models.group
+        .create(stub)
         .then(function (g) {
 
           salvedGroup = g;
 
-          var posts = [
+          let posts = [
             stubs.postStub(salvedUser.id),
             stubs.postStub(salvedUser.id),
             stubs.postStub(salvedUser.id)
@@ -69,8 +71,7 @@ describe('groupFeature', function () {
               password: salvedUserPassword
             })
             .expect(200).end(function() {
-
-              var userStub = stubs.userStub();
+              let userStub = stubs.userStub();
               helpers.createUser(userStub, function(err, user) {
                 if (err) return done(err);
                 salvedUser2 = user;
@@ -89,7 +90,10 @@ describe('groupFeature', function () {
               });
             });
           });
-        }).catch(done);
+
+          return null;
+        })
+        .catch(done);
       });
     });
   });
@@ -111,8 +115,6 @@ describe('groupFeature', function () {
     });
 
     it('get /user/userId/membership route should find user memberships array', function (done) {
-      console.log('>>>>', salvedUser.id+1);
-
       authenticatedRequest
       .get('/user/'+ salvedUser.id +'/membership')
       .set('Accept', 'application/json')
@@ -126,7 +128,7 @@ describe('groupFeature', function () {
       });
     });
 
-    it('get /user/[userId]/find-new-groups?where=%7B%7D&limit=9&sort=createdAt+DESC. route should find new groups to user', function (done) {
+    it('get /user/[userId]/find-new-groups?where=%7B%7D&limit=9&order=createdAt+DESC. route should find new groups to user', function (done) {
 
       var userStub = stubs.userStub();
       helpers.createUser(userStub, function(err, user) {
@@ -137,7 +139,7 @@ describe('groupFeature', function () {
         .then(function (g) {
 
           authenticatedRequest
-          .get('/user/'+ salvedUser.id +'/find-new-groups?where=%7B%7D&limit=9&sort=createdAt+DESC')
+          .get('/user/'+ salvedUser.id +'/find-new-groups?where=%7B%7D&limit=9&order=createdAt+DESC')
           .set('Accept', 'application/json')
           .expect(200)
           .end(function (err, res) {
@@ -157,13 +159,16 @@ describe('groupFeature', function () {
 
             done();
           });
-        }).catch(done);
+
+          return null;
+        })
+        .catch(done);
       });
     });
 
-    it('get /group?where=%7B%7D&limit=9&sort=createdAt+DESC route should find group list', function (done) {
+    it('get /group?where=%7B%7D&limit=9&order=createdAt+DESC route should find group list', function (done) {
       authenticatedRequest
-      .get('/group?where=%7B%7D&limit=9&sort=createdAt+DESC')
+      .get('/group?where=%7B%7D&limit=9&order=createdAt+DESC')
       .set('Accept', 'application/json')
       .end(function (err, res) {
         assert.equal(200, res.status);
@@ -197,14 +202,18 @@ describe('groupFeature', function () {
         we.db.models.group.findById(res.body.group.id)
         .then(function (g) {
           // check if creator is member
-          g.getMembers().then(function (users) {
-            var membersIds = users.map(function(u) {
+          return g.getMembers()
+          .then(function (users) {
+            let membersIds = users.map(function(u) {
               return u.id;
             });
             assert(membersIds.indexOf(salvedUser.id) > -1);
             done();
-          }).catch(done);
-        }).catch(done);
+
+            return null;
+          });
+        })
+        .catch(done);
       });
     });
   });
@@ -217,6 +226,7 @@ describe('groupFeature', function () {
       .expect(200)
       .end(function (err, res) {
         if (err) throw err;
+
         assert(res.body.group);
         assert(res.body.group.id, salvedGroup.id);
         assert(res.body.group.name, salvedGroup.name);
@@ -240,7 +250,7 @@ describe('groupFeature', function () {
 
   describe('groupPost', function () {
     it('post /post/create should create one post in group with groupId in body params', function (done) {
-      var postStub = stubs.postStub(salvedUser.id);
+      let postStub = stubs.postStub(salvedUser.id);
       postStub.group = salvedGroup.id;
 
       request(http)
@@ -305,7 +315,7 @@ describe('groupFeature', function () {
   describe('groupMembers', function () {
     it('post /api/v1/group/:groupId/join route should add authenticated user in group', function (done) {
 
-      authenticatedRequest
+      authenticatedRequest2
       .post('/api/v1/group/'+ salvedGroup.id +'/join')
       .set('Accept', 'application/json')
       .expect(200)
@@ -313,11 +323,11 @@ describe('groupFeature', function () {
         if (err) throw err;
 
         assert(res.body.membership);
-        assert.equal(res.body.membership.userId, salvedUser.id);
+        assert.equal(res.body.membership.userId, salvedUser2.id);
 
-        salvedGroup.findOneMember(salvedUser.id, function(err, membership) {
+        salvedGroup.findOneMember(salvedUser2.id, function(err, membership) {
           if (err) throw err;
-          assert.equal(membership.userId,  salvedUser.id);
+          assert.equal(membership.userId,  salvedUser2.id);
           done();
         });
       });
@@ -350,29 +360,26 @@ describe('groupFeature', function () {
     });
 
     it('post /api/v1/group/:groupId/leave route should add authenticated user in group', function (done) {
-      authenticatedRequest
+      authenticatedRequest2
       .post('/api/v1/group/'+ salvedGroup.id +'/leave')
       .set('Accept', 'application/json')
       .end(function (err, res) {
         if (err) throw err;
         assert.equal(204, res.status);
-        salvedGroup.findOneMember(salvedUser.id, function(err, membership) {
+        salvedGroup.findOneMember(salvedUser2.id, function(err, membership) {
           if (err) throw err;
           assert(!membership);
           done();
         });
       });
     });
-
   });
-
-
 
   describe('groupMembers.invite', function () {
     it('post /group/:groupId([0-9]+)/member/invite route should' +
      'create one membershipinvite and send email', function (done) {
       // hide log
-      var showDebugEmail = we.email.showDebugEmail;
+      let showDebugEmail = we.email.showDebugEmail;
       // check if is called
       we.email.showDebugEmail = function() {};
       sinon.spy(we.email, 'showDebugEmail');
@@ -394,15 +401,19 @@ describe('groupFeature', function () {
         we.email.showDebugEmail.restore();
         we.email.showDebugEmail = showDebugEmail;
 
-        we.db.models.membershipinvite.findOne({
+        we.db.models.membershipinvite
+        .findOne({
           where: {
             userId: salvedUser2.id
           }
-        }).then(function (invite) {
+        })
+        .then(function (invite) {
           assert.equal(invite.userId,  salvedUser2.id);
 
           done();
-        }).catch(done);
+          return null;
+        })
+        .catch(done);
       });
     });
   });

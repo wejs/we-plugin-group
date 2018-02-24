@@ -40,10 +40,11 @@ module.exports = function Model(we) {
          * @return {Object}         Sequelize destroy promisse
          */
         spentInvite(groupId, email, userId) {
-          return we.db.models.membershipinvite.destroy({
+          return we.db.models.membershipinvite
+          .destroy({
             where: {
               groupId: groupId,
-              $or: [
+              [we.Op.or]: [
                 { email: email },
                 { userId: userId }
               ]

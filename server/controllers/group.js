@@ -9,6 +9,7 @@ module.exports = {
   find(req, res) {
     let membersJoinRequired = false;
     const Op = req.we.Op;
+    const sequelize = req.we.db.defaultConnection;
 
     if (req.query.member && Number(req.query.member)) {
       res.locals.query.where.privacity = 'public';
@@ -29,15 +30,14 @@ module.exports = {
       } else if(req.query.my === false || req.query.my == 'false') {
         // find new groups to user
         res.locals.query.where[Op.and] = [
-          [' members.id IS NULL ', []],
+          sequelize.literal('members.id IS NULL'),
           { privacity: 'public' }
         ];
-
         res.locals.showNewGroups = true;
       } else {
         // find user groups and new groups
         res.locals.query.where[Op.or] = [
-          [' members.id IS NOT NULL ', []],
+          sequelize.literal('members.id IS NULL'),
           { privacity: 'public' }
         ];
 
@@ -116,20 +116,14 @@ module.exports = {
           ));
         } else {
           // default json send data:
-          res.send();
+          res.ok();
         }
       } else {
         return res.redirect(we.router.urlTo(
           'group.detail', [group.id]
         ));
       }
-
     });
-
-    if (group.privacity == 'public' || group.activity == null) {
-      // go to /posts
-      //
-    }
 
     // grupo público
 
@@ -155,11 +149,6 @@ module.exports = {
 
       // membro
 
-
-
-
-    // console.log('>>>>>', res.locals.data);
-
     // findOneMember
   },
 
@@ -178,16 +167,13 @@ module.exports = {
     res.locals.Model
     .findAll(res.locals.query)
     .then( (record)=> {
-      res.locals.Model.count(res.locals.query)
+      return res.locals.Model
+      .count(res.locals.query)
       .then( (count)=> {
         res.locals.metadata.count = count;
         res.locals.data = record;
         return res.ok();
-      })
-      .catch( (err)=> {
-        return res.serverError(err);
       });
-      return null;
     })
     .catch(res.queryError);
   },
@@ -206,7 +192,16 @@ module.exports = {
         }
       });
 
+      if ( res.locals.redirectTo ) {
+        return res.goTo( res.locals.redirectTo );
+      } else if ( req.accepts('html') ) {
       return res.goTo( res.locals.redirectTo || '/group/'+res.locals.group.id );
+      } else {
+        return res.status(200).send({
+          membership: res.locals.membership,
+          follow: res.locals.group.metadata.isFollowing
+        });
+      }
     }
 
     res.locals.group.userJoin(req.user.id, (err, membership)=> {
@@ -220,9 +215,10 @@ module.exports = {
           if (res.locals.redirectTo) {
             return res.goTo( res.locals.redirectTo );
           } else {
-            return res.status(200).send({
+            res.status(200).send({
               membershiprequest: membership
             });
+            return null;
           }
         }
         // add message
@@ -233,7 +229,8 @@ module.exports = {
           }
         });
 
-        req.we.db.models.follow.follow('group', res.locals.group.id, req.user.id, (err, follow)=> {
+        req.we.db.models.follow
+        .follow('group', res.locals.group.id, req.user.id, (err, follow)=> {
           if (err) return res.serverError(err);
 
           if (res.locals.redirectTo) {
@@ -245,6 +242,8 @@ module.exports = {
             });
           }
         });
+
+        return null;
       })
       .catch(res.queryError);
     });
@@ -296,7 +295,8 @@ module.exports = {
 
     req.we.utils.async.series([
       function checkIfUserAreInRegistered(done) {
-        we.db.models.user.find({
+        we.db.models.user
+        .find({
           where: {
             email: req.body.email
           }
@@ -423,7 +423,8 @@ module.exports = {
       }]
     }];
 
-    we.db.models.membership.findAll(res.locals.query)
+    we.db.models.membership
+    .findAll(res.locals.query)
     .then( (result)=> {
       res.locals.data = result;
 

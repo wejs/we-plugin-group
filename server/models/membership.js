@@ -22,8 +22,9 @@ module.exports = function MembershipModel(we) {
       // roles array
       roles: {
         type: we.db.Sequelize.BLOB,
-        get: function()  {
-          if (this.getDataValue('roles')){
+        defaultValue: 'member',
+        get()  {
+          if (this.getDataValue('roles')) {
             if (typeof this.getDataValue('roles') == 'string') {
               return this.getDataValue('roles').split(';');
             } else {
@@ -32,8 +33,10 @@ module.exports = function MembershipModel(we) {
           }
           return [];
         },
-        set: function(val) {
-          if (typeof val == 'string') {
+        set(val) {
+          if (!val) {
+            this.setDataValue('roles', 'member');
+          } else if (typeof val == 'string') {
             this.setDataValue('roles', val);
           } else {
             this.setDataValue('roles', val.join(';'));

@@ -7,7 +7,7 @@
 module.exports = function loadPlugin(projectPath, Plugin) {
   const plugin = new Plugin(__dirname);
 
-  const Op = plugin.we.db.Sequelize.Op;
+  const Op = plugin.we.Op;
 
   // set plugin configs
   plugin.setConfigs({
@@ -129,62 +129,6 @@ module.exports = function loadPlugin(projectPath, Plugin) {
         }
       }
     }
-  });
-
-  //- BREADCRUMB
-
-  plugin.router.breadcrumb.add('findOnePost', function findOneBreadcrumb(req, res, next) {
-    res.locals.breadcrumb =
-      '<ol class="breadcrumb">'+
-        '<li><a href="/">'+res.locals.__('Home')+'</a></li>'+
-        '<li><a href="'+req.we.router.urlTo('post.find', req.paramsArray)+
-      '">'+res.locals.__('post.find')+'</a></li>'+
-        '<li class="active">'+res.locals.__('post.find')+'</li>'+
-      '</ol>';
-
-    next();
-  });
-
-  plugin.router.breadcrumb.add('findAllPostInGroup', function findAllPostInGroupBreadcrumb(req, res, next) {
-    if (!res.locals.group) return next();
-
-    res.locals.breadcrumb =
-      '<ol class="breadcrumb">'+
-        '<li><a href="/">'+res.locals.__('Home')+'</a></li>'+
-        '<li><a href="'+req.we.router.urlTo('group.find', req.paramsArray)+
-      '">'+res.locals.__('group.find')+'</a></li>'+
-        '<li class="active">'+res.locals.group.name+'</li>'+
-      '</ol>';
-
-    next();
-  });
-
-  plugin.router.breadcrumb.add('findOnePostInGroup', function findOnePostInGroupBreadcrumb(req, res, next) {
-    if (!res.locals.group) return next();
-
-    res.locals.breadcrumb =
-      '<ol class="breadcrumb">'+
-        '<li><a href="/">'+res.locals.__('Home')+'</a></li>'+
-        '<li><a href="'+req.we.router.urlTo('group.find', req.paramsArray)+
-      '">'+res.locals.__('group.find')+'</a></li>'+
-        '<li><a href="/group/'+res.locals.group.id+'">'+res.locals.group.name+'</a></li>'+
-        '<li class="active">'+res.locals.__(res.locals.resourceName + '.find')+'</li>'+
-      '</ol>';
-
-    next();
-  });
-
-  plugin.router.breadcrumb.add('findUserGroupInvite', function findUserGroupInviteBreadcrumb(req, res, next) {
-    res.locals.breadcrumb =
-      '<ol class="breadcrumb">'+
-        '<li><a href="/">'+res.locals.__('Home')+'</a></li>'+
-        '<li><a href="'+req.we.router.urlTo('group.find', req.paramsArray)+'">'+
-          res.locals.__('group.find')+
-        '</a></li>'+
-        '<li class="active">'+res.locals.__('membershipinvite.find')+'</li>'+
-      '</ol>';
-
-    next();
   });
 
   //-- ROUTES
@@ -512,33 +456,89 @@ module.exports = function loadPlugin(projectPath, Plugin) {
     }
   });
 
-  /**
-   * Custom group search parser
-   */
-  plugin.router.search.parsers.groupSearch = function groupSearch(searchName, field, value, w) {
+  plugin.events.on('we:after:load:plugins', function(we) {
+    //- BREADCRUMB
+    we.router.breadcrumb.add('findOnePost', function findOneBreadcrumb(req, res, next) {
+      res.locals.breadcrumb =
+        '<ol class="breadcrumb">'+
+          '<li><a href="/">'+res.locals.__('Home')+'</a></li>'+
+          '<li><a href="'+req.we.router.urlTo('post.find', req.paramsArray)+
+        '">'+res.locals.__('post.find')+'</a></li>'+
+          '<li class="active">'+res.locals.__('post.find')+'</li>'+
+        '</ol>';
 
-    return w[Op.or] = {
-      name: {
-        [Op.like]: '%'+value+'%'
-      },
-      description: {
-        [Op.like]: '%'+value+'%'
+      next();
+    });
+
+    we.router.breadcrumb.add('findAllPostInGroup', function findAllPostInGroupBreadcrumb(req, res, next) {
+      if (!res.locals.group) return next();
+
+      res.locals.breadcrumb =
+        '<ol class="breadcrumb">'+
+          '<li><a href="/">'+res.locals.__('Home')+'</a></li>'+
+          '<li><a href="'+req.we.router.urlTo('group.find', req.paramsArray)+
+        '">'+res.locals.__('group.find')+'</a></li>'+
+          '<li class="active">'+res.locals.group.name+'</li>'+
+        '</ol>';
+
+      next();
+    });
+
+    we.router.breadcrumb.add('findOnePostInGroup', function findOnePostInGroupBreadcrumb(req, res, next) {
+      if (!res.locals.group) return next();
+
+      res.locals.breadcrumb =
+        '<ol class="breadcrumb">'+
+          '<li><a href="/">'+res.locals.__('Home')+'</a></li>'+
+          '<li><a href="'+req.we.router.urlTo('group.find', req.paramsArray)+
+        '">'+res.locals.__('group.find')+'</a></li>'+
+          '<li><a href="/group/'+res.locals.group.id+'">'+res.locals.group.name+'</a></li>'+
+          '<li class="active">'+res.locals.__(res.locals.resourceName + '.find')+'</li>'+
+        '</ol>';
+
+      next();
+    });
+
+    we.router.breadcrumb.add('findUserGroupInvite', function findUserGroupInviteBreadcrumb(req, res, next) {
+      res.locals.breadcrumb =
+        '<ol class="breadcrumb">'+
+          '<li><a href="/">'+res.locals.__('Home')+'</a></li>'+
+          '<li><a href="'+req.we.router.urlTo('group.find', req.paramsArray)+'">'+
+            res.locals.__('group.find')+
+          '</a></li>'+
+          '<li class="active">'+res.locals.__('membershipinvite.find')+'</li>'+
+        '</ol>';
+
+      next();
+    });
+    /**
+     * Custom group search parser
+     */
+    we.router.search.parsers.groupSearch = function groupSearch(searchName, field, value, w) {
+
+      return w[Op.or] = {
+        name: {
+          [Op.like]: '%'+value+'%'
+        },
+        description: {
+          [Op.like]: '%'+value+'%'
+        }
       }
-    }
-  };
-  /**
-   * Custom post search parser
-   */
-  plugin.router.search.parsers.postSearch = function postSearch(searchName, field, value, w) {
-    return w[Op.or] = {
-      title: {
-        [Op.like]: '%'+value+'%'
-      },
-      body: {
-        [Op.like]: '%'+value+'%'
+    };
+    /**
+     * Custom post search parser
+     */
+    we.router.search.parsers.postSearch = function postSearch(searchName, field, value, w) {
+      return w[Op.or] = {
+        title: {
+          [Op.like]: '%'+value+'%'
+        },
+        body: {
+          [Op.like]: '%'+value+'%'
+        }
       }
-    }
-  };
+    };
+  });
 
   plugin.events.on('we:config:getAppBootstrapConfig', function(opts) {
     if (opts.context && opts.context.widgetContext && opts.context.group) {
