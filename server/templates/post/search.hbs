@@ -10,13 +10,16 @@
       {{else}}
         <option value="">{{t 'post.objectType.null'}}</option>
       {{/unless}}
-      {{#each req.we.config.post.objectTypes}}
-        {{#ifCond this ../req.query.objectType }}
-          <option selected value="{{@key}}">{{t this}}</option>
-        {{else}}
-          <option value="{{@key}}">{{t this}}</option>
-        {{/ifCond}}
-      {{/each}}
+
+      {{#with req.query as |q|}}
+        {{#each req.we.config.post.objectTypes}}
+          {{#ifCond this q.objectType }}
+            <option selected value="{{@key}}">{{t this}}</option>
+          {{else}}
+            <option value="{{@key}}">{{t this}}</option>
+          {{/ifCond}}
+        {{/each}}
+      {{/with}}
     </select>
     <button type="submit" class="btn btn-default">{{t 'post.objectType.submit'}}</button>
   </form>
