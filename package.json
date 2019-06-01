@@ -7,11 +7,11 @@
     "test": "NODE_ENV=test LOG_LV=info ./node_modules/.bin/mocha test/bootstrap.js test/**/*.test.js -b "
   },
   "devDependencies": {
-    "express-mysql-session": "^2.1.0",
+    "connect-sqlite3": "^0.9.11",
+    "sqlite3": "^4.0.7",
     "fs-extra": "^8.0.1",
     "istanbul": "^0.4.5",
     "mocha": "^6.1.4",
-    "mysql2": "^1.6.5",
     "sinon": "^7.3.2",
     "supertest": "^4.0.2",
     "we-core": "^2",

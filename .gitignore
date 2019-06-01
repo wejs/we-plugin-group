@@ -3,3 +3,4 @@ coverage
 config
 *.log
 files/uploads
+*.sqlite

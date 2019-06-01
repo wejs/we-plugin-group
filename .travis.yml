@@ -3,15 +3,9 @@ language: node_js
 node_js:
   - v6
 
-services:
-  - mysql
-
 env:
   NODE_ENV: 'test'
 
 notifications:
   email:
     - alberto@wejs.org
-
-before_script:
-  - mysql -e 'create database test;'

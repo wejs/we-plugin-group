@@ -6,5 +6,6 @@ files/uploads
 .travis.yml
 .gitignore
 *.log
+*.sqlite
 config
 coverage
