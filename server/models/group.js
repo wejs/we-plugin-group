@@ -108,7 +108,7 @@ module.exports = function Model(we) {
         },
 
         findOneMember(modelId, userId, cb) {
-          we.db.models.membership.find({
+          we.db.models.membership.findOne({
             where: {
               userId: userId,
               groupId: modelId

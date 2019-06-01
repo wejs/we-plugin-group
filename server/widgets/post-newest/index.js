@@ -5,7 +5,7 @@
  */
 
 module.exports = function (projectPath, Widget) {
-  var widget = new Widget('post-newest', __dirname);
+  const widget = new Widget('post-newest', __dirname);
 
   // // Override default widget class functions after instance
   //
@@ -21,23 +21,55 @@ module.exports = function (projectPath, Widget) {
   // }
 
   // // Widget view middleware, use for get data after render the widget html
-  widget.viewMiddleware = function viewMiddleware(w, req, res, next) {
+  widget.viewMiddleware = function (w, req, res, next) {
+    const Post = req.we.db.models.post;
 
-    req.we.db.models.post
-    .findAll({
-      where: {},
+    Post.findAll({
+      where: { active: true },
       limit: 3,
-      include: [{ all: true }]
+      attributes: ['id'],
+      raw: true
     })
     .then( (r)=> {
+      if (!r || !r.length) {
+        return r;
+      }
+
+      let proms = [];
+
+      r.forEach( function (item, index) {
+        proms.push (
+          Post.findOne({
+            where: {
+              id: item.id
+            },
+            include: { all: true }
+          })
+          .then(function (post) {
+            r[index] = post;
+          })
+        );
+      })
+
+      return Promise.all(proms)
+      .then( ()=> {
+        return r;
+      });
+    })
+    .then( (r)=> {
+      if (!r || !r.length) {
+        w.hide = true;
+        return next();
+      }
+
       w.posts = r;
+
 
       w.posts.forEach( (p)=> {
         p.hideComments = true;
       });
 
       next();
-      return null;
     })
     .catch(next);
   }

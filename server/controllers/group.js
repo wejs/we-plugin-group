@@ -296,7 +296,7 @@ module.exports = {
     req.we.utils.async.series([
       function checkIfUserAreInRegistered(done) {
         we.db.models.user
-        .find({
+        .findOne({
           where: {
             email: req.body.email
           }
@@ -365,7 +365,7 @@ module.exports = {
     if (!req.isAuthenticated) return res.forbidden();
     const we = req.getWe();
 
-    we.db.models.membershipinvite.find({
+    we.db.models.membershipinvite.findOne({
       where: {
         userId: req.user.id,
         groupId: req.params.groupId
