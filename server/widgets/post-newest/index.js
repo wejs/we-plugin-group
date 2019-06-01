@@ -27,6 +27,10 @@ module.exports = function (projectPath, Widget) {
     Post.findAll({
       where: { active: true },
       limit: 3,
+      order:[
+        ['createdAt', 'DESC'],
+        ['id', 'DESC']
+      ],
       attributes: ['id'],
       raw: true
     })

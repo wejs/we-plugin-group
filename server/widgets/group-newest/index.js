@@ -5,7 +5,7 @@
  */
 
 module.exports = function (projectPath, Widget) {
-  var widget = new Widget('group-newest', __dirname);
+  const widget = new Widget('group-newest', __dirname);
 
   // // Override default widget class functions after instance
   //
@@ -25,7 +25,11 @@ module.exports = function (projectPath, Widget) {
 
     req.we.db.models.group
     .findAll({
-      limit: 3
+      limit: 3,
+      order:[
+        ['createdAt', 'DESC'],
+        ['id', 'DESC']
+      ]
     })
     .then( (r)=> {
       if (!r || !r.length) {
