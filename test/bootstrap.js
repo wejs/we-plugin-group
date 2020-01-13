@@ -7,7 +7,7 @@ let we;
 
 
 before(function (callback) {
-  testTools.copyLocalSQLiteConfigIfNotExitst(projectPath, callback);
+  testTools.copyLocalSQLiteConfigIfNotExists(projectPath, callback);
 });
 
 before(function(callback) {
@@ -40,9 +40,9 @@ after(function (callback) {
     if(err) return callback(err);
 
     const tempFolders = [
-      projectPath + '/files/tmp',
-      projectPath + '/files/config',
-      projectPath + '/files/sqlite',
+      projectPath + '/config',
+      projectPath + '/database.sqlite',
+      projectPath + '/database-test.sqlite',
       projectPath + '/files/uploads',
       projectPath + '/files/templatesCacheBuilds.js'
     ];

@@ -7,7 +7,9 @@
  */
 
 module.exports = function Model(we) {
+  const utils = we.utils;
   const isEmpty = we.utils._.isEmpty;
+  const async = we.utils.async;
 
   const model = {
     definition: {
@@ -114,17 +116,10 @@ module.exports = function Model(we) {
       classMethods: {
         setPostTeaser(post, options, next) {
           if (!post.body) return next();
-          const postBodyClean = we.utils.string(post.body)
-            .stripTags().s;
-
-          if (!postBodyClean) return next();
-
-          post.teaser = postBodyClean.substr(0, 150);
-
+          post.teaser = utils.stripTagsAndTruncate(post.body, 150);
           next(null, post);
         },
         setPostObjectType(post, options, next) {
-
           if (!isEmpty(post.images) && !isEmpty(post.attachment)) {
             post.objectType = 'multimedia';
           } else if (!isEmpty(post.images)) {
@@ -236,7 +231,7 @@ module.exports = function Model(we) {
           let record = this;
           let followers = [];
 
-          req.we.utils.async.series([
+          async.series([
             function getFollowers(done) {
               if (!req.isAuthenticated()) {
                 return done();
@@ -282,11 +277,11 @@ module.exports = function Model(we) {
             res.locals.createdPostUserNotified = {};
 
             if (res.locals.group) {
-              req.we.utils.async.eachSeries(followers, record.createNotificationInGroup.bind({
+              async.eachSeries(followers, record.createNotificationInGroup.bind({
                 req: req, res: res, we: req.we
               }), next);
             } else {
-              req.we.utils.async.eachSeries(followers, record.createNotification.bind({
+              async.eachSeries(followers, record.createNotification.bind({
                 req: req, res: res, we: req.we
               }), next);
             }

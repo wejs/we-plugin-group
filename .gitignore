@@ -1,6 +1,8 @@
+files/uploads
 node_modules
 coverage
 config
 *.log
-files/uploads
+*.sql
 *.sqlite
+.nyc_output

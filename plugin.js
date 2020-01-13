@@ -8,6 +8,7 @@ module.exports = function loadPlugin(projectPath, Plugin) {
   const plugin = new Plugin(__dirname);
 
   const Op = plugin.we.Op;
+  const utils = plugin.we.utils;
 
   // set plugin configs
   plugin.setConfigs({
@@ -265,7 +266,7 @@ module.exports = function loadPlugin(projectPath, Plugin) {
       breadcrumbHandler(req, res, next) {
         if (!res.locals.user) return next();
 
-        let name = plugin.we.utils.string(res.locals.user.displayName).truncate(40).s;
+        let name = utils.stripTagsAndTruncate(res.locals.user.displayName, 40);
 
         res.locals.breadcrumb =
           '<ol class="breadcrumb">'+
@@ -575,7 +576,7 @@ module.exports = function loadPlugin(projectPath, Plugin) {
         return null;
       }
 
-      we.utils.async.parallel([
+      utils.async.parallel([
         function loadMembership(next) {
           we.db.models.membership.find({
             where: { userId: req.user.id, groupId: group.id }

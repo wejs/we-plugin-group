@@ -2,8 +2,6 @@
 
 We.js group plugin, use this plugin to build fóruns or social networks
 
-# Looking for maintainer!
-
 # how to install
 ```
 we i we-plugin-group
@@ -20,4 +18,5 @@ we i we-plugin-group
 
 ## Sponsored by
 
-- Linky Systems: https://linkysystems.com
+- Linky: https://linkysystems.com
+
