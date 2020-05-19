@@ -21,7 +21,7 @@ module.exports = function (projectPath, Widget) {
   // }
 
   // // Widget view middleware, use for get data after render the widget html
-  widget.viewMiddleware = function viewMiddleware(w, req, res, next) {
+  widget.viewMiddleware = function (w, req, res, next) {
 
     req.we.db.models.group
     .findAll({
@@ -39,7 +39,6 @@ module.exports = function (projectPath, Widget) {
       }
 
       next();
-      return null;
     })
     .catch(next);
   }

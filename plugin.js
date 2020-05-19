@@ -561,8 +561,7 @@ module.exports = function loadPlugin(projectPath, Plugin) {
     we.db.models.group.findById(id)
     .then( (group)=> {
       if (!group) {
-        res.notFound();
-        return null;
+        return res.notFound();
       }
 
       res.locals.group = group;
@@ -572,8 +571,7 @@ module.exports = function loadPlugin(projectPath, Plugin) {
       res.locals.widgetContext = 'group-' + group.id;
 
       if (!req.user) {
-        next();
-        return null;
+        return next();
       }
 
       utils.async.parallel([
@@ -582,7 +580,6 @@ module.exports = function loadPlugin(projectPath, Plugin) {
             where: { userId: req.user.id, groupId: group.id }
           })
           .then( (membership)=> {
-
             if (membership) {
               let roles = membership.roles;
               req.userRoleNames = req.userRoleNames.concat(roles.map( (r)=> {
@@ -595,8 +592,7 @@ module.exports = function loadPlugin(projectPath, Plugin) {
               req.membership = membership;
             }
 
-            next();
-            return null;
+            return next();
           })
           .catch(res.queryError);
         },
@@ -604,13 +600,11 @@ module.exports = function loadPlugin(projectPath, Plugin) {
           we.db.models.follow.isFollowing(req.user.id, 'group', group.id)
           .then( (isFollowing)=> {
             res.locals.group.metadata.isFollowing = isFollowing;
-            next();
-            return null;
+            return next();
           })
           .catch(next);
         }
       ], next);
-      return null;
     })
     .catch(next);
   }

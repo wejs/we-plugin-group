@@ -110,8 +110,9 @@ module.exports = {
           }
         })
         .catch( (err)=> {
-          req.we.log.error(err);
-          return null;
+          req.we.log.error('models:post.js:Error on set view notificaion:', {
+            error: err
+          });
         });
       }
 

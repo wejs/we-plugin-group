@@ -61,15 +61,12 @@ module.exports = {
 
       res.locals.data = records;
 
-      res.locals.Model
+      return res.locals.Model
       .count(res.locals.query)
       .then( (count)=> {
         res.locals.metadata.count = count;
-
-        return res.ok();
-      })
-      .catch(res.queryError);
-      return null;
+        res.ok();
+      });
     })
     .catch(res.queryError);
   },
@@ -428,15 +425,11 @@ module.exports = {
     .then( (result)=> {
       res.locals.data = result;
 
-      we.db.models.membership.count(res.locals.query)
+      return we.db.models.membership.count(res.locals.query)
       .then( (count)=> {
         res.locals.metadata.count = count;
         res.ok();
-        return null;
-      })
-      .catch(res.queryError);
-
-      return null;
+      });
     })
     .catch(next);
   },
@@ -452,12 +445,9 @@ module.exports = {
       res.locals.data = result.rows;
       res.locals.metadata.count = result.count;
       res.ok();
-
-      return null;
     })
     .catch( (err)=> {
       next(err);
-      return null;
     });
   },
 
@@ -479,18 +469,14 @@ module.exports = {
         membership.roles = roles;
       }
 
-      membership.save()
+      return membership.save()
       .then( ()=> {
         if (res.locals.redirectTo) {
           res.goTo( res.locals.redirectTo );
         } else {
           res.ok(membership);
         }
-        return null;
-      })
-      .catch(req.queryError);
-
-      return null;
+      });
     })
     .catch(res.queryError);
   },
@@ -542,12 +528,10 @@ module.exports = {
           } else {
             res.ok(membership);
           }
-          return null;
         })
         .catch(req.queryError);
       });
 
-      return null;
     })
     .catch(res.queryError);
   }

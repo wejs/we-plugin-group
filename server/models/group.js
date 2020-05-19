@@ -101,8 +101,7 @@ module.exports = function Model(we) {
             where: { modelId: modelId}
           })
           .then( (r)=> {
-            cb(null, r);
-            return null;
+            return cb(null, r);
           })
           .catch(cb)
         },
@@ -115,8 +114,7 @@ module.exports = function Model(we) {
             }
           })
           .then( (r)=> {
-            cb(null, r);
-            return null;
+            return cb(null, r);
           })
           .catch(cb)
         },
@@ -146,9 +144,9 @@ module.exports = function Model(we) {
               }
             }
 
-            done();
-            return null;
+            return done();
           })
+          .catch(done);
         }
       },
       instanceMethods: {
@@ -167,7 +165,6 @@ module.exports = function Model(we) {
           })
           .spread( (membershiprequest)=> {
             cb(null, membershiprequest);
-            return null;
           })
           .catch(cb);
         },
@@ -196,7 +193,6 @@ module.exports = function Model(we) {
           })
           .spread( (membershiprequest)=> {
             cb(null, membershiprequest);
-            return null;
           })
           .catch(cb);
         },
@@ -220,7 +216,6 @@ module.exports = function Model(we) {
                 userId: userId,
                 groupId: group.id
               });
-              return null;
             })
             .catch(cb);
           } else {
@@ -246,7 +241,6 @@ module.exports = function Model(we) {
               } else {
                 group.createRequestMembership(userId, cb);
               }
-              return null;
             })
             .catch(cb);
           }
@@ -256,7 +250,6 @@ module.exports = function Model(we) {
           this.removeMember(userId)
           .then( ()=> {
             cb();
-            return null;
           })
           .catch(cb);
         },
@@ -275,8 +268,6 @@ module.exports = function Model(we) {
             } else {
               cb(null, memberships);
             }
-
-            return null;
           });
         },
 
@@ -338,7 +329,6 @@ module.exports = function Model(we) {
               // is the last manager member
               cb(null, true);
             }
-            return null;
           })
           .catch(cb);
         },
@@ -351,7 +341,6 @@ module.exports = function Model(we) {
           })
           .then( (r)=> {
             cb(null, r);
-            return null;
           })
           .catch(cb)
         },
@@ -401,7 +390,6 @@ module.exports = function Model(we) {
               }])
               .then( ()=> {
                 done();
-                return null;
               })
               .catch(done);
             }
@@ -424,7 +412,6 @@ module.exports = function Model(we) {
                 })
                 .then( ()=> {
                   next();
-                  return null;
                 })
                 .catch(next);
               },
@@ -438,7 +425,6 @@ module.exports = function Model(we) {
                   }
                   we.log.verbose('we-plugin-group:group:afterCreate:newFollow:', follow);
                   next();
-                  return null;
                 });
               }
             ], (err)=> {
@@ -455,7 +441,6 @@ module.exports = function Model(we) {
                 r.loadCounts(next);
               }, (err)=> {
                 resolve(err);
-                return null;
               });
             } else {
               record.loadCounts(resolve);
@@ -473,7 +458,6 @@ module.exports = function Model(we) {
                 })
                 .then( ()=> {
                   next();
-                  return null;
                 })
                 .catch(next);
               },
@@ -483,7 +467,6 @@ module.exports = function Model(we) {
                 })
                 .then( ()=> {
                   next();
-                  return null;
                 })
                 .catch(next);
               }
